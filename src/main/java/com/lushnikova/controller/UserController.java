@@ -1,37 +1,37 @@
 package com.lushnikova.controller;
 
-import com.lushnikova.dto.req.PersonRequest;
-import com.lushnikova.dto.resp.PersonResponse;
-import com.lushnikova.middleware.PersonMiddleware;
-import com.lushnikova.service.PersonService;
+import com.lushnikova.dto.req.UserRequest;
+import com.lushnikova.dto.resp.UserResponse;
+import com.lushnikova.middleware.UserMiddleware;
+import com.lushnikova.service.UserService;
 
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class PersonController {
+public class UserController {
 
-    private final PersonService personService;
-    private final PersonMiddleware personMiddleware;
+    private final UserService userService;
+    private final UserMiddleware userMiddleware;
 
 
-    public PersonController(PersonService personService, PersonMiddleware personMiddleware) {
-        this.personService = personService;
-        this.personMiddleware = personMiddleware;
+    public UserController(UserService userService, UserMiddleware userMiddleware) {
+        this.userService = userService;
+        this.userMiddleware = userMiddleware;
     }
 
     //регистрация нового пользователя
-    public PersonResponse createPerson() {
-        PersonRequest personRequest = new PersonRequest();
+    public UserResponse createPerson() {
+        UserRequest userRequest = new UserRequest();
         System.out.println("Введите свое имя: ");
-        personRequest.setName(scannerString());
+        userRequest.setName(scannerString());
 
         while (true) {
             String email = email();
 
             if (checkEmail(email) != null) System.out.println("Данная почта уже существует");
             else {
-                personRequest.setEmail(email);
+                userRequest.setEmail(email);
 
                 while (true) {
                     System.out.println("Пароль должен содержать 8 символов латинского алфавита, " +
@@ -39,10 +39,10 @@ public class PersonController {
                             "одну маленькую букву либо спец. символ, либо цифру.");
                     String password = password();
 
-                    if (personMiddleware.checkPassword(password)) {
-                        personRequest.setPassword(password);
+                    if (userMiddleware.checkPassword(password)) {
+                        userRequest.setPassword(password);
 
-                        return personService.save(personRequest);
+                        return userService.save(userRequest);
                     } else wrongInput();
                 }
             }
@@ -50,7 +50,7 @@ public class PersonController {
     }
 
     //авторизация пользователя
-    public PersonResponse getPersonAfterAuthentication() {
+    public UserResponse getPersonAfterAuthentication() {
         while (true){
             String email = email();
             UUID idPersonFromCheckEmail = checkEmail(email);
@@ -62,12 +62,12 @@ public class PersonController {
     }
 
     //рекрусивный метод ввода пароля
-    private PersonResponse recursionByPassword(UUID idPersonFromCheckEmail){
+    private UserResponse recursionByPassword(UUID idPersonFromCheckEmail){
 
         String password = password();
 
-        PersonResponse personFromService = personService.findById(idPersonFromCheckEmail);
-        if (personMiddleware.checkPassword(password, personFromService)) {
+        UserResponse personFromService = userService.findById(idPersonFromCheckEmail);
+        if (userMiddleware.checkPassword(password, personFromService)) {
             return personFromService;
         } else {
             System.out.println("Пароль введен не верно! Хотите восстановить пароль(y) или попробовать еще попытку(n)? [y/n]");
@@ -77,8 +77,8 @@ public class PersonController {
                 case "y" -> {
                     System.out.println("Введите новый пароль: ");
                     String newPassword = scannerString();
-                    personService.updatePassword(idPersonFromCheckEmail, newPassword);
-                    return personService.findById(idPersonFromCheckEmail);
+                    userService.updatePassword(idPersonFromCheckEmail, newPassword);
+                    return userService.findById(idPersonFromCheckEmail);
                 }
                 case "n" -> recursionByPassword(idPersonFromCheckEmail);
                 default -> wrongInput();
@@ -88,17 +88,17 @@ public class PersonController {
     }
 
     // получение пользователя
-    public PersonResponse getPerson(UUID id) {
-        return personService.findById(id);
+    public UserResponse getPerson(UUID id) {
+        return userService.findById(id);
     }
 
     // информация о пользователе
     public void readPerson(UUID id) {
-        PersonResponse personResponse = personService.findById(id);
+        UserResponse userResponse = userService.findById(id);
         System.out.println("Ваши данные: ");
-        System.out.println("Имя =  " + personResponse.getName());
-        System.out.println("Почта =  " + personResponse.getEmail());
-        System.out.println("Пароль =  " + personResponse.getPassword());
+        System.out.println("Имя =  " + userResponse.getName());
+        System.out.println("Почта =  " + userResponse.getEmail());
+        System.out.println("Пароль =  " + userResponse.getPassword());
         System.out.println("----------------------------------------------");
     }
 
@@ -117,24 +117,24 @@ public class PersonController {
             case "1" -> {
                 System.out.println("Введите новое имя: ");
                 String name = scannerString();
-                personService.updateName(idPerson, name);
+                userService.updateName(idPerson, name);
                 editPerson(idPerson);
             }
             case "2" -> {
                 String email = email();
-                personService.updateEmail(idPerson, email);
+                userService.updateEmail(idPerson, email);
                 editPerson(idPerson);
             }
             case "3" -> {
                 String password = password();
-                if(personMiddleware.checkPassword(password)){
-                    personService.updatePassword(idPerson, password);
+                if(userMiddleware.checkPassword(password)){
+                    userService.updatePassword(idPerson, password);
                     editPerson(idPerson);
                 } else wrongInput();
 
             }
             case "4" -> {
-                personService.delete(idPerson);
+                userService.delete(idPerson);
                 System.out.println("Ваш профиль удален");
             }
 
@@ -165,14 +165,14 @@ public class PersonController {
 
     }
 
-    private List<PersonResponse> listPeople() {
-        return personService.findAll();
+    private List<UserResponse> listPeople() {
+        return userService.findAll();
     }
 
     private UUID checkEmail(String email){
-        for (PersonResponse personResponse : listPeople()) {
-            if (personMiddleware.checkEmail(email, personResponse)) {
-                return personResponse.getId();
+        for (UserResponse userResponse : listPeople()) {
+            if (userMiddleware.checkEmail(email, userResponse)) {
+                return userResponse.getId();
             }
         }
         return null;

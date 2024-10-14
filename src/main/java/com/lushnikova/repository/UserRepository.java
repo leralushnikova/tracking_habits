@@ -13,15 +13,15 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class PersonRepository {
-    private static final PersonRepository INSTANCE;
+public class UserRepository {
+    private static final UserRepository INSTANCE;
     private final CopyOnWriteArrayList<User> people;
 
     static {
-        INSTANCE = new PersonRepository();
+        INSTANCE = new UserRepository();
     }
 
-    private PersonRepository() {
+    private UserRepository() {
         people = new CopyOnWriteArrayList<>();
 
         User user1 = new User("Jame", "jame@gmail.com", "jame");
@@ -102,7 +102,7 @@ public class PersonRepository {
         people.add(user2);
     }
 
-    public static PersonRepository getInstance() {
+    public static UserRepository getInstance() {
         return INSTANCE;
     }
 

@@ -2,24 +2,23 @@ package com.lushnikova.service.impl;
 
 import com.lushnikova.dto.req.AdminRequest;
 import com.lushnikova.dto.resp.AdminResponse;
-import com.lushnikova.dto.resp.PersonResponse;
+import com.lushnikova.dto.resp.UserResponse;
 import com.lushnikova.exception.ModelNotFound;
 import com.lushnikova.mapper_mapstruct.AdminMapper;
-import com.lushnikova.model.Admin;
 import com.lushnikova.repository.AdminRepository;
 import com.lushnikova.service.AdminService;
-import com.lushnikova.service.PersonService;
+import com.lushnikova.service.UserService;
 
 import java.util.List;
 import java.util.UUID;
 
 public class AdminsServiceImpl implements AdminService {
-    private final PersonService personService;
+    private final UserService userService;
     private final AdminRepository adminRepository;
     private final AdminMapper adminMapper;
 
-    public AdminsServiceImpl(PersonService personService, AdminRepository adminRepository, AdminMapper adminMapper) {
-        this.personService = personService;
+    public AdminsServiceImpl(UserService userService, AdminRepository adminRepository, AdminMapper adminMapper) {
+        this.userService = userService;
         this.adminRepository = adminRepository;
         this.adminMapper = adminMapper;
     }
@@ -36,17 +35,17 @@ public class AdminsServiceImpl implements AdminService {
     }
 
     @Override
-    public List<PersonResponse> findAllPerson() {
-        return personService.findAll();
+    public List<UserResponse> findAllPerson() {
+        return userService.findAll();
     }
 
     @Override
     public void deletePerson(UUID idPerson) {
-        personService.delete(idPerson);
+        userService.delete(idPerson);
     }
 
     @Override
     public void blockByIpPerson(UUID idPerson, boolean isActive) throws ModelNotFound {
-        personService.setIsActiveByIdPerson(idPerson, isActive);
+        userService.setIsActiveByIdPerson(idPerson, isActive);
     }
 }

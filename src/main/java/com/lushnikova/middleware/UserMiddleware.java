@@ -1,18 +1,18 @@
 package com.lushnikova.middleware;
 
 import com.lushnikova.consts.RegexConsts;
-import com.lushnikova.dto.resp.PersonResponse;
+import com.lushnikova.dto.resp.UserResponse;
 
 
-public class PersonMiddleware {
+public class UserMiddleware {
 
     //проверка почты
-    public boolean checkEmail(String email, PersonResponse person) {
+    public boolean checkEmail(String email, UserResponse person) {
         return person.getEmail().equals(email);
     }
 
     //проверка почты
-    public boolean checkPassword(String password, PersonResponse person) {
+    public boolean checkPassword(String password, UserResponse person) {
         return person.getPassword().equals(password);
     }
 

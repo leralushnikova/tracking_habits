@@ -1,64 +1,64 @@
 package com.lushnikova.service.impl;
 
 import com.lushnikova.dto.req.HabitRequest;
-import com.lushnikova.dto.req.PersonRequest;
+import com.lushnikova.dto.req.UserRequest;
 import com.lushnikova.dto.resp.HabitResponse;
-import com.lushnikova.dto.resp.PersonResponse;
+import com.lushnikova.dto.resp.UserResponse;
 import com.lushnikova.mapper_mapstruct.HabitMapper;
-import com.lushnikova.mapper_mapstruct.PersonMapper;
+import com.lushnikova.mapper_mapstruct.UserMapper;
 import com.lushnikova.model.Habit;
 import com.lushnikova.model.User;
 import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Statistics;
 import com.lushnikova.model.enums.Status;
-import com.lushnikova.service.PersonService;
-import com.lushnikova.repository.PersonRepository;
+import com.lushnikova.service.UserService;
+import com.lushnikova.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 
-public class PersonServiceImpl implements PersonService {
+public class UserServiceImpl implements UserService {
     private final HabitMapper habitMapper;
-    private final PersonMapper personMapper;
-    private final PersonRepository personRepository;
+    private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
-    public PersonServiceImpl(PersonMapper personMapper, PersonRepository personRepository) {
-        this.personMapper = personMapper;
-        this.personRepository = personRepository;
+    public UserServiceImpl(UserMapper userMapper, UserRepository userRepository) {
+        this.userMapper = userMapper;
+        this.userRepository = userRepository;
         this.habitMapper = HabitMapper.INSTANCE;
     }
 
     @Override
-    public PersonResponse save(PersonRequest personRequest) {
-        User user = personMapper.mapToEntity(personRequest);
-        return personMapper.mapToResponse(personRepository.save(user));
+    public UserResponse save(UserRequest userRequest) {
+        User user = userMapper.mapToEntity(userRequest);
+        return userMapper.mapToResponse(userRepository.save(user));
     }
 
     @Override
-    public PersonResponse findById(UUID id) {
-        return personMapper.mapToResponse(personRepository.findById(id));
+    public UserResponse findById(UUID id) {
+        return userMapper.mapToResponse(userRepository.findById(id));
     }
 
     @Override
     public void updateName(UUID id, String name) {
-        personRepository.updateName(id, name);
+        userRepository.updateName(id, name);
     }
 
     @Override
     public void updateEmail(UUID id, String email) {
-        personRepository.updateEmail(id, email);
+        userRepository.updateEmail(id, email);
     }
 
     @Override
     public void updatePassword(UUID id, String password) {
-        personRepository.updatePassword(id, password);
+        userRepository.updatePassword(id, password);
     }
 
     @Override
     public void delete(UUID id){
-        personRepository.delete(id);
+        userRepository.delete(id);
     }
 
     @Override
@@ -66,75 +66,75 @@ public class PersonServiceImpl implements PersonService {
         Habit habit = habitMapper.mapToEntity(habitRequest);
         long idHabit = getHabitsByIdPerson(idPerson).size() + 1;
         habit.setId(idHabit);
-        personRepository.addHabitByIdPerson(idPerson, habit);
+        userRepository.addHabitByIdPerson(idPerson, habit);
     }
 
     @Override
     public List<HabitResponse> getHabitsByIdPerson(UUID idPerson) {
-        return personRepository.getHabitsByIdPerson(idPerson).stream().map(habitMapper::mapToResponse).toList();
+        return userRepository.getHabitsByIdPerson(idPerson).stream().map(habitMapper::mapToResponse).toList();
     }
 
     @Override
     public List<HabitResponse> getHabitsByStatusByIdPerson(UUID idPerson, Status status) {
-        return personRepository.getHabitsByStatusByIdPerson(idPerson, status).stream().map(habitMapper::mapToResponse).toList();
+        return userRepository.getHabitsByStatusByIdPerson(idPerson, status).stream().map(habitMapper::mapToResponse).toList();
     }
 
     @Override
     public List<HabitResponse> getHabitsByLocalDateByIdPerson(UUID idPerson, LocalDate localDate) {
-        return personRepository.getHabitsByLocalDateByIdPerson(idPerson, localDate).stream().map(habitMapper::mapToResponse).toList();
+        return userRepository.getHabitsByLocalDateByIdPerson(idPerson, localDate).stream().map(habitMapper::mapToResponse).toList();
     }
 
     @Override
     public void updateTitleByIdHabitByIdPerson(UUID idPerson, Long idHabit, String newTitle) {
-        personRepository.updateTitleByIdHabitByIdPerson(idPerson, idHabit, newTitle);
+        userRepository.updateTitleByIdHabitByIdPerson(idPerson, idHabit, newTitle);
     }
 
     @Override
     public void updateDescriptionByIdHabitByIdPerson(UUID idPerson, Long idHabit, String newDescription) {
-        personRepository.updateDescriptionByIdHabitByIdPerson(idPerson, idHabit, newDescription);
+        userRepository.updateDescriptionByIdHabitByIdPerson(idPerson, idHabit, newDescription);
     }
 
     @Override
     public void updateRepeatByIdHabitByIdPerson(UUID idPerson, Long idHabit, Repeat newRepeat) {
-        personRepository.updateRepeatByIdHabitByIdPerson(idPerson, idHabit, newRepeat);
+        userRepository.updateRepeatByIdHabitByIdPerson(idPerson, idHabit, newRepeat);
     }
 
     @Override
     public void updateStatusByIdHabitByIdPerson(UUID idPerson, Long idHabit, Status newStatus) {
-        personRepository.updateStatusByIdHabitByIdPerson(idPerson, idHabit, newStatus);
+        userRepository.updateStatusByIdHabitByIdPerson(idPerson, idHabit, newStatus);
     }
 
     @Override
     public void deleteHabitByIdPerson(UUID idPerson, Long idHabit) {
-        personRepository.deleteHabitByIdPerson(idPerson, idHabit);
+        userRepository.deleteHabitByIdPerson(idPerson, idHabit);
     }
 
     @Override
     public List<String> getHabitFulfillmentStatisticsByIdPerson(UUID idPerson, Statistics statistics, Long idHabit, LocalDate dateFrom) {
-        return personRepository.getHabitFulfillmentStatisticsByIdPerson(idPerson, statistics, idHabit, dateFrom);
+        return userRepository.getHabitFulfillmentStatisticsByIdPerson(idPerson, statistics, idHabit, dateFrom);
     }
 
     @Override
     public int percentSuccessHabitsByIdPerson(UUID idPerson, LocalDate dateFrom, LocalDate dateTo) {
-        return personRepository.percentSuccessHabitsByIdPerson(idPerson, dateFrom, dateTo);
+        return userRepository.percentSuccessHabitsByIdPerson(idPerson, dateFrom, dateTo);
     }
 
     @Override
     public void reportHabitByIdPerson(UUID idPerson, Long idHabit) {
-        personRepository.reportHabitByIdPerson(idPerson, idHabit);
+        userRepository.reportHabitByIdPerson(idPerson, idHabit);
     }
 
     @Override
     public void setDoneDatesHabitByIdPerson(UUID idPerson, Long idHabit) {
-        personRepository.setDoneDatesHabitByIdPerson(idPerson, idHabit);
+        userRepository.setDoneDatesHabitByIdPerson(idPerson, idHabit);
     }
 
     public void setIsActiveByIdPerson(UUID idPerson, boolean isActive) {
-        personRepository.setIsActiveByIdPerson(idPerson, isActive);
+        userRepository.setIsActiveByIdPerson(idPerson, isActive);
     }
 
     @Override
-    public List<PersonResponse> findAll() {
-        return personRepository.findAll().stream().map(personMapper::mapToResponse).toList();
+    public List<UserResponse> findAll() {
+        return userRepository.findAll().stream().map(userMapper::mapToResponse).toList();
     }
 }

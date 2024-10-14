@@ -1,9 +1,9 @@
 package com.lushnikova.service;
 
 import com.lushnikova.dto.req.HabitRequest;
-import com.lushnikova.dto.req.PersonRequest;
+import com.lushnikova.dto.req.UserRequest;
 import com.lushnikova.dto.resp.HabitResponse;
-import com.lushnikova.dto.resp.PersonResponse;
+import com.lushnikova.dto.resp.UserResponse;
 import com.lushnikova.exception.ModelNotFound;
 import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Statistics;
@@ -13,9 +13,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-public interface PersonService {
-    PersonResponse save(PersonRequest personRequest);
-    PersonResponse findById(UUID id);
+public interface UserService {
+    UserResponse save(UserRequest userRequest);
+    UserResponse findById(UUID id);
     void updateName(UUID id, String name);
     void updateEmail(UUID id, String email);
     void updatePassword(UUID id, String password);
@@ -33,6 +33,6 @@ public interface PersonService {
     List<String> getHabitFulfillmentStatisticsByIdPerson(UUID idPerson, Statistics statistics, Long idHabit, LocalDate dateFrom);
     int percentSuccessHabitsByIdPerson(UUID idPerson, LocalDate dateFrom, LocalDate dateTo);
     void reportHabitByIdPerson(UUID idPerson, Long idHabit);
-    List<PersonResponse> findAll();
+    List<UserResponse> findAll();
     void setIsActiveByIdPerson(UUID idPerson, boolean isActive) throws ModelNotFound;
 }

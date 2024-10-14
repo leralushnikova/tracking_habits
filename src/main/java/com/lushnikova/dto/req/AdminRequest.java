@@ -2,26 +2,16 @@ package com.lushnikova.dto.req;
 
 import java.util.Objects;
 
-public class PersonRequest {
-    private String name;
+public class AdminRequest {
     private String email;
     private String password;
 
-    public PersonRequest() {
+    public AdminRequest() {
     }
 
-    public PersonRequest(String name, String email, String password) {
-        this.name = name;
+    public AdminRequest(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {
@@ -43,20 +33,19 @@ public class PersonRequest {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PersonRequest that)) return false;
-        return Objects.equals(name, that.name) && Objects.equals(email, that.email) && Objects.equals(password, that.password);
+        if (!(o instanceof AdminRequest that)) return false;
+        return Objects.equals(email, that.email) && Objects.equals(password, that.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, password);
+        return Objects.hash(email, password);
     }
 
     @Override
     public String toString() {
-        return "PersonRequest{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
+        return "AdminRequest{" +
+                "email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }

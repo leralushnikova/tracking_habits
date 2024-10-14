@@ -1,48 +1,48 @@
 package com.lushnikova;
 
 import com.lushnikova.controller.HabitController;
-import com.lushnikova.controller.PersonController;
-import com.lushnikova.dto.resp.PersonResponse;
+import com.lushnikova.controller.UserController;
+import com.lushnikova.dto.resp.UserResponse;
 import com.lushnikova.exception.ModelNotFound;
-import com.lushnikova.mapper_mapstruct.PersonMapper;
+import com.lushnikova.mapper_mapstruct.UserMapper;
 import com.lushnikova.middleware.DateMiddleware;
-import com.lushnikova.middleware.PersonMiddleware;
-import com.lushnikova.repository.PersonRepository;
-import com.lushnikova.service.PersonService;
-import com.lushnikova.service.impl.PersonServiceImpl;
+import com.lushnikova.middleware.UserMiddleware;
+import com.lushnikova.repository.UserRepository;
+import com.lushnikova.service.UserService;
+import com.lushnikova.service.impl.UserServiceImpl;
 
 import java.util.UUID;
 
-import static com.lushnikova.controller.PersonController.scannerString;
-import static com.lushnikova.controller.PersonController.wrongInput;
+import static com.lushnikova.controller.UserController.scannerString;
+import static com.lushnikova.controller.UserController.wrongInput;
 
 
 public class Main {
 
 
-    private static final PersonMapper personMapper = PersonMapper.INSTANCE;
+    private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
     private static final DateMiddleware dateMiddleware = new DateMiddleware();
-    private static final PersonMiddleware personMiddleware = new PersonMiddleware();
-    private static final PersonRepository personRepository = PersonRepository.getInstance();
-    private static final PersonService personService = new PersonServiceImpl(personMapper, personRepository);
-    private static final PersonController personController = new PersonController(personService, personMiddleware);
-    private static final HabitController habitController = new HabitController(personService, dateMiddleware);
+    private static final UserMiddleware USER_MIDDLEWARE = new UserMiddleware();
+    private static final UserRepository USER_REPOSITORY = UserRepository.getInstance();
+    private static final UserService USER_SERVICE = new UserServiceImpl(USER_MAPPER, USER_REPOSITORY);
+    private static final UserController USER_CONTROLLER = new UserController(USER_SERVICE, USER_MIDDLEWARE);
+    private static final HabitController habitController = new HabitController(USER_SERVICE, dateMiddleware);
 
     public static void main(String[] args) throws ModelNotFound {
 
-        PersonResponse personResponse;
+        UserResponse userResponse;
         while (true) {
             System.out.println("Вы хотите войти(in), зарегистрироваться(up) или выйти(exit)?[in/up/exit]");
             String input = scannerString();
 
             switch (input) {
                 case ("in") -> {
-                    personResponse = personController.getPersonAfterAuthentication();
-                    modesForUsers(personResponse.getId());
+                    userResponse = USER_CONTROLLER.getPersonAfterAuthentication();
+                    modesForUsers(userResponse.getId());
                 }
                 case ("up") -> {
-                    personResponse = personController.createPerson();
-                    modesForUsers(personResponse.getId());
+                    userResponse = USER_CONTROLLER.createPerson();
+                    modesForUsers(userResponse.getId());
                 }
                 case ("exit") -> {
                     return;
@@ -55,8 +55,8 @@ public class Main {
 
     public static void modesForUsers(UUID idPerson) throws ModelNotFound {
         while (true) {
-            PersonResponse personResponse = personController.getPerson(idPerson);
-            if (personResponse != null) {
+            UserResponse userResponse = USER_CONTROLLER.getPerson(idPerson);
+            if (userResponse != null) {
                 System.out.println("Выберите режим: ");
                 System.out.println("1 - Редактировать данные пользователя");
                 System.out.println("2 - Просмотр данных пользователя");
@@ -70,9 +70,9 @@ public class Main {
                 String answer = scannerString();
 
                 switch (answer) {
-                    case "1" -> personController.editPerson(idPerson);
+                    case "1" -> USER_CONTROLLER.editPerson(idPerson);
 
-                    case "2" -> personController.readPerson(idPerson);
+                    case "2" -> USER_CONTROLLER.readPerson(idPerson);
 
                     case "3" -> habitController.crudHabits(idPerson);
 

@@ -1,27 +1,27 @@
-package com.lushnikova.dto.req;
+package com.lushnikova.dto.resp;
 
 import java.util.Objects;
+import java.util.UUID;
 
-public class UserRequest {
-    private String name;
+public class AdminResponse {
+    private final UUID id;
     private String email;
     private String password;
 
-    public UserRequest() {
+    {
+        id = UUID.randomUUID();
     }
 
-    public UserRequest(String name, String email, String password) {
-        this.name = name;
+    public AdminResponse() {
+    }
+
+    public AdminResponse(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public UUID getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -43,19 +43,19 @@ public class UserRequest {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserRequest that)) return false;
-        return Objects.equals(name, that.name) && Objects.equals(email, that.email) && Objects.equals(password, that.password);
+        if (!(o instanceof AdminResponse admin)) return false;
+        return Objects.equals(id, admin.id) && Objects.equals(email, admin.email) && Objects.equals(password, admin.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, password);
+        return Objects.hash(id, email, password);
     }
 
     @Override
     public String toString() {
-        return "PersonRequest{" +
-                "name='" + name + '\'' +
+        return "Admin{" +
+                "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';

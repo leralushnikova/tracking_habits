@@ -7,30 +7,30 @@ import com.lushnikova.middleware.DateMiddleware;
 import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Statistics;
 import com.lushnikova.model.enums.Status;
-import com.lushnikova.service.PersonService;
+import com.lushnikova.service.UserService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
-import static com.lushnikova.controller.PersonController.scannerString;
-import static com.lushnikova.controller.PersonController.wrongInput;
+import static com.lushnikova.controller.UserController.scannerString;
+import static com.lushnikova.controller.UserController.wrongInput;
 
 public class HabitController {
 
-    private final PersonService personService;
+    private final UserService userService;
     private final DateMiddleware dateMiddleware;
 
-    public HabitController(PersonService personService, DateMiddleware dateMiddleware) {
-        this.personService = personService;
+    public HabitController(UserService userService, DateMiddleware dateMiddleware) {
+        this.userService = userService;
         this.dateMiddleware = dateMiddleware;
     }
 
     //crud привычек
     public void crudHabits(UUID idPerson) throws ModelNotFound {
         while (true) {
-            List<HabitResponse> list = personService.getHabitsByIdPerson(idPerson);
+            List<HabitResponse> list = userService.getHabitsByIdPerson(idPerson);
             System.out.println("Выберите:");
             System.out.println("1 - создать");
             System.out.println("2 - удалить");
@@ -64,7 +64,7 @@ public class HabitController {
 
         habitRequest.setRepeat(getRepeat());
 
-        personService.addHabitByIdPerson(idPerson, habitRequest);
+        userService.addHabitByIdPerson(idPerson, habitRequest);
     }
 
     //удаление привычки
@@ -76,7 +76,7 @@ public class HabitController {
             long idHabit = Long.parseLong(scannerString());
 
             if (idHabit > 0 && idHabit <= list.size()) {
-                personService.deleteHabitByIdPerson(idPerson, idHabit);
+                userService.deleteHabitByIdPerson(idPerson, idHabit);
 
                 System.out.println("Ваша привычка удалена!");
                 System.out.println("----------------------------------------------");
@@ -110,16 +110,16 @@ public class HabitController {
                             System.out.println("Введите новое название: ");
                             String title = scannerString();
 
-                            personService.updateTitleByIdHabitByIdPerson(idPerson, idHabit, title);
+                            userService.updateTitleByIdHabitByIdPerson(idPerson, idHabit, title);
                         }
                         case "2" -> {
                             System.out.println("Введите новое описание: ");
                             String description = scannerString();
 
-                            personService.updateDescriptionByIdHabitByIdPerson(idPerson, idHabit, description);
+                            userService.updateDescriptionByIdHabitByIdPerson(idPerson, idHabit, description);
                         }
-                        case "3" -> personService.updateRepeatByIdHabitByIdPerson(idPerson, idHabit, getRepeat());
-                        case "4" -> personService.updateStatusByIdHabitByIdPerson(idPerson, idHabit, getStatus());
+                        case "3" -> userService.updateRepeatByIdHabitByIdPerson(idPerson, idHabit, getRepeat());
+                        case "4" -> userService.updateStatusByIdHabitByIdPerson(idPerson, idHabit, getStatus());
                         case "exit" -> {
                             return;
                         }
@@ -134,7 +134,7 @@ public class HabitController {
 
     //получение привычки
     public void readHabits(UUID idPerson) throws ModelNotFound {
-        List<HabitResponse> list = personService.getHabitsByIdPerson(idPerson);
+        List<HabitResponse> list = userService.getHabitsByIdPerson(idPerson);
         if (!list.isEmpty()) {
             while (true) {
 
@@ -174,7 +174,7 @@ public class HabitController {
 
     // установка выполнилась ли привычка
     public void addHabitDoneDates(UUID idPerson) {
-        List<HabitResponse> list = personService.findById(idPerson).getHabits();
+        List<HabitResponse> list = userService.findById(idPerson).getHabits();
         System.out.println("Какую привычку вы хотите редактировать?");
         System.out.println("Введите число от 1 до " + list.size() + ":");
 
@@ -183,7 +183,7 @@ public class HabitController {
             long idHabit = Long.parseLong(scannerString());
 
             if (idHabit > 0 && idHabit <= list.size()) {
-                personService.setDoneDatesHabitByIdPerson(idPerson, idHabit);
+                userService.setDoneDatesHabitByIdPerson(idPerson, idHabit);
             } else {
                 getErrorHabit();
                 addHabitDoneDates(idPerson);
@@ -200,7 +200,7 @@ public class HabitController {
             try {
                 LocalDate localdate = enterDate();
                 if (dateMiddleware.checkDate(localdate)) {
-                    List<HabitResponse> list = personService.getHabitsByLocalDateByIdPerson(idPerson, localdate);
+                    List<HabitResponse> list = userService.getHabitsByLocalDateByIdPerson(idPerson, localdate);
                     if (!list.isEmpty()) return list;
                     else System.out.println("Данного списка нет по дате создания!");
                 }
@@ -213,12 +213,12 @@ public class HabitController {
     //список привычек по статусу
     public List<HabitResponse> getListHabitByStatus(UUID idPerson) throws ModelNotFound {
         Status status = getStatus();
-        return personService.getHabitsByStatusByIdPerson(idPerson, status);
+        return userService.getHabitsByStatusByIdPerson(idPerson, status);
     }
 
     //получение статистики привычки
     public void getHabitFulfillmentStatisticsByIdPerson(UUID idPerson) throws ModelNotFound {
-        List<HabitResponse> list = personService.getHabitsByIdPerson(idPerson);
+        List<HabitResponse> list = userService.getHabitsByIdPerson(idPerson);
 
         if (!list.isEmpty()) {
             Statistics statistics = getStatistics();
@@ -236,7 +236,7 @@ public class HabitController {
 
                         if (dateMiddleware.checkDate(localdate)) {
 
-                            List<String> statisticsList = personService.getHabitFulfillmentStatisticsByIdPerson(idPerson, statistics, idHabit, localdate);
+                            List<String> statisticsList = userService.getHabitFulfillmentStatisticsByIdPerson(idPerson, statistics, idHabit, localdate);
 
                             System.out.println("Генерация статистики выполнения привычки id = " + idHabit + " с " + localdate);
 
@@ -266,7 +266,7 @@ public class HabitController {
 
             if (dateMiddleware.checkDate(dateFrom) && dateMiddleware.checkDate(dateTo)) {
                 System.out.println("Процент успешного выполнения привычек = " +
-                        personService.percentSuccessHabitsByIdPerson(idPerson, dateFrom, dateTo) + "%");
+                        userService.percentSuccessHabitsByIdPerson(idPerson, dateFrom, dateTo) + "%");
                 System.out.println("----------------------------------------------");
 
             }
@@ -278,11 +278,11 @@ public class HabitController {
 
     //отчет пользователя по прогрессу выполнения
     public void reportHabitByIdPerson(UUID idPerson) throws ModelNotFound {
-        List<HabitResponse> list = personService.getHabitsByIdPerson(idPerson);
+        List<HabitResponse> list = userService.getHabitsByIdPerson(idPerson);
 
         if(!list.isEmpty()){
             long idHabit = choiceName(list.size());
-            personService.reportHabitByIdPerson(idPerson, idHabit);
+            userService.reportHabitByIdPerson(idPerson, idHabit);
         } else {
             getErrorHabits();
             reportHabitByIdPerson(idPerson);
