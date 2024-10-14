@@ -130,6 +130,10 @@ public class PersonServiceImpl implements PersonService {
         personRepository.setDoneDatesHabitByIdPerson(idPerson, idHabit);
     }
 
+    public void setIsActiveByIdPerson(UUID idPerson, boolean isActive) {
+        personRepository.setIsActiveByIdPerson(idPerson, isActive);
+    }
+
     @Override
     public List<PersonResponse> findAll() {
         return personRepository.findAll().stream().map(personMapper::mapToResponse).toList();

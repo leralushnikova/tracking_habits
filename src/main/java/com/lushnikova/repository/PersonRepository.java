@@ -187,6 +187,10 @@ public class PersonRepository {
         findById(idPerson).getHabits().get(Math.toIntExact(idHabit) - 1).setDoneDates();
     }
 
+    public void setIsActiveByIdPerson(UUID idPerson, boolean isActive){
+        findById(idPerson).setActive(isActive);
+    }
+
     public synchronized List<Person> findAll() {
         return new ArrayList<>(people);
     }

@@ -34,4 +34,5 @@ public interface PersonService {
     int percentSuccessHabitsByIdPerson(UUID idPerson, LocalDate dateFrom, LocalDate dateTo);
     void reportHabitByIdPerson(UUID idPerson, Long idHabit);
     List<PersonResponse> findAll();
+    void setIsActiveByIdPerson(UUID idPerson, boolean isActive) throws ModelNotFound;
 }

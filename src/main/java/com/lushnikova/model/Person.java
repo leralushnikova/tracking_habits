@@ -6,10 +6,7 @@ import com.lushnikova.model.enums.Status;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Person {
@@ -17,6 +14,7 @@ public class Person {
     private String name;
     private String email;
     private String password;
+    private boolean isActive;
     private final CopyOnWriteArrayList<Habit> habits = new CopyOnWriteArrayList<>();
 
     {
@@ -65,6 +63,14 @@ public class Person {
 
     public List<Habit> getHabits() {
         return habits;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     public List<Habit> getHabitsByStatus(Status status) {
@@ -213,7 +219,17 @@ public class Person {
         }
     }*/
 
-    //переопределить equals и hashcode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person person)) return false;
+        return isActive == person.isActive && Objects.equals(id, person.id) && Objects.equals(name, person.name) && Objects.equals(email, person.email) && Objects.equals(password, person.password) && Objects.equals(habits, person.habits);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, password, isActive, habits);
+    }
 
     @Override
     public String toString() {
