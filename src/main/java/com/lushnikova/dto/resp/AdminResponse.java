@@ -4,20 +4,21 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class AdminResponse {
-    private final UUID id;
+    private UUID id;
     private String email;
     private String password;
-
-    {
-        id = UUID.randomUUID();
-    }
 
     public AdminResponse() {
     }
 
-    public AdminResponse(String email, String password) {
+    public AdminResponse(UUID id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public UUID getId() {

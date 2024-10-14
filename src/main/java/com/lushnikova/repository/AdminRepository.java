@@ -26,6 +26,10 @@ public class AdminRepository {
         }
     }
 
+    public static AdminRepository getInstance() {
+        return INSTANCE;
+    }
+
     public synchronized void save(Admin admin) {
         admins.add(admin);
     }
@@ -33,6 +37,11 @@ public class AdminRepository {
     public Admin findById(UUID id){
         return admins.stream().filter(admin -> admin.getId().equals(id)).findFirst().orElse(null);
     }
+
+    public synchronized void updatePassword(UUID id, String newPassword) {
+        findById(id).setPassword(newPassword);
+    }
+
 
     public synchronized List<Admin> findAll(){
         return new ArrayList<>(admins);

@@ -1,24 +1,24 @@
 package com.lushnikova.middleware;
 
-import com.lushnikova.consts.RegexConsts;
 import com.lushnikova.dto.resp.UserResponse;
 
 
-public class UserMiddleware {
+public class UserMiddleware implements Middleware{
 
-    //проверка почты
-    public boolean checkEmail(String email, UserResponse person) {
-        return person.getEmail().equals(email);
+    @Override
+    public boolean checkEmail(String email, Object object) {
+        if (object instanceof UserResponse) {
+            return ((UserResponse) object).getEmail().equals(email);
+        }
+        return false;
     }
 
-    //проверка почты
-    public boolean checkPassword(String password, UserResponse person) {
-        return person.getPassword().equals(password);
-    }
-
-    //проверка пароля при создании пользователя
-    public boolean checkPassword(String password) {
-        return password.matches(RegexConsts.REGEX_PASSWORD);
+    @Override
+    public boolean checkPassword(String password, Object object) {
+        if (object instanceof UserResponse) {
+            return ((UserResponse) object).getPassword().equals(password);
+        }
+        return false;
     }
 
 }

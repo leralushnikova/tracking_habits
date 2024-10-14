@@ -19,6 +19,7 @@ public class User {
 
     {
         id = UUID.randomUUID();
+        isActive = true;
     }
     public User() {
     }
@@ -119,17 +120,6 @@ public class User {
             habits.get(i).setId((long) (i + 1));
         }
     }
-
-    public void setDoneDates(Long idHabit){
-        for (Habit habit : habits) {
-            if(habit.getId().equals(idHabit)){
-                habit.setStatus(Status.DONE);
-                break;
-            }
-        }
-    }
-
-
 
     public List<String> getHabitFulfillmentStatistics(Statistics statistics, Long idHabit, LocalDate dateFrom) {
         int days = 0;

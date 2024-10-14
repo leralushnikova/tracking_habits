@@ -12,15 +12,15 @@ import com.lushnikova.service.UserService;
 import java.util.List;
 import java.util.UUID;
 
-public class AdminsServiceImpl implements AdminService {
+public class AdminServiceImpl implements AdminService {
     private final UserService userService;
     private final AdminRepository adminRepository;
     private final AdminMapper adminMapper;
 
-    public AdminsServiceImpl(UserService userService, AdminRepository adminRepository, AdminMapper adminMapper) {
+    public AdminServiceImpl(UserService userService, AdminRepository adminRepository) {
         this.userService = userService;
         this.adminRepository = adminRepository;
-        this.adminMapper = adminMapper;
+        this.adminMapper = AdminMapper.INSTANCE;
     }
 
 
@@ -30,22 +30,39 @@ public class AdminsServiceImpl implements AdminService {
     }
 
     @Override
-    public List<AdminResponse> getAllAdmins() {
+    public AdminResponse findById(UUID id) {
+        return adminMapper.mapToResponse(adminRepository.findById(id));
+    }
+
+    @Override
+    public void updatePassword(UUID id, String password) {
+        adminRepository.updatePassword(id, password);
+    }
+
+    @Override
+    public List<AdminResponse> findAllAdmins() {
         return adminRepository.findAll().stream().map(adminMapper::mapToResponse).toList();
     }
 
     @Override
-    public List<UserResponse> findAllPerson() {
+    public UserResponse findByIdUser(UUID idUser) {
+        return userService.findById(idUser);
+    }
+
+    @Override
+    public List<UserResponse> findAllUsers() {
         return userService.findAll();
     }
 
     @Override
-    public void deletePerson(UUID idPerson) {
-        userService.delete(idPerson);
+    public void deletePerson(UUID idUser) {
+        userService.delete(idUser);
     }
 
     @Override
-    public void blockByIpPerson(UUID idPerson, boolean isActive) throws ModelNotFound {
-        userService.setIsActiveByIdPerson(idPerson, isActive);
+    public void blockByIpPerson(UUID idUser, boolean isActive) throws ModelNotFound {
+        userService.setIsActiveByIdPerson(idUser, isActive);
     }
+
+
 }

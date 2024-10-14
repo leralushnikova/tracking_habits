@@ -10,10 +10,13 @@ import java.util.UUID;
 
 public interface AdminService {
     void saveAdmin(AdminRequest adminRequest);
-    List<AdminResponse> getAllAdmins();
+    AdminResponse findById(UUID id);
+    void updatePassword(UUID id, String password);
+    List<AdminResponse> findAllAdmins();
 
-    List<UserResponse> findAllPerson();
-    void deletePerson(UUID idPerson);
-    void blockByIpPerson(UUID idPerson, boolean isActive) throws ModelNotFound;
+    List<UserResponse> findAllUsers();
+    UserResponse findByIdUser(UUID idUser);
+    void deletePerson(UUID idUser);
+    void blockByIpPerson(UUID idUser, boolean isActive) throws ModelNotFound;
 
 }
