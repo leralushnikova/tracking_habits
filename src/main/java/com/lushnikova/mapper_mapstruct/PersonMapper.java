@@ -2,7 +2,7 @@ package com.lushnikova.mapper_mapstruct;
 
 import com.lushnikova.dto.req.PersonRequest;
 import com.lushnikova.dto.resp.PersonResponse;
-import com.lushnikova.model.Person;
+import com.lushnikova.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,8 +11,8 @@ public interface PersonMapper {
 
     PersonMapper INSTANCE = Mappers.getMapper(PersonMapper.class);
 
-    Person mapToEntity(PersonRequest personRequest);
+    User mapToEntity(PersonRequest personRequest);
 
-    PersonResponse mapToResponse(Person person);
+    PersonResponse mapToResponse(User user);
 
 }

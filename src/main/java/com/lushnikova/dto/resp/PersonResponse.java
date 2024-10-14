@@ -10,16 +10,18 @@ public class PersonResponse {
     private String name;
     private String email;
     private String password;
+    private boolean isActive;
     private List<HabitResponse> habits;
 
     public PersonResponse() {
     }
 
-    public PersonResponse(UUID id, String name, String email, String password, List<HabitResponse> habits) {
+    public PersonResponse(UUID id, String name, String email, String password, boolean isActive, List<HabitResponse> habits) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.isActive = isActive;
         this.habits = habits;
     }
 
@@ -55,6 +57,14 @@ public class PersonResponse {
         this.password = password;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public List<HabitResponse> getHabits() {
         return habits;
     }
@@ -67,12 +77,12 @@ public class PersonResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PersonResponse that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(habits, that.habits);
+        return isActive == that.isActive && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(habits, that.habits);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, habits);
+        return Objects.hash(id, name, email, password, isActive, habits);
     }
 
     @Override
@@ -82,6 +92,7 @@ public class PersonResponse {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", isActive=" + isActive +
                 ", habits=" + habits +
                 '}';
     }

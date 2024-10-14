@@ -17,11 +17,17 @@ public class AdminRepository {
 
     private AdminRepository() {
         admins = new CopyOnWriteArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            Admin admin = new Admin();
+            admin.setEmail("admin" + i);
+            admin.setPassword("admin" + i);
+            admins.add(admin);
+        }
     }
 
-    public synchronized Admin save(Admin admin) {
+    public synchronized void save(Admin admin) {
         admins.add(admin);
-        return admin;
     }
 
     public Admin findById(UUID id){

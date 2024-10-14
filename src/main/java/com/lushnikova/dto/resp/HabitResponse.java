@@ -4,7 +4,6 @@ import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Status;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Set;

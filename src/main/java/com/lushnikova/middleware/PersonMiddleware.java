@@ -6,10 +6,6 @@ import com.lushnikova.dto.resp.PersonResponse;
 
 public class PersonMiddleware {
 
-    public PersonMiddleware() {
-
-    }
-
     //проверка почты
     public boolean checkEmail(String email, PersonResponse person) {
         return person.getEmail().equals(email);

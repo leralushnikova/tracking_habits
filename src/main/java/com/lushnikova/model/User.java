@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Person {
+public class User {
     private final UUID id;
     private String name;
     private String email;
@@ -20,10 +20,10 @@ public class Person {
     {
         id = UUID.randomUUID();
     }
-    public Person() {
+    public User() {
     }
 
-    public Person(String name, String email, String password) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -129,6 +129,8 @@ public class Person {
         }
     }
 
+
+
     public List<String> getHabitFulfillmentStatistics(Statistics statistics, Long idHabit, LocalDate dateFrom) {
         int days = 0;
         switch (statistics) {
@@ -195,6 +197,7 @@ public class Person {
                 System.out.println("Статус: " + habit.getStatus());
                 System.out.println("Частота выполнения: " + habit.getRepeat());
                 System.out.println("Текущая серия выполнений: " + habit.getStreak());
+                System.out.println("Даты выполнения привычки: " +  habit.getDoneDates());
                 System.out.println("----------------------------------------------");
                 break;
             }
@@ -222,8 +225,8 @@ public class Person {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Person person)) return false;
-        return isActive == person.isActive && Objects.equals(id, person.id) && Objects.equals(name, person.name) && Objects.equals(email, person.email) && Objects.equals(password, person.password) && Objects.equals(habits, person.habits);
+        if (!(o instanceof User user)) return false;
+        return isActive == user.isActive && Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(habits, user.habits);
     }
 
     @Override

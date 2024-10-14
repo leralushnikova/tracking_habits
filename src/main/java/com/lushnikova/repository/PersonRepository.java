@@ -1,7 +1,7 @@
 package com.lushnikova.repository;
 
 import com.lushnikova.model.Habit;
-import com.lushnikova.model.Person;
+import com.lushnikova.model.User;
 import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Statistics;
 import com.lushnikova.model.enums.Status;
@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PersonRepository {
     private static final PersonRepository INSTANCE;
-    private final CopyOnWriteArrayList<Person> people;
+    private final CopyOnWriteArrayList<User> people;
 
     static {
         INSTANCE = new PersonRepository();
@@ -24,9 +24,9 @@ public class PersonRepository {
     private PersonRepository() {
         people = new CopyOnWriteArrayList<>();
 
-        Person person1 = new Person("Jame", "jame@gmail.com", "jame");
+        User user1 = new User("Jame", "jame@gmail.com", "jame");
 
-        Person person2 = new Person("Kirill", "kirill@gmail.com", "kirill");
+        User user2 = new User("Kirill", "kirill@gmail.com", "kirill");
 
         Random random = new Random();
 
@@ -61,7 +61,7 @@ public class PersonRepository {
                 date = date.plusDays(random.nextInt(1, 3));
             }
 
-            person1.addHabit(habit);
+            user1.addHabit(habit);
         }
 
         long k = 1L;
@@ -95,24 +95,24 @@ public class PersonRepository {
                 date = date.plusDays(random.nextInt(1, 3));
             }
 
-            person2.addHabit(habit);
+            user2.addHabit(habit);
         }
 
-        people.add(person1);
-        people.add(person2);
+        people.add(user1);
+        people.add(user2);
     }
 
     public static PersonRepository getInstance() {
         return INSTANCE;
     }
 
-    public synchronized Person save(Person person) {
-        people.add(person);
-        return person;
+    public synchronized User save(User user) {
+        people.add(user);
+        return user;
     }
 
-    public Person findById(UUID id) {
-        return people.stream().filter(person -> person.getId().equals(id)).findFirst().orElse(null);
+    public User findById(UUID id) {
+        return people.stream().filter(user -> user.getId().equals(id)).findFirst().orElse(null);
     }
 
     public synchronized void updateName(UUID id, String name) {
@@ -191,7 +191,7 @@ public class PersonRepository {
         findById(idPerson).setActive(isActive);
     }
 
-    public synchronized List<Person> findAll() {
+    public synchronized List<User> findAll() {
         return new ArrayList<>(people);
     }
 

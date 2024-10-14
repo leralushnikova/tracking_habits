@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Admin {
-    private UUID id;
+    private final UUID id;
     private String email;
     private String password;
 

@@ -4,11 +4,10 @@ import com.lushnikova.dto.req.HabitRequest;
 import com.lushnikova.dto.req.PersonRequest;
 import com.lushnikova.dto.resp.HabitResponse;
 import com.lushnikova.dto.resp.PersonResponse;
-import com.lushnikova.exception.ModelNotFound;
 import com.lushnikova.mapper_mapstruct.HabitMapper;
 import com.lushnikova.mapper_mapstruct.PersonMapper;
 import com.lushnikova.model.Habit;
-import com.lushnikova.model.Person;
+import com.lushnikova.model.User;
 import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Statistics;
 import com.lushnikova.model.enums.Status;
@@ -33,8 +32,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonResponse save(PersonRequest personRequest) {
-        Person person = personMapper.mapToEntity(personRequest);
-        return personMapper.mapToResponse(personRepository.save(person));
+        User user = personMapper.mapToEntity(personRequest);
+        return personMapper.mapToResponse(personRepository.save(user));
     }
 
     @Override
@@ -63,7 +62,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void addHabitByIdPerson(UUID idPerson, HabitRequest habitRequest) throws ModelNotFound {
+    public void addHabitByIdPerson(UUID idPerson, HabitRequest habitRequest) {
         Habit habit = habitMapper.mapToEntity(habitRequest);
         long idHabit = getHabitsByIdPerson(idPerson).size() + 1;
         habit.setId(idHabit);
@@ -71,17 +70,17 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<HabitResponse> getHabitsByIdPerson(UUID idPerson) throws ModelNotFound {
+    public List<HabitResponse> getHabitsByIdPerson(UUID idPerson) {
         return personRepository.getHabitsByIdPerson(idPerson).stream().map(habitMapper::mapToResponse).toList();
     }
 
     @Override
-    public List<HabitResponse> getHabitsByStatusByIdPerson(UUID idPerson, Status status) throws ModelNotFound {
+    public List<HabitResponse> getHabitsByStatusByIdPerson(UUID idPerson, Status status) {
         return personRepository.getHabitsByStatusByIdPerson(idPerson, status).stream().map(habitMapper::mapToResponse).toList();
     }
 
     @Override
-    public List<HabitResponse> getHabitsByLocalDateByIdPerson(UUID idPerson, LocalDate localDate) throws ModelNotFound {
+    public List<HabitResponse> getHabitsByLocalDateByIdPerson(UUID idPerson, LocalDate localDate) {
         return personRepository.getHabitsByLocalDateByIdPerson(idPerson, localDate).stream().map(habitMapper::mapToResponse).toList();
     }
 

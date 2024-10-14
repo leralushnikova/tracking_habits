@@ -61,6 +61,7 @@ public class PersonController {
         }
     }
 
+    //рекрусивный метод ввода пароля
     private PersonResponse recursionByPassword(UUID idPersonFromCheckEmail){
 
         String password = password();
@@ -86,39 +87,60 @@ public class PersonController {
         return personFromService;
     }
 
+    // получение пользователя
     public PersonResponse getPerson(UUID id) {
         return personService.findById(id);
     }
 
+    // информация о пользователе
+    public void readPerson(UUID id) {
+        PersonResponse personResponse = personService.findById(id);
+        System.out.println("Ваши данные: ");
+        System.out.println("Имя =  " + personResponse.getName());
+        System.out.println("Почта =  " + personResponse.getEmail());
+        System.out.println("Пароль =  " + personResponse.getPassword());
+        System.out.println("----------------------------------------------");
+    }
 
+
+    //редактирование данных пользователя
     public void editPerson(UUID idPerson) {
-        while (true) {
-            System.out.println("Вы хотите изменить имя(n), email (e), пароль(p), удалить профиль(d), выход(exit)?");
-            String answer = scannerString();
-            switch (answer) {
-                case "n" -> {
-                    System.out.println("Введите новое имя: ");
-                    String name = scannerString();
-                    personService.updateName(idPerson, name);
-                }
-                case "e" -> {
-                    String email = scannerString();
-                    personService.updateEmail(idPerson, email);
-                }
-                case "p" -> {
-                    String password = scannerString();
-                    personService.updatePassword(idPerson, password);
-                }
-                case "d" -> {
-                    personService.delete(idPerson);
-                    System.out.println("Ваш профиль удален");
-                    return;
-                }
-                case "exit" -> {
-                    return;
-                }
-                default -> wrongInput();
+        System.out.println("Вы хотите изменить:");
+        System.out.println("1 - имя");
+        System.out.println("2 - email");
+        System.out.println("3 - пароль");
+        System.out.println("4 - удалить профиль");
+        System.out.println("5 - выход из режима редактирования пользователя");
+
+        String answer = scannerString();
+        switch (answer) {
+            case "1" -> {
+                System.out.println("Введите новое имя: ");
+                String name = scannerString();
+                personService.updateName(idPerson, name);
+                editPerson(idPerson);
             }
+            case "2" -> {
+                String email = email();
+                personService.updateEmail(idPerson, email);
+                editPerson(idPerson);
+            }
+            case "3" -> {
+                String password = password();
+                if(personMiddleware.checkPassword(password)){
+                    personService.updatePassword(idPerson, password);
+                    editPerson(idPerson);
+                } else wrongInput();
+
+            }
+            case "4" -> {
+                personService.delete(idPerson);
+                System.out.println("Ваш профиль удален");
+            }
+
+            case "5" -> {
+            }
+            default -> wrongInput();
         }
     }
 
@@ -139,6 +161,8 @@ public class PersonController {
 
     public static void wrongInput() {
         System.out.println("Неправильный ввод!");
+        System.out.println("----------------------------------------------");
+
     }
 
     private List<PersonResponse> listPeople() {

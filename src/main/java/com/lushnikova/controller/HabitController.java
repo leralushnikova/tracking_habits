@@ -3,14 +3,14 @@ package com.lushnikova.controller;
 import com.lushnikova.dto.req.HabitRequest;
 import com.lushnikova.dto.resp.HabitResponse;
 import com.lushnikova.exception.ModelNotFound;
-import com.lushnikova.mapper_mapstruct.PersonMapper;
 import com.lushnikova.middleware.DateMiddleware;
 import com.lushnikova.model.enums.Repeat;
+import com.lushnikova.model.enums.Statistics;
 import com.lushnikova.model.enums.Status;
 import com.lushnikova.service.PersonService;
 
-import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,19 +28,22 @@ public class HabitController {
     }
 
     //crud привычек
-    public void crudHabits(UUID idPerson) throws ModelNotFound, ParseException {
+    public void crudHabits(UUID idPerson) throws ModelNotFound {
         while (true) {
             List<HabitResponse> list = personService.getHabitsByIdPerson(idPerson);
-            System.out.println("Вы хотите создать(c), удалить(d), " +
-                    "редактировать(u) привычку или посмотреть все привычки(r), выход(exit)?[c/d/u/r/exit]");
-
+            System.out.println("Выберите:");
+            System.out.println("1 - создать");
+            System.out.println("2 - удалить");
+            System.out.println("3 - редактировать привычку");
+            System.out.println("4 - отметить выполненную привычку");
+            System.out.println("exit - выход из режима управления привычек");
             String answer = scannerString();
 
             switch (answer) {
-                case "c" -> create(idPerson);
-                case "d" -> delete(idPerson, list);
-                case "u" -> update(idPerson, list);
-                case "r" -> readHabits(idPerson, list);
+                case "1" -> create(idPerson);
+                case "2" -> delete(idPerson, list);
+                case "3" -> update(idPerson, list);
+                case "4" -> addHabitDoneDates(idPerson);
                 case "exit" -> {
                     return;
                 }
@@ -64,7 +67,8 @@ public class HabitController {
         personService.addHabitByIdPerson(idPerson, habitRequest);
     }
 
-    public void delete(UUID idPerson, List<HabitResponse> list){
+    //удаление привычки
+    public void delete(UUID idPerson, List<HabitResponse> list) {
         if (!list.isEmpty()) {
             System.out.println("Какую привычку вы хотите удалить?");
             System.out.println("Введите число от 1 до " + list.size() + ":");
@@ -73,42 +77,49 @@ public class HabitController {
 
             if (idHabit > 0 && idHabit <= list.size()) {
                 personService.deleteHabitByIdPerson(idPerson, idHabit);
-                System.out.println("Ваша привычка удалена");
+
+                System.out.println("Ваша привычка удалена!");
+                System.out.println("----------------------------------------------");
+
             } else getErrorHabit();
         } else getErrorHabits();
 
     }
 
-    public void update(UUID idPerson, List<HabitResponse> list){
+    //обновление привычки
+    public void update(UUID idPerson, List<HabitResponse> list) {
         if (!list.isEmpty()) {
             System.out.println("Какую привычку вы хотите редактировать?");
-            System.out.println("Введите число от 1 до " + list.size() + ":");
 
-            long idHabit = Long.parseLong(scannerString());
+            long idHabit = choiceName(list.size());
 
             if (idHabit > 0 && idHabit <= list.size()) {
                 while (true) {
-                    System.out.println("Что вы хотите отредактировать название(t), " +
-                            "описание(d), повторение(r), статус(s) привычки или выход(exit)?[t/d/r/s/exit]");
+                    System.out.println("Отредактировать: ");
+                    System.out.println("1 - название привычки");
+                    System.out.println("2 - описание привычки");
+                    System.out.println("3 - повторение привычки");
+                    System.out.println("4 - статус привычки");
+                    System.out.println("exit - выход из редактирования привычки");
+
 
                     String answer = scannerString();
 
                     switch (answer) {
-                        case "t" -> {
-
+                        case "1" -> {
                             System.out.println("Введите новое название: ");
                             String title = scannerString();
 
                             personService.updateTitleByIdHabitByIdPerson(idPerson, idHabit, title);
                         }
-                        case "d" -> {
+                        case "2" -> {
                             System.out.println("Введите новое описание: ");
                             String description = scannerString();
 
                             personService.updateDescriptionByIdHabitByIdPerson(idPerson, idHabit, description);
                         }
-                        case "r" -> personService.updateRepeatByIdHabitByIdPerson(idPerson, idHabit, getRepeat());
-                        case "s" -> personService.updateStatusByIdHabitByIdPerson(idPerson, idHabit, getStatus());
+                        case "3" -> personService.updateRepeatByIdHabitByIdPerson(idPerson, idHabit, getRepeat());
+                        case "4" -> personService.updateStatusByIdHabitByIdPerson(idPerson, idHabit, getStatus());
                         case "exit" -> {
                             return;
                         }
@@ -121,34 +132,38 @@ public class HabitController {
 
     }
 
-    public void readHabits(UUID idPerson, List<HabitResponse> list) throws ModelNotFound, ParseException {
-        if(!list.isEmpty()){
+    //получение привычки
+    public void readHabits(UUID idPerson) throws ModelNotFound {
+        List<HabitResponse> list = personService.getHabitsByIdPerson(idPerson);
+        if (!list.isEmpty()) {
             while (true) {
-                System.out.println("Хотите заполучить полный список(a) или отфильтровать его(f)?[a/f]");
+
+                System.out.println("Выберите список привычек: ");
+                System.out.println("1 - полный список ");
+                System.out.println("2 - отфильтрованный по дате создания");
+                System.out.println("3 - отфильтрованный по статусу");
+                System.out.println("exit - выход из списка привычек");
+
                 String answer2 = scannerString();
 
                 switch (answer2) {
-                    case "a" -> {
+                    case "1" -> {
                         list.forEach(System.out::println);
+                        System.out.println("----------------------------------------------");
                         return;
                     }
-                    case "f" -> {
-                        while (true) {
-                            System.out.println("Отфильтровать по дате создания(d) или по статусу(s)?");
-                            String answer3 = scannerString();
-
-                            switch (answer3) {
-                                case "d" -> {
-                                    getListHabitByDateCreate(idPerson).forEach(System.out::println);
-                                    return;
-                                }
-                                case "s" -> {
-                                    getListHabitByStatus(idPerson).forEach(System.out::println);
-                                    return;
-                                }
-                                default -> wrongInput();
-                            }
-                        }
+                    case "2" -> {
+                        getListHabitByDateCreate(idPerson).forEach(System.out::println);
+                        System.out.println("----------------------------------------------");
+                        return;
+                    }
+                    case "3" -> {
+                        getListHabitByStatus(idPerson).forEach(System.out::println);
+                        System.out.println("----------------------------------------------");
+                        return;
+                    }
+                    case "exit" -> {
+                        return;
                     }
                     default -> wrongInput();
                 }
@@ -157,60 +172,142 @@ public class HabitController {
 
     }
 
-
-    public  void addHabitDoneDates(UUID idPerson){
+    // установка выполнилась ли привычка
+    public void addHabitDoneDates(UUID idPerson) {
         List<HabitResponse> list = personService.findById(idPerson).getHabits();
-        while (true) {
+        System.out.println("Какую привычку вы хотите редактировать?");
+        System.out.println("Введите число от 1 до " + list.size() + ":");
 
-            System.out.println("Хотите отметить привычку отмеченной?[y/n]");
+        if (!list.isEmpty()) {
 
-            String answer = scannerString();
+            long idHabit = Long.parseLong(scannerString());
 
-            if (answer.equals("y")) {
-
-                System.out.println("Какую привычку вы хотите редактировать?");
-                System.out.println("Введите число от 1 до " + list.size() + ":");
-
-                long idHabit = Long.parseLong(scannerString());
-
-                if (idHabit > 0 && idHabit <= list.size()) {
-                    personService.setDoneDatesHabitByIdPerson(idPerson, idHabit);
-                } else getErrorHabit();
+            if (idHabit > 0 && idHabit <= list.size()) {
+                personService.setDoneDatesHabitByIdPerson(idPerson, idHabit);
+            } else {
+                getErrorHabit();
+                addHabitDoneDates(idPerson);
             }
-            if (answer.equals("n")) return;
-
-            if(!answer.equals("y")) wrongInput();
-        }
+        } else getErrorHabits();
     }
 
 
-    public List<HabitResponse> getListHabitByDateCreate(UUID idPerson) throws ModelNotFound, ParseException {
+    // список привычек по дате создания
+    public List<HabitResponse> getListHabitByDateCreate(UUID idPerson) throws ModelNotFound {
         while (true) {
-            System.out.println("Введите время создания привычки(формат ввода yyyy-MM-dd): ");
-            String time = scannerString();
-            LocalDate localdate = LocalDate.parse(time);
+            System.out.println("Введите время создания привычки: ");
 
-            if (dateMiddleware.checkDate(localdate)) {
-                return personService.getHabitsByLocalDateByIdPerson(idPerson, localdate);
-            } else System.out.println("Не верный формат даты!");
+            try {
+                LocalDate localdate = enterDate();
+                if (dateMiddleware.checkDate(localdate)) {
+                    List<HabitResponse> list = personService.getHabitsByLocalDateByIdPerson(idPerson, localdate);
+                    if (!list.isEmpty()) return list;
+                    else System.out.println("Данного списка нет по дате создания!");
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Не верный формат даты!");
+            }
         }
     }
 
+    //список привычек по статусу
     public List<HabitResponse> getListHabitByStatus(UUID idPerson) throws ModelNotFound {
         Status status = getStatus();
         return personService.getHabitsByStatusByIdPerson(idPerson, status);
     }
 
+    //получение статистики привычки
+    public void getHabitFulfillmentStatisticsByIdPerson(UUID idPerson) throws ModelNotFound {
+        List<HabitResponse> list = personService.getHabitsByIdPerson(idPerson);
 
-    public static void getErrorHabits(){
+        if (!list.isEmpty()) {
+            Statistics statistics = getStatistics();
+
+            System.out.println("Выберите привычку.");
+
+            long idHabit = choiceName(list.size());
+
+            if (idHabit > 0 && idHabit <= list.size()) {
+                while (true) {
+                    System.out.println("Введите день начало указанного периода: ");
+
+                    try {
+                        LocalDate localdate = enterDate();
+
+                        if (dateMiddleware.checkDate(localdate)) {
+
+                            List<String> statisticsList = personService.getHabitFulfillmentStatisticsByIdPerson(idPerson, statistics, idHabit, localdate);
+
+                            System.out.println("Генерация статистики выполнения привычки id = " + idHabit + " с " + localdate);
+
+                            statisticsList.forEach(System.out::println);
+                            System.out.println("----------------------------------------------");
+
+                            return;
+                        }
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Не верный формат даты!");
+                    }
+                }
+            } else getErrorHabit();
+        } else getErrorHabits();
+    }
+
+    //процент успешного выполнения привычек
+    public void getPercentSuccessHabitsByIdPerson(UUID idPerson) {
+        try {
+            System.out.println("Введите день начало периода: ");
+            LocalDate dateFrom = enterDate();
+
+            System.out.println("Введите день конца периода: ");
+
+            LocalDate dateTo = enterDate();
+
+
+            if (dateMiddleware.checkDate(dateFrom) && dateMiddleware.checkDate(dateTo)) {
+                System.out.println("Процент успешного выполнения привычек = " +
+                        personService.percentSuccessHabitsByIdPerson(idPerson, dateFrom, dateTo) + "%");
+                System.out.println("----------------------------------------------");
+
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Не верный формат даты!");
+            getPercentSuccessHabitsByIdPerson(idPerson);
+        }
+    }
+
+    //отчет пользователя по прогрессу выполнения
+    public void reportHabitByIdPerson(UUID idPerson) throws ModelNotFound {
+        List<HabitResponse> list = personService.getHabitsByIdPerson(idPerson);
+
+        if(!list.isEmpty()){
+            long idHabit = choiceName(list.size());
+            personService.reportHabitByIdPerson(idPerson, idHabit);
+        } else {
+            getErrorHabits();
+            reportHabitByIdPerson(idPerson);
+        }
+    }
+
+
+    public static void getErrorHabits() {
         System.out.println("У вас еще не привычек!");
+        System.out.println("----------------------------------------------");
+
     }
 
-    public static void getErrorHabit(){
+    public static void getErrorHabit() {
         System.out.println("Такая привычка не найдена!");
+        System.out.println("----------------------------------------------");
+
     }
 
-    private Repeat getRepeat(){
+    private long choiceName(long size) {
+        System.out.println("Введите число от 1 до " + size + ":");
+        return Long.parseLong(scannerString());
+    }
+
+    private Repeat getRepeat() {
         while (true) {
             System.out.println("Как часто ее нужно выполнять ежедневно(d) или еженедельно(w)?[d/w]");
             String answer = scannerString();
@@ -227,25 +324,57 @@ public class HabitController {
         }
     }
 
-    public Status getStatus(){
+    public Status getStatus() {
         while (true) {
-            System.out.println("Выберите статус привычки " +
-                    "в списке(t), в процессе(p) или готово(d)?[t/p/d] ");
+            System.out.println("Выберите статус привычки:");
+            System.out.println("1 - создана");
+            System.out.println("2 - в процессе");
+            System.out.println("3 - готово");
+
             String status = scannerString();
 
-            switch (status){
-                case "t" -> {
+            switch (status) {
+                case "1" -> {
                     return Status.CREATED;
                 }
-                case "p" -> {
+                case "2" -> {
                     return Status.IN_PROGRESS;
                 }
-                case "d" -> {
+                case "3" -> {
                     return Status.DONE;
                 }
                 default -> wrongInput();
             }
         }
+    }
+
+    private Statistics getStatistics() {
+        while (true) {
+            System.out.println("Выберите за какой период вы хотите получить привычку:");
+            System.out.println("1 - день");
+            System.out.println("2 - неделя");
+            System.out.println("3 - месяц");
+
+            String answer = scannerString();
+
+            switch (answer) {
+                case "1" -> {
+                    return Statistics.DAY;
+                }
+                case "2" -> {
+                    return Statistics.WEEK;
+                }
+                case "3" -> {
+                    return Statistics.MONTH;
+                }
+                default -> wrongInput();
+            }
+        }
+    }
+
+    private LocalDate enterDate() {
+        System.out.println("формат ввода yyyy-MM-dd");
+        return LocalDate.parse(scannerString());
     }
 
 }
