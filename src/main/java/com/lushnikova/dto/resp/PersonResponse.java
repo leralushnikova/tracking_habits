@@ -3,9 +3,10 @@ package com.lushnikova.dto.resp;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PersonResponse {
-    private Long id;
+    private UUID id;
     private String name;
     private String email;
     private String password;
@@ -14,7 +15,7 @@ public class PersonResponse {
     public PersonResponse() {
     }
 
-    public PersonResponse(Long id, String name, String email, String password, List<HabitResponse> habits) {
+    public PersonResponse(UUID id, String name, String email, String password, List<HabitResponse> habits) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -22,11 +23,11 @@ public class PersonResponse {
         this.habits = habits;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

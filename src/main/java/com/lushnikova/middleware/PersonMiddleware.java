@@ -1,30 +1,26 @@
 package com.lushnikova.middleware;
 
 import com.lushnikova.consts.RegexConsts;
-import com.lushnikova.model.Person;
-import com.lushnikova.repository.PersonRepository;
+import com.lushnikova.dto.resp.PersonResponse;
 
-import java.util.List;
 
 public class PersonMiddleware {
-    private final PersonRepository repository;
 
-    public PersonMiddleware(PersonRepository repository) {
-        this.repository = repository;
+    public PersonMiddleware() {
+
     }
 
     //проверка почты
-    public boolean checkEmail(String email) {
-        List<Person> persons = repository.findAll();
-        for (Person p : persons) {
-            if(p.getEmail().equals(email)) {
-                return false;
-            }
-        }
-        return true;
+    public boolean checkEmail(String email, PersonResponse person) {
+        return person.getEmail().equals(email);
     }
 
-    //проверка пароля
+    //проверка почты
+    public boolean checkPassword(String password, PersonResponse person) {
+        return person.getPassword().equals(password);
+    }
+
+    //проверка пароля при создании пользователя
     public boolean checkPassword(String password) {
         return password.matches(RegexConsts.REGEX_PASSWORD);
     }

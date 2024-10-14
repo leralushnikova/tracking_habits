@@ -4,63 +4,81 @@ import com.lushnikova.controller.HabitController;
 import com.lushnikova.controller.PersonController;
 import com.lushnikova.dto.resp.PersonResponse;
 import com.lushnikova.exception.ModelNotFound;
-import com.lushnikova.mapper.HabitMapper;
-import com.lushnikova.mapper.PersonMapper;
+import com.lushnikova.mapper_mapstruct.PersonMapper;
+import com.lushnikova.middleware.DateMiddleware;
 import com.lushnikova.middleware.PersonMiddleware;
-import com.lushnikova.repository.HabitRepository;
 import com.lushnikova.repository.PersonRepository;
-import com.lushnikova.service.HabitService;
 import com.lushnikova.service.PersonService;
-import com.lushnikova.service.impl.HabitServiceImpl;
 import com.lushnikova.service.impl.PersonServiceImpl;
 
-import static com.lushnikova.controller.PersonController.*;
+import java.text.ParseException;
+import java.util.UUID;
+
+import static com.lushnikova.controller.PersonController.scannerString;
+import static com.lushnikova.controller.PersonController.wrongInput;
+
 
 public class Main {
 
-    static final PersonRepository personRepository = new PersonRepository();
-    static final HabitRepository habitRepository = new HabitRepository();
-    static final HabitMapper habitMapper = new HabitMapper();
-    static final PersonMapper personMapper = new PersonMapper(personRepository, habitMapper);
-    static final HabitService habitService = new HabitServiceImpl(habitRepository, habitMapper, personRepository);
-    static final PersonService personService = new PersonServiceImpl(personRepository, habitRepository, personMapper);
-    static final PersonMiddleware personMiddleware = new PersonMiddleware(personRepository);
-    static final PersonController personController = new PersonController(personRepository, personMapper, personService, personMiddleware);
-    static final HabitController habitController = new HabitController(personRepository, habitService, personService, personController);
 
-    public static void main(String[] args) throws ModelNotFound {
+    private static final PersonMapper personMapper = PersonMapper.INSTANCE;
+    private static final DateMiddleware dateMiddleware = new DateMiddleware();
+    private static final PersonMiddleware personMiddleware = new PersonMiddleware();
+    private static final PersonRepository personRepository = PersonRepository.getInstance();
+    private static final PersonService personService = new PersonServiceImpl(personMapper, personRepository);
+    private static final PersonController personController = new PersonController(personService, personMiddleware);
+    private static final HabitController habitController = new HabitController(personService, dateMiddleware);
+
+    public static void main(String[] args) throws ModelNotFound, ParseException {
 
         PersonResponse personResponse;
         while (true){
-            System.out.println("Вы хотите войти(in) или зарегистрироваться(up)?[in/up]");
+            System.out.println("Вы хотите войти(in), зарегистрироваться(up) или выйти(exit)?[in/up/exit]");
             String input = scannerString();
 
-            if (input.equals("in")) {
-                personResponse = personController.getPersonAfterAuthentication();
-                break;
+            switch (input) {
+                case ("in") -> {
+                    personResponse = personController.getPersonAfterAuthentication();
+                    crudHabit(personResponse.getId());
+                }
+                case ("up") -> {
+                    personResponse = personController.createPerson();
+                    crudHabit(personResponse.getId());
+                }
+                case ("exit") -> {return;}
+
+                default -> wrongInput();
             }
-            if (input.equals("up")) {
-                personResponse = personController.createPerson();
-                break;
-            }
-            wrongInput();
         }
 
-        while (true) {
-            System.out.println("Вы хотите редактировать профиль?[y/n]");
-            String answer = scannerString();
-
-            if (answer.equals("y")) {
-                personResponse = personController.editPerson(personResponse.getId());
-            }
-            if (answer.equals("n")) {
-                habitController.crudHabits(personResponse.getId());
-                break;
-            }
-            if(!answer.equals("y")) wrongInput();
-        }
-
-        System.out.println(personService.findById(personResponse.getId()));
+//        System.out.println(personService.findById(personResponse.getId()));
     }
+
+    public static void crudHabit(UUID idPerson) throws ModelNotFound, ParseException {
+        while (true) {
+            PersonResponse personResponse = personController.getPerson(idPerson);
+            if (personResponse != null) {
+                System.out.println();
+                System.out.println("Ваши данные: ");
+                System.out.println("Имя =  " + personResponse.getName());
+                System.out.println("Почта =  " + personResponse.getEmail());
+                System.out.println("Пароль =  " + personResponse.getPassword());
+                System.out.println();
+                System.out.println("Вы хотите редактировать профиль?[y/n]");
+                String answer = scannerString();
+
+                if (answer.equals("y")) {
+                    personController.editPerson(personResponse.getId());
+                }
+                if (answer.equals("n")) {
+                    habitController.crudHabits(personResponse.getId());
+                    habitController.addHabitDoneDates(idPerson);
+                }
+                if(!answer.equals("y") && !answer.equals("n")) wrongInput();
+            }
+            if(personResponse == null) return;
+        }
+    }
+
 
 }

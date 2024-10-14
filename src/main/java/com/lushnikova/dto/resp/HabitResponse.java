@@ -3,8 +3,12 @@ package com.lushnikova.dto.resp;
 import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Status;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class HabitResponse {
     private Long id;
@@ -12,20 +16,10 @@ public class HabitResponse {
     private String description;
     private Repeat repeat;
     private Status status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    public HabitResponse() {
-    }
-
-    public HabitResponse(Long id, String title, String description, Repeat repeat, Status status, LocalDateTime createdAt) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.repeat = repeat;
-        this.status = status;
-        this.createdAt = createdAt;
-    }
+    private LocalDate createdAt;
+    private int streak;
+    private LocalTime pushTime;
+    private final Set<LocalDate> doneDates = new TreeSet<>();
 
     public Long getId() {
         return id;
@@ -67,32 +61,44 @@ public class HabitResponse {
         this.status = status;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public int getStreak() {
+        return streak;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setStreak(int streak) {
+        this.streak = streak;
+    }
+
+    public LocalTime getPushTime() {
+        return pushTime;
+    }
+
+    public void setPushTime(LocalTime pushTime) {
+        this.pushTime = pushTime;
+    }
+
+    public Set<LocalDate> getDoneDates() {
+        return doneDates;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof HabitResponse that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(description, that.description) && repeat == that.repeat && status == that.status && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+        if (!(o instanceof HabitResponse response)) return false;
+        return streak == response.streak && Objects.equals(id, response.id) && Objects.equals(title, response.title) && Objects.equals(description, response.description) && repeat == response.repeat && status == response.status && Objects.equals(createdAt, response.createdAt) && Objects.equals(pushTime, response.pushTime) && Objects.equals(doneDates, response.doneDates);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, repeat, status, createdAt, updatedAt);
+        return Objects.hash(id, title, description, repeat, status, createdAt, streak, pushTime, doneDates);
     }
 
     @Override
@@ -104,7 +110,9 @@ public class HabitResponse {
                 ", repeat=" + repeat +
                 ", status=" + status +
                 ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                ", streak=" + streak +
+                ", pushTime=" + pushTime +
+                ", doneDates=" + doneDates +
                 '}';
     }
 }

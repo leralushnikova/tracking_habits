@@ -1,32 +1,38 @@
 package com.lushnikova.model;
 
+import com.lushnikova.model.enums.Repeat;
+import com.lushnikova.model.enums.Statistics;
+import com.lushnikova.model.enums.Status;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Person {
-    private Long id;
+    private final UUID id;
     private String name;
     private String email;
     private String password;
-    private List<Habit> habits;
+    private final CopyOnWriteArrayList<Habit> habits = new CopyOnWriteArrayList<>();
 
+    {
+        id = UUID.randomUUID();
+    }
     public Person() {
     }
 
-    public Person(Long id, String name, String email, String password, List<Habit> habits) {
-        this.id = id;
+    public Person(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.habits = habits;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -53,29 +59,165 @@ public class Person {
         this.password = password;
     }
 
+    public void addHabit(Habit habit) {
+        habits.add(habit);
+    }
+
     public List<Habit> getHabits() {
         return habits;
     }
 
-    public void setHabits(List<Habit> habits) {
-        this.habits = habits;
+    public List<Habit> getHabitsByStatus(Status status) {
+        return habits.stream().filter(el -> el.getStatus().equals(status)).toList();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Person person)) return false;
-        return Objects.equals(id, person.id) && Objects.equals(name, person.name) && Objects.equals(email, person.email) && Objects.equals(password, person.password) && Objects.equals(habits, person.habits);
+    public List<Habit> getHabitsByLocalDate(LocalDate localDate) {
+        return habits.stream().filter(el -> el.getCreatedAt().toString().equals(localDate.toString())).toList();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, email, password, habits);
+    public void updateTitle(Long idHabit, String newTitle){
+        for (Habit habit : habits) {
+            if (habit.getId().equals(idHabit)) {
+                habit.setTitle(newTitle);
+            }
+        }
     }
+
+    public void updateDescription(Long idHabit, String newDescription){
+        for (Habit habit : habits) {
+            if (habit.getId().equals(idHabit)) {
+                habit.setDescription(newDescription);
+            }
+        }
+    }
+
+    public void updateRepeat(Long idHabit, Repeat newRepeat){
+        for (Habit habit : habits) {
+            if (habit.getId().equals(idHabit)) {
+                habit.setRepeat(newRepeat);
+            }
+        }
+    }
+
+    public void updateStatus(Long idHabit, Status newStatus){
+        for (Habit habit : habits) {
+            if (habit.getId().equals(idHabit)) {
+                habit.setStatus(newStatus);
+            }
+        }
+    }
+
+    public void deleteHabit(Long idHabit){
+        habits.removeIf(habit -> habit.getId().equals(idHabit));
+        for (int i = 0; i < habits.size(); i++) {
+            habits.get(i).setId((long) (i + 1));
+        }
+    }
+
+    public void setDoneDates(Long idHabit){
+        for (Habit habit : habits) {
+            if(habit.getId().equals(idHabit)){
+                habit.setStatus(Status.DONE);
+                break;
+            }
+        }
+    }
+
+    public List<String> getHabitFulfillmentStatistics(Statistics statistics, Long idHabit, LocalDate dateFrom) {
+        int days = 0;
+        switch (statistics) {
+            case DAY -> days = 1;
+            case WEEK -> days = 7;
+            case MONTH -> days = 31; //потом учесть февраль
+        }
+
+        List<String> list = new ArrayList<>();
+        LocalDate dateTo = dateFrom.plusDays(days);
+
+        for (Habit habit : habits) {
+            if (habit.getId().equals(idHabit)) {
+                while (!dateTo.isEqual(dateFrom)) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(dateFrom).append("\t");
+
+                    Set<LocalDate> listDates = habit.getDoneDates();
+                    boolean flag = false;
+                    for (LocalDate date : listDates) {
+                        if (dateFrom.equals(date)) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if(flag) sb.append(" + ");
+                    else sb.append(" - ");
+                    list.add(sb.toString());
+                    dateFrom = dateFrom.plusDays(1);
+                }
+            }
+        }
+        return list;
+    }
+
+
+    public int percentSuccessHabits(LocalDate dateFrom, LocalDate dateTo){
+        long resultDays = ChronoUnit.DAYS.between(dateFrom, dateTo);
+        int allHabits = habits.size();
+        int sumHabit = 0;
+        while (!dateTo.isEqual(dateFrom)) {
+
+            for (Habit habit : habits) {
+                Set<LocalDate> listDates = habit.getDoneDates();
+                for (LocalDate date : listDates) {
+                    if(date.equals(dateFrom)) {
+                        sumHabit++;
+                        break;
+                    }
+                }
+            }
+
+            dateFrom = dateFrom.plusDays(1);
+        }
+
+        return (int) (Math.round((double) (sumHabit * 100)/ (double) (allHabits * resultDays)));
+    }
+
+    public void reportHabit(Long idHabit) {
+        for(Habit habit : habits){
+            if(habit.getId().equals(idHabit)){
+                System.out.println("Название: " + habit.getTitle());
+                System.out.println("Описание: " + habit.getDescription());
+                System.out.println("Статус: " + habit.getStatus());
+                System.out.println("Частота выполнения: " + habit.getRepeat());
+                System.out.println("Текущая серия выполнений: " + habit.getStreak());
+                System.out.println("----------------------------------------------");
+                break;
+            }
+        }
+    }
+
+   /* public void switchOnPushNotification(Long idHabit, LocalTime pushTime) {
+        for (Habit habit : habits) {
+            if (habit.getId().equals(idHabit)) {
+                habit.setPushTime(pushTime);
+                break;
+            }
+        }
+    }
+
+    public void switchOffPushNotification(Long idHabit) {
+        for (Habit habit : habits) {
+            if (habit.getId().equals(idHabit)) {
+                habit.setPushTime(null);
+                break;
+            }
+        }
+    }*/
+
+    //переопределить equals и hashcode
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +

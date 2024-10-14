@@ -3,36 +3,40 @@ package com.lushnikova.model;
 import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Status;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Set;
+import java.util.TreeSet;
 
+//удалить set для createdAt
 public class Habit {
     private Long id;
     private String title;
     private String description;
     private Repeat repeat;
     private Status status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDate createdAt;
+    private int streak;
+    private LocalTime pushTime;
+    private final Set<LocalDate> doneDates = new TreeSet<>();
 
     public Habit() {
     }
 
-    public Habit(Long id, String title, String description, Repeat repeat, Status status, LocalDateTime createdAt) {
+    public Habit(Long id, String title, String description, Repeat repeat) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.repeat = repeat;
-        this.status = status;
-        this.createdAt = createdAt;
-    }
-
-    public Long getId() {
-        return id;
+        this.status = Status.CREATED;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -67,33 +71,51 @@ public class Habit {
         this.status = status;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDate getCreatedAt() {
+        return createdAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public LocalTime getPushTime() {
+        return pushTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Habit habit)) return false;
-        return Objects.equals(id, habit.id) && Objects.equals(title, habit.title) && Objects.equals(description, habit.description) && repeat == habit.repeat && status == habit.status && Objects.equals(createdAt, habit.createdAt) && Objects.equals(updatedAt, habit.updatedAt);
+    public void setPushTime(LocalTime pushTime) {
+        this.pushTime = pushTime;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, description, repeat, status, createdAt, updatedAt);
+    public void setDoneDates() {
+        LocalDate now = LocalDate.now();
+        doneDates.add(now);
+
+        if(doneDates.contains(now.minusDays(1))){
+            streak ++;
+        } else streak = 1;
     }
+
+    //нужно будет удалить
+    public void setDoneDates(LocalDate date) {
+        doneDates.add(date);
+
+        if(doneDates.contains(date.minusDays(1))){
+            streak ++;
+        } else streak = 1;
+    }
+
+    public int getStreak() {
+        return streak;
+    }
+
+    public Set<LocalDate> getDoneDates() {
+        return doneDates;
+    }
+
+
+    //переопределить equals и hashcode
+
 
     @Override
     public String toString() {
@@ -104,7 +126,8 @@ public class Habit {
                 ", repeat=" + repeat +
                 ", status=" + status +
                 ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                ", streak=" + streak +
+                ", doneDates=" + doneDates +
                 '}';
     }
 }
