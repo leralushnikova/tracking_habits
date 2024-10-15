@@ -10,6 +10,7 @@ import com.lushnikova.homework_1.model.enums.Statistics;
 import com.lushnikova.homework_1.model.enums.Status;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,4 +36,6 @@ public interface UserService {
     void reportHabitByIdPerson(UUID idPerson, Long idHabit);
     List<UserResponse> findAll();
     void setIsActiveByIdPerson(UUID idPerson, boolean isActive) throws ModelNotFound;
+    void switchOnPushNotificationByIdPerson(UUID idPerson, Long idHabit, LocalTime pushTime) throws ModelNotFound;
+    void switchOffPushNotificationByIdPerson(UUID idPerson, Long idHabit) throws ModelNotFound;
 }

@@ -5,6 +5,7 @@ import com.lushnikova.homework_1.model.enums.Statistics;
 import com.lushnikova.homework_1.model.enums.Status;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -82,36 +83,24 @@ public class User {
         return habits.stream().filter(el -> el.getCreatedAt().toString().equals(localDate.toString())).toList();
     }
 
+    private Habit findById(Long id){
+        return habits.stream().filter(habit -> habit.getId().equals(id)).findFirst().orElse(null);
+    }
+
     public void updateTitle(Long idHabit, String newTitle){
-        for (Habit habit : habits) {
-            if (habit.getId().equals(idHabit)) {
-                habit.setTitle(newTitle);
-            }
-        }
+        findById(idHabit).setTitle(newTitle);
     }
 
     public void updateDescription(Long idHabit, String newDescription){
-        for (Habit habit : habits) {
-            if (habit.getId().equals(idHabit)) {
-                habit.setDescription(newDescription);
-            }
-        }
+        findById(idHabit).setDescription(newDescription);
     }
 
     public void updateRepeat(Long idHabit, Repeat newRepeat){
-        for (Habit habit : habits) {
-            if (habit.getId().equals(idHabit)) {
-                habit.setRepeat(newRepeat);
-            }
-        }
+        findById(idHabit).setRepeat(newRepeat);
     }
 
     public void updateStatus(Long idHabit, Status newStatus){
-        for (Habit habit : habits) {
-            if (habit.getId().equals(idHabit)) {
-                habit.setStatus(newStatus);
-            }
-        }
+        findById(idHabit).setStatus(newStatus);
     }
 
     public void deleteHabit(Long idHabit){
@@ -186,31 +175,27 @@ public class User {
                 System.out.println("Описание: " + habit.getDescription());
                 System.out.println("Статус: " + habit.getStatus());
                 System.out.println("Частота выполнения: " + habit.getRepeat());
+
+                StringBuilder stringBuilder = new StringBuilder("Уведомления : ");
+                if(habit.getPushTime() == null) stringBuilder.append("выкл");
+                else stringBuilder.append("вкл").append(" в ").append(habit.getPushTime());
+                System.out.println(stringBuilder);
+
                 System.out.println("Текущая серия выполнений: " + habit.getStreak());
-                System.out.println("Даты выполнения привычки: " +  habit.getDoneDates());
+                System.out.println("Даты выполнения привычки: " + habit.getDoneDates());
                 System.out.println("----------------------------------------------");
                 break;
             }
         }
     }
 
-   /* public void switchOnPushNotification(Long idHabit, LocalTime pushTime) {
-        for (Habit habit : habits) {
-            if (habit.getId().equals(idHabit)) {
-                habit.setPushTime(pushTime);
-                break;
-            }
-        }
+    public void switchOnPushNotification(Long idHabit, LocalTime pushTime) {
+        findById(idHabit).setPushTime(pushTime);
     }
 
     public void switchOffPushNotification(Long idHabit) {
-        for (Habit habit : habits) {
-            if (habit.getId().equals(idHabit)) {
-                habit.setPushTime(null);
-                break;
-            }
-        }
-    }*/
+        findById(idHabit).setPushTime(null);
+    }
 
     @Override
     public boolean equals(Object o) {

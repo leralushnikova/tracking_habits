@@ -5,6 +5,7 @@ import com.lushnikova.homework_1.model.enums.Status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -21,6 +22,7 @@ public class Habit {
     private final Set<LocalDate> doneDates = new TreeSet<>();
 
     public Habit() {
+        this.status = Status.CREATED;
     }
 
     public Habit(Long id, String title, String description, Repeat repeat) {
@@ -114,8 +116,17 @@ public class Habit {
     }
 
 
-    //переопределить equals и hashcode
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Habit habit)) return false;
+        return streak == habit.streak && Objects.equals(id, habit.id) && Objects.equals(title, habit.title) && Objects.equals(description, habit.description) && repeat == habit.repeat && status == habit.status && Objects.equals(createdAt, habit.createdAt) && Objects.equals(pushTime, habit.pushTime) && Objects.equals(doneDates, habit.doneDates);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, repeat, status, createdAt, streak, pushTime, doneDates);
+    }
 
     @Override
     public String toString() {
@@ -127,6 +138,7 @@ public class Habit {
                 ", status=" + status +
                 ", createdAt=" + createdAt +
                 ", streak=" + streak +
+                ", pushTime=" + pushTime +
                 ", doneDates=" + doneDates +
                 '}';
     }

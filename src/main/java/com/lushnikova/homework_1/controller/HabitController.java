@@ -10,9 +10,13 @@ import com.lushnikova.homework_1.model.enums.Status;
 import com.lushnikova.homework_1.service.UserService;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
+
+import static com.lushnikova.homework_1.controller.UserController.scannerString;
+import static com.lushnikova.homework_1.controller.UserController.wrongInput;
 
 public class HabitController {
 
@@ -33,14 +37,16 @@ public class HabitController {
             System.out.println("2 - удалить");
             System.out.println("3 - редактировать привычку");
             System.out.println("4 - отметить выполненную привычку");
+            System.out.println("5 - включить/выключить уведомление привычки");
             System.out.println("exit - выход из режима управления привычек");
-            String answer = UserController.scannerString();
+            String answer = scannerString();
 
             switch (answer) {
                 case "1" -> create(idPerson);
                 case "2" -> delete(idPerson, list);
                 case "3" -> update(idPerson, list);
                 case "4" -> addHabitDoneDates(idPerson);
+                case "5" -> switchOnOrOffHabitsNotification(idPerson);
                 case "exit" -> {
                     return;
                 }
@@ -54,10 +60,10 @@ public class HabitController {
         HabitRequest habitRequest = new HabitRequest();
 
         System.out.println("Назовите привычку: ");
-        habitRequest.setTitle(UserController.scannerString());
+        habitRequest.setTitle(scannerString());
 
         System.out.println("Опишите привычку: ");
-        habitRequest.setDescription(UserController.scannerString());
+        habitRequest.setDescription(scannerString());
 
         habitRequest.setRepeat(getRepeat());
 
@@ -70,7 +76,7 @@ public class HabitController {
             System.out.println("Какую привычку вы хотите удалить?");
             System.out.println("Введите число от 1 до " + list.size() + ":");
 
-            long idHabit = Long.parseLong(UserController.scannerString());
+            long idHabit = Long.parseLong(scannerString());
 
             if (idHabit > 0 && idHabit <= list.size()) {
                 userService.deleteHabitByIdPerson(idPerson, idHabit);
@@ -88,7 +94,7 @@ public class HabitController {
         if (!list.isEmpty()) {
             System.out.println("Какую привычку вы хотите редактировать?");
 
-            long idHabit = choiceName(list.size());
+            long idHabit = choiceNumber(list.size());
 
             if (idHabit > 0 && idHabit <= list.size()) {
                 while (true) {
@@ -100,18 +106,18 @@ public class HabitController {
                     System.out.println("exit - выход из редактирования привычки");
 
 
-                    String answer = UserController.scannerString();
+                    String answer = scannerString();
 
                     switch (answer) {
                         case "1" -> {
                             System.out.println("Введите новое название: ");
-                            String title = UserController.scannerString();
+                            String title = scannerString();
 
                             userService.updateTitleByIdHabitByIdPerson(idPerson, idHabit, title);
                         }
                         case "2" -> {
                             System.out.println("Введите новое описание: ");
-                            String description = UserController.scannerString();
+                            String description = scannerString();
 
                             userService.updateDescriptionByIdHabitByIdPerson(idPerson, idHabit, description);
                         }
@@ -141,7 +147,7 @@ public class HabitController {
                 System.out.println("3 - отфильтрованный по статусу");
                 System.out.println("exit - выход из списка привычек");
 
-                String answer2 = UserController.scannerString();
+                String answer2 = scannerString();
 
                 switch (answer2) {
                     case "1" -> {
@@ -177,7 +183,7 @@ public class HabitController {
 
         if (!list.isEmpty()) {
 
-            long idHabit = Long.parseLong(UserController.scannerString());
+            long idHabit = Long.parseLong(scannerString());
 
             if (idHabit > 0 && idHabit <= list.size()) {
                 userService.setDoneDatesHabitByIdPerson(idPerson, idHabit);
@@ -190,7 +196,7 @@ public class HabitController {
 
 
     // список привычек по дате создания
-    public List<HabitResponse> getListHabitByDateCreate(UUID idPerson) throws ModelNotFound {
+    private List<HabitResponse> getListHabitByDateCreate(UUID idPerson) throws ModelNotFound {
         while (true) {
             System.out.println("Введите время создания привычки: ");
 
@@ -208,7 +214,7 @@ public class HabitController {
     }
 
     //список привычек по статусу
-    public List<HabitResponse> getListHabitByStatus(UUID idPerson) throws ModelNotFound {
+    private List<HabitResponse> getListHabitByStatus(UUID idPerson) throws ModelNotFound {
         Status status = getStatus();
         return userService.getHabitsByStatusByIdPerson(idPerson, status);
     }
@@ -222,7 +228,7 @@ public class HabitController {
 
             System.out.println("Выберите привычку.");
 
-            long idHabit = choiceName(list.size());
+            long idHabit = choiceNumber(list.size());
 
             if (idHabit > 0 && idHabit <= list.size()) {
                 while (true) {
@@ -273,12 +279,45 @@ public class HabitController {
         }
     }
 
+
+    //включение или выключение уведомления привычки
+    private void switchOnOrOffHabitsNotification(UUID idPerson) throws ModelNotFound {
+        List<HabitResponse> list = userService.getHabitsByIdPerson(idPerson);
+        System.out.println("Выберите привычку: ");
+
+        long idHabit = choiceNumber(list.size());
+
+        System.out.println("Вы хотите включить или выключить привычку? [on/off]");
+
+        String answer = scannerString();
+
+        switch (answer) {
+            case "on" -> {
+                try {
+                    System.out.println("Введите время в формате HH:mm");
+
+                    LocalTime localTime = LocalTime.parse(scannerString());
+
+                    userService.switchOnPushNotificationByIdPerson(idPerson, idHabit, localTime);
+                } catch (DateTimeParseException e) {
+                    System.out.println("Не верный формат даты!");
+                }
+
+            }
+            case "off" -> userService.switchOffPushNotificationByIdPerson(idPerson, idHabit);
+            default -> {
+                wrongInput();
+                switchOnOrOffHabitsNotification(idPerson);
+            }
+        }
+    }
+
     //отчет пользователя по прогрессу выполнения
     public void reportHabitByIdPerson(UUID idPerson) throws ModelNotFound {
         List<HabitResponse> list = userService.getHabitsByIdPerson(idPerson);
 
         if(!list.isEmpty()){
-            long idHabit = choiceName(list.size());
+            long idHabit = choiceNumber(list.size());
             userService.reportHabitByIdPerson(idPerson, idHabit);
         } else {
             getErrorHabits();
@@ -299,15 +338,15 @@ public class HabitController {
 
     }
 
-    private long choiceName(long size) {
+    private long choiceNumber(long size) {
         System.out.println("Введите число от 1 до " + size + ":");
-        return Long.parseLong(UserController.scannerString());
+        return Long.parseLong(scannerString());
     }
 
     private Repeat getRepeat() {
         while (true) {
             System.out.println("Как часто ее нужно выполнять ежедневно(d) или еженедельно(w)?[d/w]");
-            String answer = UserController.scannerString();
+            String answer = scannerString();
 
             switch (answer) {
                 case "d" -> {
@@ -321,14 +360,14 @@ public class HabitController {
         }
     }
 
-    public Status getStatus() {
+    private Status getStatus() {
         while (true) {
             System.out.println("Выберите статус привычки:");
             System.out.println("1 - создана");
             System.out.println("2 - в процессе");
             System.out.println("3 - готово");
 
-            String status = UserController.scannerString();
+            String status = scannerString();
 
             switch (status) {
                 case "1" -> {
@@ -352,7 +391,7 @@ public class HabitController {
             System.out.println("2 - неделя");
             System.out.println("3 - месяц");
 
-            String answer = UserController.scannerString();
+            String answer = scannerString();
 
             switch (answer) {
                 case "1" -> {
@@ -371,7 +410,7 @@ public class HabitController {
 
     private LocalDate enterDate() {
         System.out.println("формат ввода yyyy-MM-dd");
-        return LocalDate.parse(UserController.scannerString());
+        return LocalDate.parse(scannerString());
     }
 
 }

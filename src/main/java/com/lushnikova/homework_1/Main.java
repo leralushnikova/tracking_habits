@@ -10,6 +10,7 @@ import com.lushnikova.homework_1.middleware.AdminMiddleware;
 import com.lushnikova.homework_1.middleware.DateMiddleware;
 import com.lushnikova.homework_1.middleware.Middleware;
 import com.lushnikova.homework_1.middleware.UserMiddleware;
+import com.lushnikova.homework_1.reminder.ReminderService;
 import com.lushnikova.homework_1.repository.AdminRepository;
 import com.lushnikova.homework_1.repository.UserRepository;
 import com.lushnikova.homework_1.service.AdminService;
@@ -37,6 +38,7 @@ public class Main {
     private static final HabitController habitController = new HabitController(userService, dateMiddleware);
     private static final AdminService adminService = new AdminServiceImpl(userService, adminRepository);
     private static final AdminController adminController = new AdminController(adminService, adminMiddleware);
+    static final ReminderService reminderService = new ReminderService(userRepository);
 
     public static void main(String[] args) throws ModelNotFound {
         adminOrUser();
@@ -71,10 +73,12 @@ public class Main {
             switch (input) {
                 case ("in") -> {
                     userResponse = userController.getUserAfterAuthentication();
+                    reminderService.start(userResponse.getId());
                     modesForUsers(userResponse.getId());
                 }
                 case ("up") -> {
                     userResponse = userController.createPerson();
+                    reminderService.start(userResponse.getId());
                     modesForUsers(userResponse.getId());
                 }
                 case ("exit") -> {
@@ -95,6 +99,7 @@ public class Main {
     public static void modesForUsers(UUID idPerson) throws ModelNotFound {
         while (true) {
             UserResponse userResponse = userController.getPerson(idPerson);
+
             if (userResponse != null) {
                 System.out.println("Выберите режим: ");
                 System.out.println("1 - Редактировать данные пользователя");
@@ -124,6 +129,7 @@ public class Main {
                     case "7" -> habitController.reportHabitByIdPerson(idPerson);
 
                     case "exit" -> {
+                        reminderService.stop();
                         return;
                     }
                     default -> wrongInput();

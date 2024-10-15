@@ -4,6 +4,7 @@ import com.lushnikova.homework_1.dto.req.HabitRequest;
 import com.lushnikova.homework_1.dto.req.UserRequest;
 import com.lushnikova.homework_1.dto.resp.HabitResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
+import com.lushnikova.homework_1.exception.ModelNotFound;
 import com.lushnikova.homework_1.mapper_mapstruct.HabitMapper;
 import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
 import com.lushnikova.homework_1.model.Habit;
@@ -15,6 +16,7 @@ import com.lushnikova.homework_1.service.UserService;
 import com.lushnikova.homework_1.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -132,6 +134,17 @@ public class UserServiceImpl implements UserService {
     public void setIsActiveByIdPerson(UUID idPerson, boolean isActive) {
         userRepository.setIsActiveByIdPerson(idPerson, isActive);
     }
+
+    @Override
+    public void switchOnPushNotificationByIdPerson(UUID idPerson, Long idHabit, LocalTime pushTime) throws ModelNotFound {
+        userRepository.switchOnPushNotificationByIdPerson(idPerson, idHabit, pushTime);
+    }
+
+    @Override
+    public void switchOffPushNotificationByIdPerson(UUID idPerson, Long idHabit) throws ModelNotFound {
+        userRepository.switchOffPushNotificationByIdPerson(idPerson, idHabit);
+    }
+
 
     @Override
     public List<UserResponse> findAll() {

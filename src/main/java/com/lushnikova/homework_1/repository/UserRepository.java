@@ -7,6 +7,7 @@ import com.lushnikova.homework_1.model.enums.Statistics;
 import com.lushnikova.homework_1.model.enums.Status;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -183,12 +184,20 @@ public class UserRepository {
         findById(idPerson).reportHabit(idHabit);
     }
 
-    public void setDoneDatesHabitByIdPerson(UUID idPerson, Long idHabit) {
+    public synchronized void setDoneDatesHabitByIdPerson(UUID idPerson, Long idHabit) {
         findById(idPerson).getHabits().get(Math.toIntExact(idHabit) - 1).setDoneDates();
     }
 
-    public void setIsActiveByIdPerson(UUID idPerson, boolean isActive){
+    public synchronized void setIsActiveByIdPerson(UUID idPerson, boolean isActive){
         findById(idPerson).setActive(isActive);
+    }
+
+    public synchronized void switchOnPushNotificationByIdPerson(UUID idPerson, Long idHabit, LocalTime pushTime) {
+        findById(idPerson).switchOnPushNotification(idHabit, pushTime);
+    }
+
+    public synchronized void switchOffPushNotificationByIdPerson(UUID idPerson, Long idHabit){
+        findById(idPerson).switchOffPushNotification(idHabit);
     }
 
     public synchronized List<User> findAll() {

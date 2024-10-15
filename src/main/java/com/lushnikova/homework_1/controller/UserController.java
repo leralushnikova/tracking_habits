@@ -60,7 +60,7 @@ public class UserController {
             else {
                 if (userResponse.isActive()) {
                     if (idPersonFromCheckEmail != null) {
-                        return recursionByPassword(idPersonFromCheckEmail);
+                        return recursionForPassword(idPersonFromCheckEmail);
                     } else System.out.println("Данный пользователь не зарегистрирован");
                 } else System.out.println("Пользователь заблокирован!");
             }
@@ -126,7 +126,7 @@ public class UserController {
     }
 
     //рекрусивный метод ввода пароля
-    private UserResponse recursionByPassword(UUID idPersonFromCheckEmail){
+    private UserResponse recursionForPassword(UUID idPersonFromCheckEmail){
 
         String password = password();
 
@@ -144,7 +144,7 @@ public class UserController {
                     userService.updatePassword(idPersonFromCheckEmail, newPassword);
                     return userService.findById(idPersonFromCheckEmail);
                 }
-                case "n" -> recursionByPassword(idPersonFromCheckEmail);
+                case "n" -> recursionForPassword(idPersonFromCheckEmail);
                 default -> wrongInput();
             }
         }
