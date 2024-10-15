@@ -77,7 +77,7 @@ public class Main {
                     modesForUsers(userResponse.getId());
                 }
                 case ("up") -> {
-                    userResponse = userController.createPerson();
+                    userResponse = userController.createUser();
                     reminderService.start(userResponse.getId());
                     modesForUsers(userResponse.getId());
                 }
@@ -96,9 +96,9 @@ public class Main {
         adminController.modesForUsers();
     }
 
-    public static void modesForUsers(UUID idPerson) throws ModelNotFound {
+    public static void modesForUsers(UUID idUser) throws ModelNotFound {
         while (true) {
-            UserResponse userResponse = userController.getPerson(idPerson);
+            UserResponse userResponse = userController.getUser(idUser);
 
             if (userResponse != null) {
                 System.out.println("Выберите режим: ");
@@ -114,19 +114,19 @@ public class Main {
                 String answer = scannerString();
 
                 switch (answer) {
-                    case "1" -> userController.editPerson(idPerson);
+                    case "1" -> userController.editUser(idUser);
 
-                    case "2" -> userController.readPerson(idPerson);
+                    case "2" -> userController.readUser(idUser);
 
-                    case "3" -> habitController.crudHabits(idPerson);
+                    case "3" -> habitController.crudHabits(idUser);
 
-                    case "4" -> habitController.readHabits(idPerson);
+                    case "4" -> habitController.readHabits(idUser);
 
-                    case "5" -> habitController.getHabitFulfillmentStatisticsByIdPerson(idPerson);
+                    case "5" -> habitController.getHabitFulfillmentStatisticsByIdUser(idUser);
 
-                    case "6" -> habitController.getPercentSuccessHabitsByIdPerson(idPerson);
+                    case "6" -> habitController.getPercentSuccessHabitsByIdUser(idUser);
 
-                    case "7" -> habitController.reportHabitByIdPerson(idPerson);
+                    case "7" -> habitController.reportHabitByIdUser(idUser);
 
                     case "exit" -> {
                         reminderService.stop();

@@ -55,14 +55,13 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deletePerson(UUID idUser) {
+    public void deleteUser(UUID idUser) {
         userService.delete(idUser);
     }
 
     @Override
-    public void blockByIpPerson(UUID idUser, boolean isActive) throws ModelNotFound {
-        userService.setIsActiveByIdPerson(idUser, isActive);
+    public void blockByIdUser(UUID idUser, boolean isActive) throws ModelNotFound {
+        userService.setIsActiveByIdUser(idUser, isActive);
     }
-
 
 }

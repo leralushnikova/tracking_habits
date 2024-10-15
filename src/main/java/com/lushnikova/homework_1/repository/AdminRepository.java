@@ -42,7 +42,6 @@ public class AdminRepository {
         findById(id).setPassword(newPassword);
     }
 
-
     public synchronized List<Admin> findAll(){
         return new ArrayList<>(admins);
     }

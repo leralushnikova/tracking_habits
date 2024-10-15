@@ -21,7 +21,7 @@ public class UserController {
     }
 
     //регистрация нового пользователя
-    public UserResponse createPerson() {
+    public UserResponse createUser() {
         UserRequest userRequest = new UserRequest();
         System.out.println("Введите свое имя: ");
         userRequest.setName(scannerString());
@@ -53,14 +53,14 @@ public class UserController {
     public UserResponse getUserAfterAuthentication() {
         while (true){
             String email = email();
-            UUID idPersonFromCheckEmail = checkEmail(email);
+            UUID idUserFromCheckEmail = checkEmail(email);
 
-            UserResponse userResponse = userService.findById(idPersonFromCheckEmail);
+            UserResponse userResponse = userService.findById(idUserFromCheckEmail);
             if(userResponse == null) System.out.println("Данный пользователь не зарегистрирован");
             else {
                 if (userResponse.isActive()) {
-                    if (idPersonFromCheckEmail != null) {
-                        return recursionForPassword(idPersonFromCheckEmail);
+                    if (idUserFromCheckEmail != null) {
+                        return recursionForPassword(idUserFromCheckEmail);
                     } else System.out.println("Данный пользователь не зарегистрирован");
                 } else System.out.println("Пользователь заблокирован!");
             }
@@ -68,12 +68,12 @@ public class UserController {
     }
 
     // получение пользователя
-    public UserResponse getPerson(UUID id) {
+    public UserResponse getUser(UUID id) {
         return userService.findById(id);
     }
 
     // информация о пользователе
-    public void readPerson(UUID id) {
+    public void readUser(UUID id) {
         UserResponse userResponse = userService.findById(id);
         System.out.println("Ваши данные: ");
         System.out.println("Имя =  " + userResponse.getName());
@@ -85,7 +85,7 @@ public class UserController {
 
 
     //редактирование данных пользователя
-    public void editPerson(UUID idPerson) {
+    public void editUser(UUID idUser) {
         System.out.println("Вы хотите изменить:");
         System.out.println("1 - имя");
         System.out.println("2 - email");
@@ -98,24 +98,24 @@ public class UserController {
             case "1" -> {
                 System.out.println("Введите новое имя: ");
                 String name = scannerString();
-                userService.updateName(idPerson, name);
-                editPerson(idPerson);
+                userService.updateName(idUser, name);
+                editUser(idUser);
             }
             case "2" -> {
                 String email = email();
-                userService.updateEmail(idPerson, email);
-                editPerson(idPerson);
+                userService.updateEmail(idUser, email);
+                editUser(idUser);
             }
             case "3" -> {
                 String password = password();
                 if(userMiddleware.checkPassword(password)){
-                    userService.updatePassword(idPerson, password);
-                    editPerson(idPerson);
+                    userService.updatePassword(idUser, password);
+                    editUser(idUser);
                 } else wrongInput();
 
             }
             case "4" -> {
-                userService.delete(idPerson);
+                userService.delete(idUser);
                 System.out.println("Ваш профиль удален");
             }
 
@@ -126,13 +126,13 @@ public class UserController {
     }
 
     //рекрусивный метод ввода пароля
-    private UserResponse recursionForPassword(UUID idPersonFromCheckEmail){
+    private UserResponse recursionForPassword(UUID idUserFromCheckEmail){
 
         String password = password();
 
-        UserResponse personFromService = userService.findById(idPersonFromCheckEmail);
-        if (userMiddleware.checkPassword(password, personFromService)) {
-            return personFromService;
+        UserResponse UserFromService = userService.findById(idUserFromCheckEmail);
+        if (userMiddleware.checkPassword(password, UserFromService)) {
+            return UserFromService;
         } else {
             System.out.println("Пароль введен не верно! Хотите восстановить пароль(y) или попробовать еще попытку(n)? [y/n]");
             String answer = scannerString();
@@ -141,14 +141,14 @@ public class UserController {
                 case "y" -> {
                     System.out.println("Введите новый пароль: ");
                     String newPassword = scannerString();
-                    userService.updatePassword(idPersonFromCheckEmail, newPassword);
-                    return userService.findById(idPersonFromCheckEmail);
+                    userService.updatePassword(idUserFromCheckEmail, newPassword);
+                    return userService.findById(idUserFromCheckEmail);
                 }
-                case "n" -> recursionForPassword(idPersonFromCheckEmail);
+                case "n" -> recursionForPassword(idUserFromCheckEmail);
                 default -> wrongInput();
             }
         }
-        return personFromService;
+        return UserFromService;
     }
 
     public static String email() {

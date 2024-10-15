@@ -64,85 +64,85 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addHabitByIdPerson(UUID idPerson, HabitRequest habitRequest) {
+    public void addHabitByIdUser(UUID idUser, HabitRequest habitRequest) {
         Habit habit = habitMapper.mapToEntity(habitRequest);
-        long idHabit = getHabitsByIdPerson(idPerson).size() + 1;
+        long idHabit = getHabitsByIdUser(idUser).size() + 1;
         habit.setId(idHabit);
-        userRepository.addHabitByIdPerson(idPerson, habit);
+        userRepository.addHabitByIdUser(idUser, habit);
     }
 
     @Override
-    public List<HabitResponse> getHabitsByIdPerson(UUID idPerson) {
-        return userRepository.getHabitsByIdPerson(idPerson).stream().map(habitMapper::mapToResponse).toList();
+    public List<HabitResponse> getHabitsByIdUser(UUID idUser) {
+        return userRepository.getHabitsByIdUser(idUser).stream().map(habitMapper::mapToResponse).toList();
     }
 
     @Override
-    public List<HabitResponse> getHabitsByStatusByIdPerson(UUID idPerson, Status status) {
-        return userRepository.getHabitsByStatusByIdPerson(idPerson, status).stream().map(habitMapper::mapToResponse).toList();
+    public List<HabitResponse> getHabitsByStatusByIdUser(UUID idUser, Status status) {
+        return userRepository.getHabitsByStatusByIdUser(idUser, status).stream().map(habitMapper::mapToResponse).toList();
     }
 
     @Override
-    public List<HabitResponse> getHabitsByLocalDateByIdPerson(UUID idPerson, LocalDate localDate) {
-        return userRepository.getHabitsByLocalDateByIdPerson(idPerson, localDate).stream().map(habitMapper::mapToResponse).toList();
+    public List<HabitResponse> getHabitsByLocalDateByIdUser(UUID idUser, LocalDate localDate) {
+        return userRepository.getHabitsByLocalDateByIdUser(idUser, localDate).stream().map(habitMapper::mapToResponse).toList();
     }
 
     @Override
-    public void updateTitleByIdHabitByIdPerson(UUID idPerson, Long idHabit, String newTitle) {
-        userRepository.updateTitleByIdHabitByIdPerson(idPerson, idHabit, newTitle);
+    public void updateTitleByIdHabitByIdUser(UUID idUser, Long idHabit, String newTitle) {
+        userRepository.updateTitleByIdHabitByIdUser(idUser, idHabit, newTitle);
     }
 
     @Override
-    public void updateDescriptionByIdHabitByIdPerson(UUID idPerson, Long idHabit, String newDescription) {
-        userRepository.updateDescriptionByIdHabitByIdPerson(idPerson, idHabit, newDescription);
+    public void updateDescriptionByIdHabitByIdUser(UUID idUser, Long idHabit, String newDescription) {
+        userRepository.updateDescriptionByIdHabitByIdUser(idUser, idHabit, newDescription);
     }
 
     @Override
-    public void updateRepeatByIdHabitByIdPerson(UUID idPerson, Long idHabit, Repeat newRepeat) {
-        userRepository.updateRepeatByIdHabitByIdPerson(idPerson, idHabit, newRepeat);
+    public void updateRepeatByIdHabitByIdUser(UUID idUser, Long idHabit, Repeat newRepeat) {
+        userRepository.updateRepeatByIdHabitByIdUser(idUser, idHabit, newRepeat);
     }
 
     @Override
-    public void updateStatusByIdHabitByIdPerson(UUID idPerson, Long idHabit, Status newStatus) {
-        userRepository.updateStatusByIdHabitByIdPerson(idPerson, idHabit, newStatus);
+    public void updateStatusByIdHabitByIdUser(UUID idUser, Long idHabit, Status newStatus) {
+        userRepository.updateStatusByIdHabitByIdUser(idUser, idHabit, newStatus);
     }
 
     @Override
-    public void deleteHabitByIdPerson(UUID idPerson, Long idHabit) {
-        userRepository.deleteHabitByIdPerson(idPerson, idHabit);
+    public void deleteHabitByIdUser(UUID idUser, Long idHabit) {
+        userRepository.deleteHabitByIdUser(idUser, idHabit);
     }
 
     @Override
-    public List<String> getHabitFulfillmentStatisticsByIdPerson(UUID idPerson, Statistics statistics, Long idHabit, LocalDate dateFrom) {
-        return userRepository.getHabitFulfillmentStatisticsByIdPerson(idPerson, statistics, idHabit, dateFrom);
+    public List<String> getHabitFulfillmentStatisticsByIdUser(UUID idUser, Statistics statistics, Long idHabit, LocalDate dateFrom) {
+        return userRepository.getHabitFulfillmentStatisticsByIdUser(idUser, statistics, idHabit, dateFrom);
     }
 
     @Override
-    public int percentSuccessHabitsByIdPerson(UUID idPerson, LocalDate dateFrom, LocalDate dateTo) {
-        return userRepository.percentSuccessHabitsByIdPerson(idPerson, dateFrom, dateTo);
+    public int percentSuccessHabitsByIdUser(UUID idUser, LocalDate dateFrom, LocalDate dateTo) {
+        return userRepository.percentSuccessHabitsByIdUser(idUser, dateFrom, dateTo);
     }
 
     @Override
-    public void reportHabitByIdPerson(UUID idPerson, Long idHabit) {
-        userRepository.reportHabitByIdPerson(idPerson, idHabit);
+    public void reportHabitByIdUser(UUID idUser, Long idHabit) {
+        userRepository.reportHabitByIdUser(idUser, idHabit);
     }
 
     @Override
-    public void setDoneDatesHabitByIdPerson(UUID idPerson, Long idHabit) {
-        userRepository.setDoneDatesHabitByIdPerson(idPerson, idHabit);
+    public void setDoneDatesHabitByIdUser(UUID idUser, Long idHabit) {
+        userRepository.setDoneDatesHabitByIdUser(idUser, idHabit);
     }
 
-    public void setIsActiveByIdPerson(UUID idPerson, boolean isActive) {
-        userRepository.setIsActiveByIdPerson(idPerson, isActive);
-    }
-
-    @Override
-    public void switchOnPushNotificationByIdPerson(UUID idPerson, Long idHabit, LocalTime pushTime) throws ModelNotFound {
-        userRepository.switchOnPushNotificationByIdPerson(idPerson, idHabit, pushTime);
+    public void setIsActiveByIdUser(UUID idUser, boolean isActive) {
+        userRepository.setIsActiveByIdUser(idUser, isActive);
     }
 
     @Override
-    public void switchOffPushNotificationByIdPerson(UUID idPerson, Long idHabit) throws ModelNotFound {
-        userRepository.switchOffPushNotificationByIdPerson(idPerson, idHabit);
+    public void switchOnPushNotificationByIdUser(UUID idUser, Long idHabit, LocalTime pushTime) throws ModelNotFound {
+        userRepository.switchOnPushNotificationByIdUser(idUser, idHabit, pushTime);
+    }
+
+    @Override
+    public void switchOffPushNotificationByIdUser(UUID idUser, Long idHabit) throws ModelNotFound {
+        userRepository.switchOffPushNotificationByIdUser(idUser, idHabit);
     }
 
 

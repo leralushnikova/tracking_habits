@@ -1,7 +1,6 @@
 package com.lushnikova.homework_1.reminder;
 
 
-import com.lushnikova.homework_1.dto.resp.HabitResponse;
 import com.lushnikova.homework_1.model.Habit;
 import com.lushnikova.homework_1.model.User;
 import com.lushnikova.homework_1.repository.UserRepository;
@@ -24,7 +23,7 @@ public class ReminderService {
         running = true;
         thread = new Thread(() -> {
             while (running) {
-                checkReminders(idPerson); // Ваш метод проверки напоминаний
+                checkReminders(idPerson);
                 try {
                     Thread.sleep(60 * 1000); // Пауза на 1 минуту
                 } catch (InterruptedException e) {
@@ -41,15 +40,6 @@ public class ReminderService {
     }
 
     private void checkReminders(UUID idPerson) {
-        // Реализация проверки напоминаний
-        // Например, проверка текущего времени и отправка уведомлений
-//        * API для отправки напоминаний пользователю о необходимости выполнения привычки.
-
-        //2. Использование Timer и TimerTask
-        //Timer и TimerTask из пакета java.util позволяют планировать задачи для выполнения в будущем или периодически.
-        //
-        //3. Использование ScheduledExecutorService
-        //ScheduledExecutorService предоставляет более современный и гибкий способ планирования задач.
         List<Habit> listHabits = getUser(idPerson).getHabits();
 
         for (Habit habit : listHabits) {

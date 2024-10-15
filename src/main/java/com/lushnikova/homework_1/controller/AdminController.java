@@ -23,10 +23,10 @@ public class AdminController {
     public AdminResponse getAdminAfterAuthentication() {
         while (true){
             String email = UserController.email();
-            UUID idPersonFromCheckEmail = checkEmail(email);
+            UUID idUserFromCheckEmail = checkEmail(email);
 
-            if(idPersonFromCheckEmail != null){
-                return recursionByPassword(idPersonFromCheckEmail);
+            if(idUserFromCheckEmail != null){
+                return recursionByPassword(idUserFromCheckEmail);
             } else System.out.println("Данного администратора не существует");
         }
     }
@@ -53,14 +53,14 @@ public class AdminController {
                         UUID idUser = UUID.fromString(UserController.scannerString());
                         UserResponse userResponse = adminService.findByIdUser(idUser);
                         if (userResponse != null) {
-                            boolean flag = blockPerson();
+                            boolean flag = blockUser();
                             if(flag) {
                                 System.out.println("Пользователь разблокирован");
                             } else {
                                 System.out.println("Пользователь заблокирован");
                             }
                             System.out.println("----------------------------------------------");
-                            adminService.blockByIpPerson(userResponse.getId(), flag);
+                            adminService.blockByIdUser(userResponse.getId(), flag);
                         }
                         else wrongUUID();
                     } catch (IllegalArgumentException e){
@@ -74,7 +74,7 @@ public class AdminController {
                         UUID idUser = UUID.fromString(UserController.scannerString());
                         UserResponse userResponse = adminService.findByIdUser(idUser);
                         if (userResponse != null) {
-                            adminService.deletePerson(idUser);
+                            adminService.deleteUser(idUser);
                             System.out.println("Пользователь удален!");
                             System.out.println("----------------------------------------------");
                         }
@@ -91,11 +91,11 @@ public class AdminController {
 
 
     //рекрусивный метод ввода пароля
-    private AdminResponse recursionByPassword(UUID idPersonFromCheckEmail){
+    private AdminResponse recursionByPassword(UUID idUserFromCheckEmail){
 
         String password = UserController.password();
 
-        AdminResponse adminFromService = adminService.findById(idPersonFromCheckEmail);
+        AdminResponse adminFromService = adminService.findById(idUserFromCheckEmail);
 
         if (middleware.checkPassword(password, adminFromService)) {
             return adminFromService;
@@ -107,17 +107,17 @@ public class AdminController {
                 case "y" -> {
                     System.out.println("Введите новый пароль: ");
                     String newPassword = UserController.scannerString();
-                    adminService.updatePassword(idPersonFromCheckEmail, newPassword);
-                    return adminService.findById(idPersonFromCheckEmail);
+                    adminService.updatePassword(idUserFromCheckEmail, newPassword);
+                    return adminService.findById(idUserFromCheckEmail);
                 }
-                case "n" -> recursionByPassword(idPersonFromCheckEmail);
+                case "n" -> recursionByPassword(idUserFromCheckEmail);
                 default -> UserController.wrongInput();
             }
         }
         return adminFromService;
     }
 
-    private boolean blockPerson() {
+    private boolean blockUser() {
         System.out.println("Выберите:");
         System.out.println("1 - заблокировать пользователя");
         System.out.println("2 - разблокировать пользователя");
@@ -128,7 +128,7 @@ public class AdminController {
             case "2" -> {return true;}
             default -> {
                 UserController.wrongInput();
-                blockPerson();
+                blockUser();
             }
         }
         return false;

@@ -16,7 +16,7 @@ public interface AdminService {
 
     List<UserResponse> findAllUsers();
     UserResponse findByIdUser(UUID idUser);
-    void deletePerson(UUID idUser);
-    void blockByIpPerson(UUID idUser, boolean isActive) throws ModelNotFound;
+    void deleteUser(UUID idUser);
+    void blockByIdUser(UUID idUser, boolean isActive) throws ModelNotFound;
 
 }

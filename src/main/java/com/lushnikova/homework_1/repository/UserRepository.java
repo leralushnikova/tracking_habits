@@ -127,77 +127,74 @@ public class UserRepository {
     public synchronized void updatePassword(UUID id, String password) {
         findById(id).setPassword(password);
     }
-
-
+    
     public synchronized void delete(UUID id) {
         people.remove(findById(id));
     }
 
+    public synchronized void addHabitByIdUser(UUID idUser, Habit habit) {
+        findById(idUser).addHabit(habit);
+    }
 
-    public synchronized void addHabitByIdPerson(UUID idPerson, Habit habit) {
-        findById(idPerson).addHabit(habit);
+    public synchronized List<Habit> getHabitsByIdUser(UUID idUser) {
+        return findById(idUser).getHabits();
+    }
+
+    public synchronized List<Habit> getHabitsByStatusByIdUser(UUID idUser, Status status) {
+        return findById(idUser).getHabitsByStatus(status);
+    }
+
+    public synchronized List<Habit> getHabitsByLocalDateByIdUser(UUID idUser, LocalDate localDate) {
+        return findById(idUser).getHabitsByLocalDate(localDate);
+    }
+
+    public synchronized void updateTitleByIdHabitByIdUser(UUID idUser, Long idHabit, String newTitle) {
+        findById(idUser).updateTitle(idHabit, newTitle);
+    }
+
+    public synchronized void updateDescriptionByIdHabitByIdUser(UUID idUser, Long idHabit, String newDescription) {
+        findById(idUser).updateDescription(idHabit, newDescription);
+    }
+
+    public synchronized void updateRepeatByIdHabitByIdUser(UUID idUser, Long idHabit, Repeat newRepeat) {
+        findById(idUser).updateRepeat(idHabit, newRepeat);
+    }
+
+    public synchronized void updateStatusByIdHabitByIdUser(UUID idUser, Long idHabit, Status newStatus) {
+        findById(idUser).updateStatus(idHabit, newStatus);
+    }
+
+    public synchronized void deleteHabitByIdUser(UUID idUser, Long idHabit) {
+        findById(idUser).deleteHabit(idHabit);
     }
 
 
-    public synchronized List<Habit> getHabitsByIdPerson(UUID idPerson) {
-        return findById(idPerson).getHabits();
+    public synchronized List<String> getHabitFulfillmentStatisticsByIdUser(UUID idUser, Statistics statistics, Long idHabit, LocalDate dateFrom) {
+        return findById(idUser).getHabitFulfillmentStatistics(statistics, idHabit, dateFrom);
     }
 
-    public synchronized List<Habit> getHabitsByStatusByIdPerson(UUID idPerson, Status status) {
-        return findById(idPerson).getHabitsByStatus(status);
+    public synchronized int percentSuccessHabitsByIdUser(UUID idUser, LocalDate dateFrom, LocalDate dateTo) {
+        return findById(idUser).percentSuccessHabits(dateFrom, dateTo);
     }
 
-    public synchronized List<Habit> getHabitsByLocalDateByIdPerson(UUID idPerson, LocalDate localDate) {
-        return findById(idPerson).getHabitsByLocalDate(localDate);
+    public void reportHabitByIdUser(UUID idUser, Long idHabit) {
+        findById(idUser).reportHabit(idHabit);
     }
 
-    public synchronized void updateTitleByIdHabitByIdPerson(UUID idPerson, Long idHabit, String newTitle) {
-        findById(idPerson).updateTitle(idHabit, newTitle);
+    public synchronized void setDoneDatesHabitByIdUser(UUID idUser, Long idHabit) {
+        findById(idUser).getHabits().get(Math.toIntExact(idHabit) - 1).setDoneDates();
     }
 
-    public synchronized void updateDescriptionByIdHabitByIdPerson(UUID idPerson, Long idHabit, String newDescription) {
-        findById(idPerson).updateDescription(idHabit, newDescription);
+    public synchronized void setIsActiveByIdUser(UUID idUser, boolean isActive){
+        findById(idUser).setActive(isActive);
     }
 
-    public synchronized void updateRepeatByIdHabitByIdPerson(UUID idPerson, Long idHabit, Repeat newRepeat) {
-        findById(idPerson).updateRepeat(idHabit, newRepeat);
+    public synchronized void switchOnPushNotificationByIdUser(UUID idUser, Long idHabit, LocalTime pushTime) {
+        findById(idUser).switchOnPushNotification(idHabit, pushTime);
     }
 
-    public synchronized void updateStatusByIdHabitByIdPerson(UUID idPerson, Long idHabit, Status newStatus) {
-        findById(idPerson).updateStatus(idHabit, newStatus);
-    }
-
-    public synchronized void deleteHabitByIdPerson(UUID idPerson, Long idHabit) {
-        findById(idPerson).deleteHabit(idHabit);
-    }
-
-
-    public synchronized List<String> getHabitFulfillmentStatisticsByIdPerson(UUID idPerson, Statistics statistics, Long idHabit, LocalDate dateFrom) {
-        return findById(idPerson).getHabitFulfillmentStatistics(statistics, idHabit, dateFrom);
-    }
-
-    public synchronized int percentSuccessHabitsByIdPerson(UUID idPerson, LocalDate dateFrom, LocalDate dateTo) {
-        return findById(idPerson).percentSuccessHabits(dateFrom, dateTo);
-    }
-
-    public void reportHabitByIdPerson(UUID idPerson, Long idHabit) {
-        findById(idPerson).reportHabit(idHabit);
-    }
-
-    public synchronized void setDoneDatesHabitByIdPerson(UUID idPerson, Long idHabit) {
-        findById(idPerson).getHabits().get(Math.toIntExact(idHabit) - 1).setDoneDates();
-    }
-
-    public synchronized void setIsActiveByIdPerson(UUID idPerson, boolean isActive){
-        findById(idPerson).setActive(isActive);
-    }
-
-    public synchronized void switchOnPushNotificationByIdPerson(UUID idPerson, Long idHabit, LocalTime pushTime) {
-        findById(idPerson).switchOnPushNotification(idHabit, pushTime);
-    }
-
-    public synchronized void switchOffPushNotificationByIdPerson(UUID idPerson, Long idHabit){
-        findById(idPerson).switchOffPushNotification(idHabit);
+    public synchronized void switchOffPushNotificationByIdUser(UUID idUser, Long idHabit){
+        findById(idUser).switchOffPushNotification(idHabit);
     }
 
     public synchronized List<User> findAll() {
