@@ -4,7 +4,6 @@ import com.lushnikova.homework_1.dto.req.HabitRequest;
 import com.lushnikova.homework_1.dto.req.UserRequest;
 import com.lushnikova.homework_1.dto.resp.HabitResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
-import com.lushnikova.homework_1.exception.ModelNotFound;
 import com.lushnikova.homework_1.mapper_mapstruct.HabitMapper;
 import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
 import com.lushnikova.homework_1.model.Habit;
@@ -66,8 +65,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addHabitByIdUser(UUID idUser, HabitRequest habitRequest) {
         Habit habit = habitMapper.mapToEntity(habitRequest);
-        long idHabit = getHabitsByIdUser(idUser).size() + 1;
-        habit.setId(idHabit);
         userRepository.addHabitByIdUser(idUser, habit);
     }
 
@@ -136,12 +133,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void switchOnPushNotificationByIdUser(UUID idUser, Long idHabit, LocalTime pushTime) throws ModelNotFound {
+    public void switchOnPushNotificationByIdUser(UUID idUser, Long idHabit, LocalTime pushTime) {
         userRepository.switchOnPushNotificationByIdUser(idUser, idHabit, pushTime);
     }
 
     @Override
-    public void switchOffPushNotificationByIdUser(UUID idUser, Long idHabit) throws ModelNotFound {
+    public void switchOffPushNotificationByIdUser(UUID idUser, Long idHabit) {
         userRepository.switchOffPushNotificationByIdUser(idUser, idHabit);
     }
 

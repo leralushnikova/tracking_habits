@@ -25,8 +25,7 @@ public class Habit {
         this.status = Status.CREATED;
     }
 
-    public Habit(Long id, String title, String description, Repeat repeat) {
-        this.id = id;
+    public Habit(String title, String description, Repeat repeat) {
         this.title = title;
         this.description = description;
         this.repeat = repeat;

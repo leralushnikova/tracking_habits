@@ -91,7 +91,7 @@ public class UserController {
         System.out.println("2 - email");
         System.out.println("3 - пароль");
         System.out.println("4 - удалить профиль");
-        System.out.println("5 - выход из режима редактирования пользователя");
+        System.out.println("exit - выход из режима редактирования пользователя");
 
         String answer = scannerString();
         switch (answer) {
@@ -119,7 +119,7 @@ public class UserController {
                 System.out.println("Ваш профиль удален");
             }
 
-            case "5" -> {
+            case "exit" -> {
             }
             default -> wrongInput();
         }

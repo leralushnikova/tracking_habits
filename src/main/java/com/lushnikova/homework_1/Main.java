@@ -27,13 +27,13 @@ import static com.lushnikova.homework_1.controller.UserController.wrongInput;
 public class Main {
 
 
-    private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
+    private static final UserMapper userMapper = UserMapper.INSTANCE;
     private static final AdminRepository adminRepository = AdminRepository.getInstance();
     private static final DateMiddleware dateMiddleware = new DateMiddleware();
     private static final Middleware userMiddleware = new UserMiddleware();
     private static final Middleware adminMiddleware = new AdminMiddleware();
     private static final UserRepository userRepository = UserRepository.getInstance();
-    private static final UserService userService = new UserServiceImpl(USER_MAPPER, userRepository);
+    private static final UserService userService = new UserServiceImpl(userMapper, userRepository);
     private static final UserController userController = new UserController(userService, userMiddleware);
     private static final HabitController habitController = new HabitController(userService, dateMiddleware);
     private static final AdminService adminService = new AdminServiceImpl(userService, adminRepository);

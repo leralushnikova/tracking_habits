@@ -60,6 +60,7 @@ public class User {
     }
 
     public void addHabit(Habit habit) {
+        habit.setId((long) (habits.size() + 1));
         habits.add(habit);
     }
 
@@ -83,7 +84,7 @@ public class User {
         return habits.stream().filter(el -> el.getCreatedAt().toString().equals(localDate.toString())).toList();
     }
 
-    private Habit findById(Long id){
+    public Habit findById(Long id){
         return habits.stream().filter(habit -> habit.getId().equals(id)).findFirst().orElse(null);
     }
 
