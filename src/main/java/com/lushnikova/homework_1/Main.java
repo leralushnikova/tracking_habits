@@ -23,27 +23,58 @@ import java.util.UUID;
 import static com.lushnikova.homework_1.controller.UserController.scannerString;
 import static com.lushnikova.homework_1.controller.UserController.wrongInput;
 
-
+/**
+ * Класс запуска приложений
+ */
 public class Main {
-
-
+    /** Поле преобразования пользователей*/
     private static final UserMapper userMapper = UserMapper.INSTANCE;
+
+    /** Поле сервис администраторов*/
     private static final AdminRepository adminRepository = AdminRepository.getInstance();
+
+    /** Поле инструмент проверки дат*/
     private static final DateMiddleware dateMiddleware = new DateMiddleware();
+
+    /** Поле инструмент проверки для пользователя*/
     private static final Middleware userMiddleware = new UserMiddleware();
+
+    /** Поле инструмент проверки для администратора*/
     private static final Middleware adminMiddleware = new AdminMiddleware();
+
+    /** Поле репозиторий пользователей*/
     private static final UserRepository userRepository = UserRepository.getInstance();
+
+    /** Поле сервис пользователей*/
     private static final UserService userService = new UserServiceImpl(userMapper, userRepository);
+
+    /** Поле контроллер пользователей*/
     private static final UserController userController = new UserController(userService, userMiddleware);
+
+    /** Поле контроллер привычек*/
     private static final HabitController habitController = new HabitController(userService, dateMiddleware);
+
+    /** Поле сервис администраторов*/
     private static final AdminService adminService = new AdminServiceImpl(userService, adminRepository);
+
+    /** Поле контроллер администраторов*/
     private static final AdminController adminController = new AdminController(adminService, adminMiddleware);
+
+    /** Поле сервис по проверки уведомлений*/
     static final ReminderService reminderService = new ReminderService(userRepository);
 
+    /**
+     * Здесь точка старта приложения
+     * @throws ModelNotFound
+     */
     public static void main(String[] args) throws ModelNotFound {
         adminOrUser();
     }
 
+    /**
+     * Вход в приложение либо как администратор, либо как пользователь
+     * @throws ModelNotFound
+     */
     public static void adminOrUser() throws ModelNotFound {
         while (true) {
             System.out.println("Вы хотите войти как:");
@@ -63,7 +94,10 @@ public class Main {
 
     }
 
-    //вход для пользователей
+    /**
+     * Регистрация или авторизация пользователей
+     * @throws ModelNotFound
+     */
     public static void enterUser() throws ModelNotFound {
         UserResponse userResponse;
         while (true) {
@@ -90,12 +124,20 @@ public class Main {
         }
     }
 
-    //вход для администраторов
+    /**
+     * Авторизация администратора
+     * @throws ModelNotFound
+     */
     public static void enterAdmin() throws ModelNotFound {
         adminController.getAdminAfterAuthentication();
         adminController.modesForUsers();
     }
 
+    /**
+     * Режим управления либо данными пользователя или его привычками
+     * @param idUser - id пользователя
+     * @throws ModelNotFound
+     */
     public static void modesForUsers(UUID idUser) throws ModelNotFound {
         while (true) {
             UserResponse userResponse = userController.getUser(idUser);
@@ -137,6 +179,5 @@ public class Main {
             } else return;
         }
     }
-
 
 }

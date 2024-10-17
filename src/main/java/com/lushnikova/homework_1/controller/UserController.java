@@ -9,18 +9,33 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+/**
+ * Класс Controller для пользователей
+ */
 public class UserController {
 
+    /** Поле сервис пользователей*/
     private final UserService userService;
+
+    /** Поле инструмент проверки*/
     private final Middleware userMiddleware;
 
-
+    /**
+     * Конструктор - создание нового объекта с определенными значениями
+     * @param userService - сервис пользователей
+     * @param userMiddleware - инструмент проверки*
+     */
     public UserController(UserService userService, Middleware userMiddleware) {
         this.userService = userService;
         this.userMiddleware = userMiddleware;
     }
 
     //регистрация нового пользователя
+
+    /**
+     * Функция получения нового пользователя
+     * @return возвращение объекта пользователя
+     */
     public UserResponse createUser() {
         UserRequest userRequest = new UserRequest();
         System.out.println("Введите свое имя: ");
@@ -49,7 +64,10 @@ public class UserController {
         }
     }
 
-    //авторизация пользователя
+    /**
+     * Функция получения пользователя после авторизации
+     * @return возвращение объекта пользователя
+     */
     public UserResponse getUserAfterAuthentication() {
         while (true){
             String email = email();
@@ -67,12 +85,19 @@ public class UserController {
         }
     }
 
-    // получение пользователя
+    /**
+     * Функция получения пользователя {@link UserService#findById(UUID)}
+     * @param id - id пользователя
+     * @return возвращение объекта пользователя
+     */
     public UserResponse getUser(UUID id) {
         return userService.findById(id);
     }
 
-    // информация о пользователе
+    /**
+     * Получение информации о пользователе
+     * @param id - id пользователя
+     */
     public void readUser(UUID id) {
         UserResponse userResponse = userService.findById(id);
         System.out.println("Ваши данные: ");
@@ -84,7 +109,10 @@ public class UserController {
     }
 
 
-    //редактирование данных пользователя
+    /**
+     * Процедура редактирования пользователя
+     * @param idUser - id пользователя
+     */
     public void editUser(UUID idUser) {
         System.out.println("Вы хотите изменить:");
         System.out.println("1 - имя");
@@ -98,17 +126,21 @@ public class UserController {
             case "1" -> {
                 System.out.println("Введите новое имя: ");
                 String name = scannerString();
-                userService.updateName(idUser, name);
-                editUser(idUser);
+                if (!name.isBlank() && name.isEmpty()) {
+                    userService.updateName(idUser, name);
+                    editUser(idUser);
+                } else wrongInput();
             }
             case "2" -> {
                 String email = email();
-                userService.updateEmail(idUser, email);
-                editUser(idUser);
+                if (!email.isBlank() && email.isEmpty()) {
+                    userService.updateEmail(idUser, email);
+                    editUser(idUser);
+                } else wrongInput();
             }
             case "3" -> {
                 String password = password();
-                if(userMiddleware.checkPassword(password)){
+                if(userMiddleware.checkPassword(password) && !password.isEmpty() && !password.isBlank()){
                     userService.updatePassword(idUser, password);
                     editUser(idUser);
                 } else wrongInput();
@@ -126,6 +158,12 @@ public class UserController {
     }
 
     //рекрусивный метод ввода пароля
+    /**
+     * Функция получения пользователя по id при проверке пароля,
+     * если пароль не совпадает, то предлагается переустановить пароль
+     * @param idUserFromCheckEmail - id пользователя
+     * @return возвращает объект пользователя
+     */
     private UserResponse recursionForPassword(UUID idUserFromCheckEmail){
 
         String password = password();
@@ -151,33 +189,57 @@ public class UserController {
         return UserFromService;
     }
 
+    /**
+     * Введение почты в консоль
+     * @return возвращение почты
+     */
     public static String email() {
         System.out.println("Введите свою почту: ");
         return scannerString();
     }
 
+    /**
+     * Введение пароля в консоль
+     * @return возвращение пароля
+     */
     public static String password() {
         System.out.println("Введите свой пароль: ");
         return scannerString();
     }
 
+    /**
+     * Ввод в консоль
+     * @return возвращение строки
+     */
     public static String scannerString() {
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
 
+    /**
+     * Ответ при неправильном вводе в консоль
+     */
     public static void wrongInput() {
         System.out.println("Неправильный ввод!");
         System.out.println("----------------------------------------------");
 
     }
 
-    private List<UserResponse> listPeople() {
+    /**
+     * Функция получения списка пользователей {@link UserService#findAll()}
+     * @return возвращение пользователей
+     */
+    private List<UserResponse> listUsers() {
         return userService.findAll();
     }
 
+    /**
+     * Функция получения id пользователя при совпадении почты из списка администраторов{@link UserController#listUsers}
+     * @param email - почта при вводе
+     * @return возвращает уникальный идентификатор пользователя
+     */
     private UUID checkEmail(String email){
-        for (UserResponse userResponse : listPeople()) {
+        for (UserResponse userResponse : listUsers()) {
             if (userMiddleware.checkEmail(email, userResponse)) {
                 return userResponse.getId();
             }

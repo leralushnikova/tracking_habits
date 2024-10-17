@@ -9,17 +9,32 @@ import com.lushnikova.homework_1.service.AdminService;
 import java.util.List;
 import java.util.UUID;
 
-
+/**
+ * Класс Controller для администратора
+ */
 public class AdminController {
+
+    /** Поле сервис администраторов*/
     private final AdminService adminService;
+
+    /** Поле инструмент проверки*/
     private final Middleware middleware;
 
+    /**
+     * Конструктор - создание нового объекта с определенными значениями
+     * @param adminService - сервис администраторов
+     * @param middleware - инструмент проверки
+     */
     public AdminController(AdminService adminService, Middleware middleware) {
         this.adminService = adminService;
         this.middleware = middleware;
     }
 
-    //проверка мыла и пароля при входе
+    /**
+     * Функция получения администратора
+     * проверки его почты и пароля при входе
+     * @return возвращение найденного администратора
+     */
     public AdminResponse getAdminAfterAuthentication() {
         while (true){
             String email = UserController.email();
@@ -31,6 +46,11 @@ public class AdminController {
         }
     }
 
+    /**
+     * Процедура получения списка пользователей и их привычек,
+     * а так же режим по управлению пользователями
+     * @throws ModelNotFound
+     */
     public void modesForUsers() throws ModelNotFound {
         while (true) {
             System.out.println("Выберите:");
@@ -89,8 +109,12 @@ public class AdminController {
         }
     }
 
-
-    //рекрусивный метод ввода пароля
+    /**
+     * Функция получения администратора по id при проверке пароля,
+     * если пароль не совпадает, то предлагается переустановить пароль
+     * @param idUserFromCheckEmail - id администратора
+     * @return возвращает объект администратора
+     */
     private AdminResponse recursionByPassword(UUID idUserFromCheckEmail){
 
         String password = UserController.password();
@@ -117,6 +141,10 @@ public class AdminController {
         return adminFromService;
     }
 
+    /**
+     * Функция блокировки пользователя
+     * @return возвращает значение заблокирован пользователь или нет
+     */
     private boolean blockUser() {
         System.out.println("Выберите:");
         System.out.println("1 - заблокировать пользователя");
@@ -134,6 +162,11 @@ public class AdminController {
         return false;
     }
 
+    /**
+     * Функция получения id администратора при совпадении почты из списка администраторов{@link AdminController#listAdmins}
+     * @param email - почта при вводе
+     * @return возвращает уникальный идентификатор пользователя
+     */
     private UUID checkEmail(String email){
         for (AdminResponse adminResponse : listAdmins()) {
             if (middleware.checkEmail(email, adminResponse)) {
@@ -143,10 +176,17 @@ public class AdminController {
         return null;
     }
 
+    /**
+     * Функция получения списка администраторов {@link AdminService#findAllAdmins()}
+     * @return возвращает список администраторов
+     */
     private List<AdminResponse> listAdmins(){
         return adminService.findAllAdmins();
     }
 
+    /**
+     * Ответ при неправильном вводе id
+     */
     private void wrongUUID(){
         System.out.println("Неверно введен id");
     }
