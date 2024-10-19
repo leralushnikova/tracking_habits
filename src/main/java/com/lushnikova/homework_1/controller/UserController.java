@@ -3,11 +3,15 @@ package com.lushnikova.homework_1.controller;
 import com.lushnikova.homework_1.dto.req.UserRequest;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
 import com.lushnikova.homework_1.middleware.Middleware;
+import com.lushnikova.homework_1.model.User;
+import com.lushnikova.homework_1.repository.UserRepository;
 import com.lushnikova.homework_1.service.UserService;
 
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+
+import static com.lushnikova.homework_1.consts.ModesConsts.*;
 
 /**
  * Класс Controller для пользователей
@@ -17,16 +21,21 @@ public class UserController {
     /** Поле сервис пользователей*/
     private final UserService userService;
 
+    /** Поле репозиторий пользователей*/
+    private final UserRepository userRepository;
+
     /** Поле инструмент проверки*/
     private final Middleware userMiddleware;
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
      * @param userService - сервис пользователей
+     * @param userRepository - репозиторий пользователей
      * @param userMiddleware - инструмент проверки*
      */
-    public UserController(UserService userService, Middleware userMiddleware) {
+    public UserController(UserService userService, UserRepository userRepository, Middleware userMiddleware) {
         this.userService = userService;
+        this.userRepository = userRepository;
         this.userMiddleware = userMiddleware;
     }
 
@@ -49,9 +58,8 @@ public class UserController {
                 userRequest.setEmail(email);
 
                 while (true) {
-                    System.out.println("Пароль должен содержать 8 символов латинского алфавита, " +
-                            "минимум одну заглавную букву, " +
-                            "одну маленькую букву либо спец. символ, либо цифру.");
+                    System.out.println(MESSAGE_PASSWORD);
+
                     String password = password();
 
                     if (userMiddleware.checkPassword(password)) {
@@ -103,7 +111,6 @@ public class UserController {
         System.out.println("Ваши данные: ");
         System.out.println("Имя =  " + userResponse.getName());
         System.out.println("Почта =  " + userResponse.getEmail());
-        System.out.println("Пароль =  " + userResponse.getPassword());
         System.out.println("Статус =  " + userResponse.isActive());
         System.out.println("----------------------------------------------");
     }
@@ -114,12 +121,7 @@ public class UserController {
      * @param idUser - id пользователя
      */
     public void editUser(UUID idUser) {
-        System.out.println("Вы хотите изменить:");
-        System.out.println("1 - имя");
-        System.out.println("2 - email");
-        System.out.println("3 - пароль");
-        System.out.println("4 - удалить профиль");
-        System.out.println("exit - выход из режима редактирования пользователя");
+        System.out.println(EDIT_USER);
 
         String answer = scannerString();
         switch (answer) {
@@ -169,10 +171,12 @@ public class UserController {
         String password = password();
 
         UserResponse UserFromService = userService.findById(idUserFromCheckEmail);
-        if (userMiddleware.checkPassword(password, UserFromService)) {
+
+        User userFromRepository = userRepository.findById(idUserFromCheckEmail);
+        if (userMiddleware.checkPassword(password, userFromRepository)) {
             return UserFromService;
         } else {
-            System.out.println("Пароль введен не верно! Хотите восстановить пароль(y) или попробовать еще попытку(n)? [y/n]");
+            System.out.println(RECOVER_PASSWORD);
             String answer = scannerString();
 
             switch (answer) {
@@ -220,8 +224,7 @@ public class UserController {
      * Ответ при неправильном вводе в консоль
      */
     public static void wrongInput() {
-        System.out.println("Неправильный ввод!");
-        System.out.println("----------------------------------------------");
+        System.out.println(WRONG_INPUT);
 
     }
 

@@ -2,12 +2,15 @@ package com.lushnikova.homework_1.controller;
 
 import com.lushnikova.homework_1.dto.resp.AdminResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
-import com.lushnikova.homework_1.exception.ModelNotFound;
 import com.lushnikova.homework_1.middleware.Middleware;
+import com.lushnikova.homework_1.model.Admin;
+import com.lushnikova.homework_1.repository.AdminRepository;
 import com.lushnikova.homework_1.service.AdminService;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.lushnikova.homework_1.consts.ModesConsts.*;
 
 /**
  * Класс Controller для администратора
@@ -17,48 +20,47 @@ public class AdminController {
     /** Поле сервис администраторов*/
     private final AdminService adminService;
 
+    /** Поле репозиторий администраторов*/
+    private final AdminRepository adminRepository;
+
     /** Поле инструмент проверки*/
     private final Middleware middleware;
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
      * @param adminService - сервис администраторов
+     * @param adminRepository - репозиторий администраторов
      * @param middleware - инструмент проверки
      */
-    public AdminController(AdminService adminService, Middleware middleware) {
+    public AdminController(AdminService adminService, AdminRepository adminRepository, Middleware middleware) {
         this.adminService = adminService;
+        this.adminRepository = adminRepository;
         this.middleware = middleware;
     }
 
     /**
-     * Функция получения администратора
-     * проверки его почты и пароля при входе
-     * @return возвращение найденного администратора
+     * Процедура проверки почты и пароля
+     * администратора при входе
      */
-    public AdminResponse getAdminAfterAuthentication() {
-        while (true){
-            String email = UserController.email();
-            UUID idUserFromCheckEmail = checkEmail(email);
+    public void getAdminAfterAuthentication() {
+        String email = UserController.email();
+        UUID idUserFromCheckEmail = checkEmail(email);
 
-            if(idUserFromCheckEmail != null){
-                return recursionByPassword(idUserFromCheckEmail);
-            } else System.out.println("Данного администратора не существует");
+        if (idUserFromCheckEmail != null) {
+            recursionByPassword(idUserFromCheckEmail);
+        } else {
+            System.out.println("Данного администратора не существует");
+            getAdminAfterAuthentication();
         }
     }
 
     /**
      * Процедура получения списка пользователей и их привычек,
      * а так же режим по управлению пользователями
-     * @throws ModelNotFound
      */
-    public void modesForUsers() throws ModelNotFound {
+    public void modesForUsers(){
         while (true) {
-            System.out.println("Выберите:");
-            System.out.println("1 - просмотреть список пользователей и их привычки");
-            System.out.println("2 - заблокировать пользователя");
-            System.out.println("3 - удалить пользователя");
-            System.out.println("exit - выход");
-
+            System.out.println(MODES_FOR_USER_ADMIN);
 
             String answer = UserController.scannerString();
             switch (answer) {
@@ -89,7 +91,7 @@ public class AdminController {
 
                 }
                 case "3" -> {
-                    System.out.println("Введите id пользователя ");
+                    System.out.println("Введите id пользователя: ");
                     try {
                         UUID idUser = UUID.fromString(UserController.scannerString());
                         UserResponse userResponse = adminService.findByIdUser(idUser);
@@ -110,35 +112,34 @@ public class AdminController {
     }
 
     /**
-     * Функция получения администратора по id при проверке пароля,
+     * Процедура проверки пароля администратора,
      * если пароль не совпадает, то предлагается переустановить пароль
      * @param idUserFromCheckEmail - id администратора
-     * @return возвращает объект администратора
      */
-    private AdminResponse recursionByPassword(UUID idUserFromCheckEmail){
+    private void recursionByPassword(UUID idUserFromCheckEmail){
 
         String password = UserController.password();
 
-        AdminResponse adminFromService = adminService.findById(idUserFromCheckEmail);
+        Admin adminFromRepository = adminRepository.findById(idUserFromCheckEmail);
 
-        if (middleware.checkPassword(password, adminFromService)) {
-            return adminFromService;
-        } else {
-            System.out.println("Пароль введен не верно! Хотите восстановить пароль(y) или попробовать еще попытку(n)? [y/n]");
+        if (!middleware.checkPassword(password, adminFromRepository)) {
+            System.out.println(RECOVER_PASSWORD);
+
             String answer = UserController.scannerString();
 
             switch (answer) {
                 case "y" -> {
                     System.out.println("Введите новый пароль: ");
+
                     String newPassword = UserController.scannerString();
+
                     adminService.updatePassword(idUserFromCheckEmail, newPassword);
-                    return adminService.findById(idUserFromCheckEmail);
+
                 }
                 case "n" -> recursionByPassword(idUserFromCheckEmail);
                 default -> UserController.wrongInput();
             }
         }
-        return adminFromService;
     }
 
     /**
@@ -146,9 +147,7 @@ public class AdminController {
      * @return возвращает значение заблокирован пользователь или нет
      */
     private boolean blockUser() {
-        System.out.println("Выберите:");
-        System.out.println("1 - заблокировать пользователя");
-        System.out.println("2 - разблокировать пользователя");
+        System.out.println(BLOCK_USER);
 
         String answer = UserController.scannerString();
         switch (answer) {
@@ -177,11 +176,11 @@ public class AdminController {
     }
 
     /**
-     * Функция получения списка администраторов {@link AdminService#findAllAdmins()}
+     * Функция получения списка администраторов {@link AdminService#findAll()}
      * @return возвращает список администраторов
      */
     private List<AdminResponse> listAdmins(){
-        return adminService.findAllAdmins();
+        return adminService.findAll();
     }
 
     /**

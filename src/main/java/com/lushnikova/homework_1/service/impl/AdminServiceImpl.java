@@ -3,7 +3,6 @@ package com.lushnikova.homework_1.service.impl;
 import com.lushnikova.homework_1.dto.req.AdminRequest;
 import com.lushnikova.homework_1.dto.resp.AdminResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
-import com.lushnikova.homework_1.exception.ModelNotFound;
 import com.lushnikova.homework_1.mapper_mapstruct.AdminMapper;
 import com.lushnikova.homework_1.model.Admin;
 import com.lushnikova.homework_1.repository.AdminRepository;
@@ -44,7 +43,7 @@ public class AdminServiceImpl implements AdminService {
      * @param adminRequest - объект администратора
      */
     @Override
-    public void saveAdmin(AdminRequest adminRequest) {
+    public void save(AdminRequest adminRequest) {
         adminRepository.save(adminMapper.mapToEntity(adminRequest));
     }
 
@@ -73,7 +72,7 @@ public class AdminServiceImpl implements AdminService {
      * @return возвращает списка администраторов
      */
     @Override
-    public List<AdminResponse> findAllAdmins() {
+    public List<AdminResponse> findAll() {
         return adminRepository.findAll().stream().map(adminMapper::mapToResponse).toList();
     }
 
@@ -106,7 +105,7 @@ public class AdminServiceImpl implements AdminService {
      * @param isActive - блокировка пользователя
      */
     @Override
-    public void blockByIdUser(UUID idUser, boolean isActive) throws ModelNotFound {
+    public void blockByIdUser(UUID idUser, boolean isActive){
         userService.setIsActiveByIdUser(idUser, isActive);
     }
 
