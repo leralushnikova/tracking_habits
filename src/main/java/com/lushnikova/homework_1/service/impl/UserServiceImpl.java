@@ -245,15 +245,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Процедура определения значения поля {@link UserRepository#setIsActiveByIdUser(UUID, boolean)}
-     * @param idUser - id пользователя
-     * @param isActive - блокировка
-     */
-    public void setIsActiveByIdUser(UUID idUser, boolean isActive) {
-        userRepository.setIsActiveByIdUser(idUser, isActive);
-    }
-
-    /**
      * Процедура включения отправки уведомления привычки в указанное время {@link UserRepository#switchOnPushNotificationByIdUser(UUID, Long, LocalTime)}
      * @param idUser - id пользователя
      * @param idHabit - id привычки

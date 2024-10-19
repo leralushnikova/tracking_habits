@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Интерфейс Service по управлению администраторами и пользователями
  */
-public interface AdminService {
+public interface AdminService extends Service{
 
     /**
      * Процедура сохранения администратора

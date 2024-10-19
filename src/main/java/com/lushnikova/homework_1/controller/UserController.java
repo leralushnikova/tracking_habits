@@ -2,10 +2,14 @@ package com.lushnikova.homework_1.controller;
 
 import com.lushnikova.homework_1.dto.req.UserRequest;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
+import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
 import com.lushnikova.homework_1.middleware.Middleware;
+import com.lushnikova.homework_1.middleware.UserMiddleware;
 import com.lushnikova.homework_1.model.User;
+import com.lushnikova.homework_1.reminder.ReminderService;
 import com.lushnikova.homework_1.repository.UserRepository;
 import com.lushnikova.homework_1.service.UserService;
+import com.lushnikova.homework_1.service.impl.UserServiceImpl;
 
 import java.util.List;
 import java.util.Scanner;
@@ -16,10 +20,10 @@ import static com.lushnikova.homework_1.consts.ModesConsts.*;
 /**
  * Класс Controller для пользователей
  */
-public class UserController {
+public class UserController extends Controller{
 
     /** Поле сервис пользователей*/
-    private final UserService userService;
+    private UserService userService;
 
     /** Поле репозиторий пользователей*/
     private final UserRepository userRepository;
@@ -27,19 +31,99 @@ public class UserController {
     /** Поле инструмент проверки*/
     private final Middleware userMiddleware;
 
+    /** Поле преобразования пользователей*/
+    private final UserMapper userMapper;
+
+    /** Поле контроллер привычек*/
+    private HabitController habitController;
+
+    /** Поле сервис по проверки уведомлений*/
+    final ReminderService reminderService;
+
     /**
      * Конструктор - создание нового объекта с определенными значениями
-     * @param userService - сервис пользователей
      * @param userRepository - репозиторий пользователей
-     * @param userMiddleware - инструмент проверки*
      */
-    public UserController(UserService userService, UserRepository userRepository, Middleware userMiddleware) {
-        this.userService = userService;
+    public UserController(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
-        this.userMiddleware = userMiddleware;
+        this.userMiddleware = new UserMiddleware();
+        this.userMapper = userMapper;
+        reminderService = new ReminderService(userRepository);
     }
 
-    //регистрация нового пользователя
+    /**
+     * Процедура создания сервиса пользователя
+     */
+    @Override
+    public void createService() {
+        userService = new UserServiceImpl(userMapper, userRepository);
+        habitController = new HabitController(userService);
+    }
+
+    @Override
+    void enter() {
+        UserResponse userResponse;
+        while (true) {
+            System.out.println(ENTER_USER);
+            String input = scannerString();
+
+            switch (input) {
+                case ("in") -> {
+                    userResponse = getUserAfterAuthentication();
+                    reminderService.start(userResponse.getId());
+                    modesForUsers(userResponse.getId());
+                }
+                case ("up") -> {
+                    userResponse = createUser();
+                    reminderService.start(userResponse.getId());
+                    modesForUsers(userResponse.getId());
+                }
+                case ("exit") -> {
+                    return;
+                }
+
+                default -> wrongInput();
+            }
+        }
+    }
+
+    /**
+     * Режим управления либо данными пользователя или его привычками
+     * @param idUser - id пользователя
+     */
+    public void modesForUsers(UUID idUser){
+        while (true) {
+            UserResponse userResponse = getUser(idUser);
+
+            if (userResponse != null) {
+                System.out.println(MODES_FOR_USER);
+
+                String answer = scannerString();
+
+                switch (answer) {
+                    case "1" -> editUser(idUser);
+
+                    case "2" -> readUser(idUser);
+
+                    case "3" -> habitController.crudHabits(idUser);
+
+                    case "4" -> habitController.readHabits(idUser);
+
+                    case "5" -> habitController.getHabitFulfillmentStatisticsByIdUser(idUser);
+
+                    case "6" -> habitController.getPercentSuccessHabitsByIdUser(idUser);
+
+                    case "7" -> habitController.reportHabitByIdUser(idUser);
+
+                    case "exit" -> {
+                        reminderService.stop();
+                        return;
+                    }
+                    default -> wrongInput();
+                }
+            } else return;
+        }
+    }
 
     /**
      * Функция получения нового пользователя
@@ -159,7 +243,6 @@ public class UserController {
         }
     }
 
-    //рекрусивный метод ввода пароля
     /**
      * Функция получения пользователя по id при проверке пароля,
      * если пароль не совпадает, то предлагается переустановить пароль

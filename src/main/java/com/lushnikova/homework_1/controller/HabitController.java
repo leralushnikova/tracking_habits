@@ -23,6 +23,7 @@ import static com.lushnikova.homework_1.controller.UserController.wrongInput;
  */
 public class HabitController {
 
+
     /** Поле сервис пользователей*/
     private final UserService userService;
 
@@ -33,11 +34,10 @@ public class HabitController {
     /**
      * Конструктор - создание нового объекта с определенными значениями
      * @param userService - сервис пользователей
-     * @param dateMiddleware - инструмент проверки дат
      */
-    public HabitController(UserService userService, DateMiddleware dateMiddleware) {
+    public HabitController(UserService userService) {
         this.userService = userService;
-        this.dateMiddleware = dateMiddleware;
+        this.dateMiddleware =  new DateMiddleware();
     }
 
     //crud привычек

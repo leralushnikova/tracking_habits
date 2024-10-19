@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Интерфейс Service по управлению пользователями и их привычек
  */
-public interface UserService {
+public interface UserService extends Service{
 
     /** Процедура сохранения пользователя
      * @param userRequest - пользователя
@@ -165,12 +165,6 @@ public interface UserService {
      */
     List<UserResponse> findAll();
 
-    /**
-     * Процедура определения значения поля
-     * @param idUser - id пользователя
-     * @param isActive - блокировка
-     */
-    void setIsActiveByIdUser(UUID idUser, boolean isActive);
 
     /**
      * Процедура включения отправки уведомления привычки в указанное время

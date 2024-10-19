@@ -2,10 +2,14 @@ package com.lushnikova.homework_1.controller;
 
 import com.lushnikova.homework_1.dto.resp.AdminResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
+import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
+import com.lushnikova.homework_1.middleware.AdminMiddleware;
 import com.lushnikova.homework_1.middleware.Middleware;
 import com.lushnikova.homework_1.model.Admin;
 import com.lushnikova.homework_1.repository.AdminRepository;
+import com.lushnikova.homework_1.repository.UserRepository;
 import com.lushnikova.homework_1.service.AdminService;
+import com.lushnikova.homework_1.service.impl.AdminServiceImpl;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,27 +19,46 @@ import static com.lushnikova.homework_1.consts.ModesConsts.*;
 /**
  * Класс Controller для администратора
  */
-public class AdminController {
-
-    /** Поле сервис администраторов*/
-    private final AdminService adminService;
+public class AdminController extends Controller{
+    /** Поле репозиторий пользователей*/
+    private final UserRepository userRepository;
 
     /** Поле репозиторий администраторов*/
     private final AdminRepository adminRepository;
 
+    /** Поле сервис администраторов*/
+    private AdminService adminService;
+
     /** Поле инструмент проверки*/
     private final Middleware middleware;
+    /** Поле преобразования пользователей*/
+    private final UserMapper userMapper;
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
-     * @param adminService - сервис администраторов
-     * @param adminRepository - репозиторий администраторов
-     * @param middleware - инструмент проверки
+     * @param userRepository - репозиторий пользователей
      */
-    public AdminController(AdminService adminService, AdminRepository adminRepository, Middleware middleware) {
-        this.adminService = adminService;
-        this.adminRepository = adminRepository;
-        this.middleware = middleware;
+    public AdminController(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.adminRepository = AdminRepository.getInstance();
+        middleware = new AdminMiddleware();
+    }
+    /**
+     * Процедура создания сервиса администратора
+     */
+    @Override
+    public void createService() {
+        adminService = new AdminServiceImpl(userRepository, adminRepository, userMapper);
+    }
+
+    /**
+     * Авторизация администратора
+     */
+    @Override
+    void enter() {
+        getAdminAfterAuthentication();
+        modesForUsers();
     }
 
     /**
@@ -58,7 +81,8 @@ public class AdminController {
      * Процедура получения списка пользователей и их привычек,
      * а так же режим по управлению пользователями
      */
-    public void modesForUsers(){
+    public void modesForUsers() {
+
         while (true) {
             System.out.println(MODES_FOR_USER_ADMIN);
 

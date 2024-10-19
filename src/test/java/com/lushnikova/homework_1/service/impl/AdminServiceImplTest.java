@@ -5,7 +5,6 @@ import com.lushnikova.homework_1.model.User;
 import com.lushnikova.homework_1.repository.AdminRepository;
 import com.lushnikova.homework_1.repository.UserRepository;
 import com.lushnikova.homework_1.service.AdminService;
-import com.lushnikova.homework_1.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,22 +22,10 @@ class AdminServiceImplTest {
     /** Поле репозиторий пользователей*/
     private final UserRepository userRepository = UserRepository.getInstance();
 
-    /** Поле сервис пользователей*/
-    private final UserService userService = new UserServiceImpl(userMapper, userRepository);
-
     /** Поле сервис администраторов*/
-    private final AdminService adminService = new AdminServiceImpl(userService, adminRepository);
+    private final AdminService adminService = new AdminServiceImpl(userRepository, adminRepository, userMapper);
 
 
-    @Test
-    @DisplayName("Удаление пользователя")
-    void shouldDeleteUser(){
-
-        User user = getUserById();
-        adminService.deleteUser(user.getId());
-
-        assertNull(adminService.findByIdUser(user.getId()));
-    }
 
     @Test
     @DisplayName("Блокировка пользователя")
@@ -52,12 +39,22 @@ class AdminServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("Удаление пользователя")
+    void shouldDeleteUser(){
+
+        User user = getUserById();
+        adminService.deleteUser(user.getId());
+
+        assertNull(adminService.findByIdUser(user.getId()));
+    }
+
     /**
      * Функция получения пользователя
      * @return возвращает объект пользователя
      */
     private User getUserById(){
-        return userRepository.findAll().stream().filter(el -> el.getName().equals("Jame")).findFirst().get();
+        return userRepository.findAll().stream().filter(el -> el.getName().equals("Jame")).findFirst().orElse(null);
     }
 
 
