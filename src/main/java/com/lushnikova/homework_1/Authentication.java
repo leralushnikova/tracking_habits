@@ -15,35 +15,49 @@ import static com.lushnikova.homework_1.controller.UserController.wrongInput;
  * Класс для аутентификации админа или пользователя
  */
 public class Authentication {
-    /** Поле преобразования пользователей*/
+    /**
+     * Поле преобразования пользователей
+     */
     private final UserMapper userMapper = UserMapper.INSTANCE;
 
-    /** Поле репозиторий пользователей*/
+    /**
+     * Поле репозиторий пользователей
+     */
     private final UserRepository userRepository = UserRepository.getInstance();
 
     Controller controller;
 
-    private void initializer(){
+    private void initializer() {
+        while (true) {
             System.out.println(ADMIN_OR_USER);
 
             String answer = scannerString();
 
             switch (answer) {
-                case "1" -> controller = new AdminController(userRepository, userMapper);
-                case "2" -> controller = new UserController(userRepository, userMapper);
-                case "exit" -> {break;}
+                case "1" -> {
+                    controller = new AdminController(userRepository, userMapper);
+                    return;
+                }
+                case "2" -> {
+                    controller = new UserController(userRepository, userMapper);
+                    return;
+                }
+                case "exit" -> {
+                    return;
+                }
                 default -> {
                     wrongInput();
                     initializer();
                 }
             }
-
+        }
     }
 
-    public void main(){
+    public void main() {
         this.initializer();
-        if(controller != null){
+        if (controller != null) {
             controller.render();
+            this.initializer();
         }
     }
 }
