@@ -284,7 +284,7 @@ public class HabitRepository {
      * @return возвращает даты выполнения привычки
      * @throws SQLException
      */
-    public Set<Date> listDoneDates(Long id) throws SQLException {
+    private Set<Date> listDoneDates(Long id) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_DONE_DATES_BY_ID_HABIT);
         preparedStatement.setLong(1, id);
 
