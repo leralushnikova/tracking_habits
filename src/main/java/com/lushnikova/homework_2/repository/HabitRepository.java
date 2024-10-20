@@ -1,6 +1,6 @@
 package com.lushnikova.homework_2.repository;
 
-import com.lushnikova.homework_1.model.enum_for_model.Statistics;
+import com.lushnikova.homework_2.model.enum_for_model.Statistics;
 import com.lushnikova.homework_2.model.Habit;
 import com.lushnikova.homework_2.model.enum_for_model.Repeat;
 import com.lushnikova.homework_2.model.enum_for_model.Status;
@@ -29,7 +29,6 @@ public class HabitRepository {
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
-     *
      * @param connection - соединение б/д
      */
     public HabitRepository(Connection connection) {
@@ -38,8 +37,9 @@ public class HabitRepository {
 
     /**
      * Процедура сохранения привычки
-     *
-     * @param habit - объект пользователя
+     * @param habit - объект привычки
+     * @param idUser - id пользователя
+     * @throws SQLException
      */
     public void save(Habit habit, Long idUser) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_HABITS);
@@ -55,9 +55,9 @@ public class HabitRepository {
 
     /**
      * Функция получения привычки
-     *
      * @param id - id привычки
      * @return возвращает объект привычки
+     * @throws SQLException
      */
     public Habit findById(Long id) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABIT_BY_ID);
@@ -71,7 +71,6 @@ public class HabitRepository {
 
     /**
      * Функция получения привычки
-     *
      * @param resultSet - результат получения запроса из б/д
      * @return возвращение объекта привычки
      * @throws SQLException
@@ -111,7 +110,6 @@ public class HabitRepository {
 
     /**
      * Функция получения списка привычек пользователя
-     *
      * @param idUser - id пользователя
      * @return возвращает список привычек пользователя
      */
@@ -131,10 +129,10 @@ public class HabitRepository {
 
     /**
      * Функция получения списка привычек пользователя по статусу
-     *
      * @param idUser - id пользователя
      * @param status - статус привычки
      * @return возвращает список привычек пользователя по статусу
+     * @throws SQLException
      */
     public List<Habit> getHabitsByStatus(Long idUser, Status status) throws SQLException {
 
@@ -157,8 +155,9 @@ public class HabitRepository {
      * @param idUser - id пользователя
      * @param date   - дата создания
      * @return возвращает список привычек пользователя по дате создания
+     * @throws SQLException
      */
-    public List<Habit> getHabitsByDate(Long idUser, java.sql.Date date) throws SQLException {
+    public List<Habit> getHabitsByDate(Long idUser, Date date) throws SQLException {
 
         List<Habit> list = new ArrayList<>();
         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABITS_BY_DATE_BY_ID_USER);
@@ -177,9 +176,9 @@ public class HabitRepository {
 
     /**
      * Процедура обновления названия привычки
-     *
      * @param id       - id привычки
      * @param newTitle - новое название привычки
+     * @throws SQLException
      */
     public void updateTitleByIdHabit(Long id, String newTitle) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_TITLE);
@@ -190,9 +189,9 @@ public class HabitRepository {
 
     /**
      * Процедура обновления описания привычки
-     *
      * @param id             - id привычки
      * @param newDescription - новое описания привычки
+     * @throws SQLException
      */
     public void updateDescriptionByIdHabit(Long id, String newDescription) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_DESCRIPTION);
@@ -203,9 +202,9 @@ public class HabitRepository {
 
     /**
      * Процедура обновления частоты выполнения привычки
-     *
      * @param id        - id привычки
      * @param newRepeat - новая частота выполнения
+     * @throws SQLException
      */
     public void updateRepeatByIdHabit(Long id, Repeat newRepeat) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_REPEAT);
@@ -216,9 +215,9 @@ public class HabitRepository {
 
     /**
      * Процедура обновления статуса привычки
-     *
      * @param id        - id привычки
      * @param newStatus - новый статс
+     * @throws SQLException
      */
     public void updateStatusByIdHabit(Long id, Status newStatus) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_STATUS);
@@ -229,8 +228,8 @@ public class HabitRepository {
 
     /**
      * Процедура удаления привычки
-     *
      * @param id - id привычки
+     * @throws SQLException
      */
     public void delete(Long id) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(DELETE_HABIT);
@@ -240,11 +239,11 @@ public class HabitRepository {
 
     /**
      * Функция получения генерации статистики выполнения привычки
-     *
      * @param statistics - указания периода (DAY - за день, WEEK - за неделю, MONTH - месяц)
      * @param id         - id привычки
      * @param dateFrom   - дата, с какого числа нужно посчитать статистику
      * @return возвращает статистики выполнения привычки
+     * @throws SQLException
      */
     public List<String> getHabitFulfillmentStatistics(Long id, LocalDate dateFrom, Statistics statistics) throws SQLException {
         int days = 0;
@@ -281,9 +280,9 @@ public class HabitRepository {
 
     /**
      * Функция получения списка дат выполнены задач
-     *
      * @param id - id пользователя
      * @return возвращает даты выполнения привычки
+     * @throws SQLException
      */
     public Set<Date> listDoneDates(Long id) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_DONE_DATES_BY_ID_HABIT);
@@ -300,8 +299,8 @@ public class HabitRepository {
     /**
      * Процедура отметки даты, когда выполнялась привычка
      * и подсчета текущей серии выполнения
-     *
      * @param id - id привычки
+     * @throws SQLException
      */
     public void setDoneDates(Long id) throws SQLException {
         LocalDate date = LocalDate.now();
@@ -325,11 +324,11 @@ public class HabitRepository {
 
     /**
      * Функция получения процента успешного выполнения привычек за определенный период
-     *
      * @param idUser   - id пользователя
      * @param dateFrom - с какого числа
      * @param dateTo   - по какое число
      * @return возвращает процент успешного выполнения привычек
+     * @throws SQLException
      */
     public int percentSuccessHabits(Long idUser, LocalDate dateFrom, LocalDate dateTo) throws SQLException {
         long resultDays = ChronoUnit.DAYS.between(dateFrom, dateTo);
@@ -360,11 +359,11 @@ public class HabitRepository {
 
     /**
      * Процедура формирование отчета для пользователя по прогрессу выполнения привычки
-     *
-     * @param idHabit - id привычки
+     * @param id - id привычки
+     * @throws SQLException
      */
-    public void reportHabit(Long idHabit) throws SQLException {
-        Habit habit = findById(idHabit);
+    public void reportHabit(Long id) throws SQLException {
+        Habit habit = findById(id);
         System.out.println("Название: " + habit.getTitle());
         System.out.println("Описание: " + habit.getDescription());
         System.out.println("Статус: " + habit.getStatus());
@@ -381,10 +380,10 @@ public class HabitRepository {
     }
 
     /**
-     * Процедура включения отправки уведомления привычки в указанное время
-     *
+     * Процедура включения/выключения отправки уведомления привычки в указанное время
      * @param id       - id привычки
      * @param pushTime - время уведомления привычки
+     * @throws SQLException
      */
     public void switchOnOrOffPushNotification(Long id, Time pushTime) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_PUSH_TIME);

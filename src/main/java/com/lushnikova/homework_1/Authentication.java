@@ -12,7 +12,7 @@ import static com.lushnikova.homework_1.controller.UserController.scannerString;
 import static com.lushnikova.homework_1.controller.UserController.wrongInput;
 
 /**
- * Класс для аутентификации админа или пользователя
+ * Класс для аутентификации администратора или пользователя
  */
 public class Authentication {
     /**
@@ -25,8 +25,14 @@ public class Authentication {
      */
     private final UserRepository userRepository = UserRepository.getInstance();
 
+    /**
+     * Поле контроллера
+     */
     Controller controller;
 
+    /**
+     * Процедура инициализация контроллера
+     */
     private void initializer() {
         while (true) {
             System.out.println(ADMIN_OR_USER);
@@ -53,6 +59,9 @@ public class Authentication {
         }
     }
 
+    /**
+     * Процедура запуска метода инициализации
+     */
     public void main() {
         this.initializer();
         if (controller != null) {

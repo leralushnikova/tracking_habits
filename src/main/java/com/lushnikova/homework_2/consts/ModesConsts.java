@@ -1,4 +1,4 @@
-package com.lushnikova.homework_1.consts;
+package com.lushnikova.homework_2.consts;
 
 /**
  * Класс констант для выбора режимов

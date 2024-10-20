@@ -1,26 +1,26 @@
-package com.lushnikova.homework_1.controller;
+package com.lushnikova.homework_2.controller;
 
-import com.lushnikova.homework_1.dto.resp.AdminResponse;
-import com.lushnikova.homework_1.dto.resp.UserResponse;
-import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
-import com.lushnikova.homework_1.middleware.AdminMiddleware;
-import com.lushnikova.homework_1.middleware.Middleware;
-import com.lushnikova.homework_1.model.Admin;
-import com.lushnikova.homework_1.repository.AdminRepository;
-import com.lushnikova.homework_1.repository.UserRepository;
-import com.lushnikova.homework_1.service.AdminService;
-import com.lushnikova.homework_1.service.impl.AdminServiceImpl;
+import com.lushnikova.homework_2.dto.resp.AdminResponse;
+import com.lushnikova.homework_2.dto.resp.UserResponse;
+import com.lushnikova.homework_2.mapper.UserMapper;
+import com.lushnikova.homework_2.middleware.AdminMiddleware;
+import com.lushnikova.homework_2.middleware.Middleware;
+import com.lushnikova.homework_2.model.Admin;
+import com.lushnikova.homework_2.repository.AdminRepository;
+import com.lushnikova.homework_2.repository.UserRepository;
+import com.lushnikova.homework_2.service.AdminService;
+import com.lushnikova.homework_2.service.impl.AdminServiceImpl;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
-import static com.lushnikova.homework_1.consts.ModesConsts.*;
-import static com.lushnikova.homework_1.controller.UserController.wrongInput;
+import static com.lushnikova.homework_2.consts.ModesConsts.*;
 
 /**
  * Класс Controller для администратора
  */
-public class AdminController extends Controller{
+public class AdminController extends Controller {
     /** Поле репозиторий пользователей*/
     private final UserRepository userRepository;
 
@@ -32,17 +32,21 @@ public class AdminController extends Controller{
 
     /** Поле инструмент проверки*/
     private final Middleware middleware;
+
     /** Поле преобразования пользователей*/
     private final UserMapper userMapper;
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
      * @param userRepository - репозиторий пользователей
+     * @param userMapper - репозиторий пользователей
+     * @param connection - соединение с б/д
+     *
      */
-    public AdminController(UserRepository userRepository, UserMapper userMapper) {
+    public AdminController(UserRepository userRepository, UserMapper userMapper, Connection connection) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.adminRepository = AdminRepository.getInstance();
+        this.adminRepository = new AdminRepository(connection);
         middleware = new AdminMiddleware();
     }
 
@@ -68,14 +72,17 @@ public class AdminController extends Controller{
      * администратора при входе
      */
     public void getAdminAfterAuthentication() {
-        String email = UserController.email();
-        UUID idUserFromCheckEmail = checkEmail(email);
-
-        if (idUserFromCheckEmail != null) {
-            recursionByPassword(idUserFromCheckEmail);
-        } else {
-            System.out.println("Данного администратора не существует");
-            getAdminAfterAuthentication();
+        try {
+            String email = UserController.email();
+            Long idUserFromCheckEmail = checkEmail(email);
+            if (idUserFromCheckEmail != null) {
+                recursionByPassword(idUserFromCheckEmail);
+            } else {
+                System.out.println("Данного администратора не существует");
+                getAdminAfterAuthentication();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -91,14 +98,18 @@ public class AdminController extends Controller{
             String answer = UserController.scannerString();
             switch (answer) {
                 case "1" -> {
-                    adminService.findAllUsers().forEach(System.out::println);
-                    System.out.println("----------------------------------------------");
+                    try {
+                        adminService.findAllUsers().forEach(System.out::println);
+                        System.out.println("----------------------------------------------");
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                    }
 
                 }
                 case "2" -> {
                     System.out.println("Введите id пользователя ");
                     try {
-                        UUID idUser = UUID.fromString(UserController.scannerString());
+                        Long idUser = Long.parseLong(UserController.scannerString());
                         UserResponse userResponse = adminService.findByIdUser(idUser);
                         if (userResponse != null) {
                             boolean flag = blockUser();
@@ -110,29 +121,29 @@ public class AdminController extends Controller{
                             System.out.println("----------------------------------------------");
                             adminService.blockByIdUser(userResponse.getId(), flag);
                         }
-                        else wrongUUID();
-                    } catch (IllegalArgumentException e){
-                        wrongUUID();
+                        else wrongLong();
+                    } catch (IllegalArgumentException | SQLException e){
+                        System.out.println(e.getMessage());
                     }
 
                 }
                 case "3" -> {
                     System.out.println("Введите id пользователя: ");
                     try {
-                        UUID idUser = UUID.fromString(UserController.scannerString());
+                        Long idUser = Long.parseLong(UserController.scannerString());
                         UserResponse userResponse = adminService.findByIdUser(idUser);
                         if (userResponse != null) {
                             adminService.deleteUser(idUser);
                             System.out.println("Пользователь удален!");
                             System.out.println("----------------------------------------------");
                         }
-                        else wrongUUID();
-                    } catch (IllegalArgumentException e){
-                        wrongUUID();
+                        else wrongLong();
+                    } catch (IllegalArgumentException | SQLException e){
+                        System.out.println(e.getMessage());
                     }
                 }
                 case "exit" -> {return;}
-                default -> wrongInput();
+                default -> UserController.wrongInput();
             }
         }
     }
@@ -142,11 +153,16 @@ public class AdminController extends Controller{
      * если пароль не совпадает, то предлагается переустановить пароль
      * @param idUserFromCheckEmail - id администратора
      */
-    private void recursionByPassword(UUID idUserFromCheckEmail){
+    private void recursionByPassword(Long idUserFromCheckEmail){
 
         String password = UserController.password();
 
-        Admin adminFromRepository = adminRepository.findById(idUserFromCheckEmail);
+        Admin adminFromRepository = null;
+        try {
+            adminFromRepository = adminRepository.findById(idUserFromCheckEmail);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
 
         if (!middleware.checkPassword(password, adminFromRepository)) {
             System.out.println(RECOVER_PASSWORD);
@@ -159,12 +175,16 @@ public class AdminController extends Controller{
 
                     String newPassword = UserController.scannerString();
 
-                    adminService.updatePassword(idUserFromCheckEmail, newPassword);
+                    try {
+                        adminService.updatePassword(idUserFromCheckEmail, newPassword);
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                    }
 
                 }
                 case "n" -> recursionByPassword(idUserFromCheckEmail);
                 default -> {
-                    wrongInput();
+                    UserController.wrongInput();
                     recursionByPassword(idUserFromCheckEmail);
                 }
             }
@@ -183,7 +203,7 @@ public class AdminController extends Controller{
             case "1" -> {return false;}
             case "2" -> {return true;}
             default -> {
-                wrongInput();
+                UserController.wrongInput();
                 blockUser();
             }
         }
@@ -195,7 +215,7 @@ public class AdminController extends Controller{
      * @param email - почта при вводе
      * @return возвращает уникальный идентификатор пользователя
      */
-    private UUID checkEmail(String email){
+    private Long checkEmail(String email) throws SQLException {
         for (AdminResponse adminResponse : listAdmins()) {
             if (middleware.checkEmail(email, adminResponse)) {
                 return adminResponse.getId();
@@ -208,14 +228,14 @@ public class AdminController extends Controller{
      * Функция получения списка администраторов {@link AdminService#findAll()}
      * @return возвращает список администраторов
      */
-    private List<AdminResponse> listAdmins(){
+    private List<AdminResponse> listAdmins() throws SQLException {
         return adminService.findAll();
     }
 
     /**
      * Ответ при неправильном вводе id
      */
-    private void wrongUUID(){
+    private void wrongLong(){
         System.out.println("Неверно введен id");
     }
 }

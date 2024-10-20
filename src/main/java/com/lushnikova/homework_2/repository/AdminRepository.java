@@ -16,7 +16,7 @@ public class AdminRepository {
 
 
     /**
-     * Поле соединение с бд
+     * Поле соединение с б/д
      */
     private final Connection connection;
 

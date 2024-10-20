@@ -1,4 +1,4 @@
-package com.lushnikova.homework_1.service;
+package com.lushnikova.homework_2.service;
 
 /**
  * Маркерный интерфейс Service

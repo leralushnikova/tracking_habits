@@ -1,10 +1,10 @@
-package com.lushnikova.homework_2.model;
+package com.lushnikova.homework_2.dto.req;
 
 import lombok.*;
 
 
 /**
- * Класс Администратора
+ * Класс AdminRequest является объект request для класса {@see Admin}
  */
 
 @Getter
@@ -13,15 +13,10 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Builder
-public class Admin {
-    /** Поле идентификатор*/
-    private Long id;
-
+public class AdminRequest {
     /** Поле почта */
     private String email;
 
     /** Поле пароль */
     private String password;
 }
-
-

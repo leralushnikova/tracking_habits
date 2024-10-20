@@ -6,13 +6,10 @@
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
-    <changeSet id="008-insert_into_users" author="lera">
+    <changeSet id="011-insert_into_admins" author="lera">
         <sql>
-            insert into demo.users (name, email, password, is_active)
-            values ('Jame', 'jame@gmail.com', 'jame', true),
-                   ('user1', 'user1@gmail.com', 'user1', true),
-                   ('user2', 'user2@gmail.com', 'user2', true),
-                   ('user3', 'user3@gmail.com', 'user3', true);
+            insert into demo.admins (email, password)
+            values ('admin@gmail.com', 'admin');
         </sql>
     </changeSet>
 

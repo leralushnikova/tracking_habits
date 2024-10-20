@@ -1,24 +1,23 @@
-package com.lushnikova.homework_2.model;
+package com.lushnikova.homework_2.dto.resp;
 
 import com.lushnikova.homework_2.model.enum_for_model.Repeat;
 import com.lushnikova.homework_2.model.enum_for_model.Status;
 import lombok.*;
 
-import java.sql.Time;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.Set;
 
 /**
- * Класс Привычки
+ * Класс HabitResponse является объект response для класса {@see Habit}
  */
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Builder
-public class Habit {
+public class HabitResponse {
     /** Поле идентификатор*/
     private Long id;
 

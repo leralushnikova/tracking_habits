@@ -40,7 +40,6 @@ public class HabitController {
         this.dateMiddleware =  new DateMiddleware();
     }
 
-    //crud привычек
 
     /**
      * Режим по управлению привычек операции CRUD
@@ -68,7 +67,11 @@ public class HabitController {
         }
     }
 
-    //создание привычки
+
+    /**
+     * Процедура создания привычки
+     * @param idUser - id пользователя
+     */
     public void create(UUID idUser){
         HabitRequest habitRequest = new HabitRequest();
 

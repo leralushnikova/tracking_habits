@@ -28,7 +28,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
             </column>
         </createTable>-->
         <sql>
-            create table users
+            create table demo.users
             (
                 id        serial primary key,
                 name      varchar(30),

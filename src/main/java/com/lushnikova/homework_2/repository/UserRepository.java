@@ -1,10 +1,14 @@
 package com.lushnikova.homework_2.repository;
 
+import com.lushnikova.homework_1.model.Habit;
 import com.lushnikova.homework_2.model.User;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.lushnikova.homework_2.config.SQL_Query.*;
 
@@ -32,14 +36,16 @@ public class UserRepository {
      * Процедура сохранения пользователя
      *
      * @param user - объект пользователя
+     * @return возвращает объект пользователя
      */
-    public void save(User user) throws SQLException {
+    public User save(User user) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_USERS);
         preparedStatement.setString(1, user.getName());
         preparedStatement.setString(2, user.getEmail());
         preparedStatement.setString(3, user.getPassword());
-        preparedStatement.setBoolean(4, user.getIsActive());
+        preparedStatement.setBoolean(4, true);
         preparedStatement.executeUpdate();
+        return user;
     }
 
     /**
@@ -157,6 +163,5 @@ public class UserRepository {
         }
         return list;
     }
-
 
 }

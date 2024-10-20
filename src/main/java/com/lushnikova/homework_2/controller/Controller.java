@@ -1,4 +1,4 @@
-package com.lushnikova.homework_1.controller;
+package com.lushnikova.homework_2.controller;
 
 /**
  * Абстрактный класс Controller

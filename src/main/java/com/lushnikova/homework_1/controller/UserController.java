@@ -60,6 +60,9 @@ public class UserController extends Controller{
         habitController = new HabitController(userService);
     }
 
+    /**
+     * Авторизация пользователя
+     */
     @Override
     void enter() {
         UserResponse userResponse;
@@ -212,14 +215,14 @@ public class UserController extends Controller{
             case "1" -> {
                 System.out.println("Введите новое имя: ");
                 String name = scannerString();
-                if (!name.isBlank() && name.isEmpty()) {
+                if (!name.isBlank() && !name.isEmpty()) {
                     userService.updateName(idUser, name);
                     editUser(idUser);
                 } else wrongInput();
             }
             case "2" -> {
                 String email = email();
-                if (!email.isBlank() && email.isEmpty()) {
+                if (!email.isBlank() && !email.isEmpty()) {
                     userService.updateEmail(idUser, email);
                     editUser(idUser);
                 } else wrongInput();
@@ -270,7 +273,10 @@ public class UserController extends Controller{
                     return userService.findById(idUserFromCheckEmail);
                 }
                 case "n" -> recursionForPassword(idUserFromCheckEmail);
-                default -> wrongInput();
+                default -> {
+                    wrongInput();
+                    recursionForPassword(idUserFromCheckEmail);
+                }
             }
         }
         return UserFromService;
