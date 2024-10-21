@@ -1,7 +1,7 @@
 package com.lushnikova.homework_1.model;
 
-import com.lushnikova.homework_1.model.enums.Repeat;
-import com.lushnikova.homework_1.model.enums.Status;
+import com.lushnikova.homework_1.model.enum_for_model.Repeat;
+import com.lushnikova.homework_1.model.enum_for_model.Status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -41,12 +41,17 @@ public class Habit {
     private final Set<LocalDate> doneDates = new TreeSet<>();
 
     /**
-     * Пустой конструктор для создания нового объекта
+     * Нестатический блок инициализации
      * каждый новая привычка создается со статусом created
      */
-    public Habit() {
+    {
         this.status = Status.CREATED;
     }
+
+    /**
+     * Пустой конструктор для создания нового объекта
+     */
+    public Habit() {}
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
@@ -58,7 +63,6 @@ public class Habit {
         this.title = title;
         this.description = description;
         this.repeat = repeat;
-        this.status = Status.CREATED;
     }
 
     /**

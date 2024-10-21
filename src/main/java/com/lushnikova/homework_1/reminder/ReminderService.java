@@ -18,10 +18,10 @@ import java.util.UUID;
 public class ReminderService {
     /** Поле существования потока*/
     private volatile boolean running;
-    
+
     /** Поле потока*/
     private Thread thread;
-    
+
     /** Поле репозитория пользователей*/
     private final UserRepository userRepository;
 

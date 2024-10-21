@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="001-create_schema_demo" author="lera">
+        <sql>
+            drop sequence if exists serial;
+
+            drop table if exists demo.admins;
+
+            drop table if exists demo.habits_donedates;
+
+            drop table if exists demo.habits;
+
+            drop table if exists demo.users;
+
+            drop schema if exists demo;
+
+            CREATE SCHEMA demo;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

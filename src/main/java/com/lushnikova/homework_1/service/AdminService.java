@@ -3,7 +3,6 @@ package com.lushnikova.homework_1.service;
 import com.lushnikova.homework_1.dto.req.AdminRequest;
 import com.lushnikova.homework_1.dto.resp.AdminResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
-import com.lushnikova.homework_1.exception.ModelNotFound;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,13 +10,13 @@ import java.util.UUID;
 /**
  * Интерфейс Service по управлению администраторами и пользователями
  */
-public interface AdminService {
+public interface AdminService extends Service{
 
     /**
      * Процедура сохранения администратора
      * @param adminRequest - объект администратора
      */
-    void saveAdmin(AdminRequest adminRequest);
+    void save(AdminRequest adminRequest);
 
     /**
      * Функция получения администратора
@@ -37,7 +36,7 @@ public interface AdminService {
      * Функция получения списка администраторов
      * @return возвращает списка администраторов
      */
-    List<AdminResponse> findAllAdmins();
+    List<AdminResponse> findAll();
 
     /**
      * Функция получения списка пользователей
@@ -62,8 +61,7 @@ public interface AdminService {
      * Процедура блокирования пользователя
      * @param idUser - id пользователя
      * @param isActive - блокировка пользователя
-     * @throws ModelNotFound
      */
-    void blockByIdUser(UUID idUser, boolean isActive) throws ModelNotFound;
+    void blockByIdUser(UUID idUser, boolean isActive);
 
 }

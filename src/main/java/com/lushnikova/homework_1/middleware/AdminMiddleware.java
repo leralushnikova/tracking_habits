@@ -1,6 +1,7 @@
 package com.lushnikova.homework_1.middleware;
 
 import com.lushnikova.homework_1.dto.resp.AdminResponse;
+import com.lushnikova.homework_1.model.Admin;
 
 /**
  * Класс для проверки {@see AdminResponse} реализующий интерфейс {@see Middleware}
@@ -29,8 +30,8 @@ public class AdminMiddleware implements Middleware{
      */
     @Override
     public boolean checkPassword(String password, Object object) {
-        if (object instanceof AdminResponse) {
-            return ((AdminResponse) object).getPassword().equals(password);
+        if (object instanceof Admin) {
+            return ((Admin) object).getPassword().equals(password);
         }
         return false;
     }

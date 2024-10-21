@@ -1,7 +1,7 @@
 package com.lushnikova.homework_1.dto.resp;
 
-import com.lushnikova.homework_1.model.enums.Repeat;
-import com.lushnikova.homework_1.model.enums.Status;
+import com.lushnikova.homework_1.model.enum_for_model.Repeat;
+import com.lushnikova.homework_1.model.enum_for_model.Status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -67,14 +67,6 @@ public class AdminResponse {
     }
 
     /**
-     * Функция получения значения поля {@link AdminResponse#password}
-     * @return возвращает пароль администратора
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
      * Процедура определения значения поля {@link AdminResponse#password}
      * @param password - пароль
      */
@@ -108,7 +100,6 @@ public class AdminResponse {
         return "Admin{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 '}';
     }
 }

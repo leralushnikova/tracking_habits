@@ -2,35 +2,131 @@ package com.lushnikova.homework_1.controller;
 
 import com.lushnikova.homework_1.dto.req.UserRequest;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
+import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
 import com.lushnikova.homework_1.middleware.Middleware;
+import com.lushnikova.homework_1.middleware.UserMiddleware;
+import com.lushnikova.homework_1.model.User;
+import com.lushnikova.homework_1.reminder.ReminderService;
+import com.lushnikova.homework_1.repository.UserRepository;
 import com.lushnikova.homework_1.service.UserService;
+import com.lushnikova.homework_1.service.impl.UserServiceImpl;
 
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
+import static com.lushnikova.homework_1.consts.ModesConsts.*;
+
 /**
  * Класс Controller для пользователей
  */
-public class UserController {
+public class UserController extends Controller{
 
     /** Поле сервис пользователей*/
-    private final UserService userService;
+    private UserService userService;
+
+    /** Поле репозиторий пользователей*/
+    private final UserRepository userRepository;
 
     /** Поле инструмент проверки*/
     private final Middleware userMiddleware;
 
+    /** Поле преобразования пользователей*/
+    private final UserMapper userMapper;
+
+    /** Поле контроллер привычек*/
+    private HabitController habitController;
+
+    /** Поле сервис по проверки уведомлений*/
+    final ReminderService reminderService;
+
     /**
      * Конструктор - создание нового объекта с определенными значениями
-     * @param userService - сервис пользователей
-     * @param userMiddleware - инструмент проверки*
+     * @param userRepository - репозиторий пользователей
      */
-    public UserController(UserService userService, Middleware userMiddleware) {
-        this.userService = userService;
-        this.userMiddleware = userMiddleware;
+    public UserController(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMiddleware = new UserMiddleware();
+        this.userMapper = userMapper;
+        reminderService = new ReminderService(userRepository);
     }
 
-    //регистрация нового пользователя
+    /**
+     * Процедура создания сервиса пользователя
+     */
+    @Override
+    public void createService() {
+        userService = new UserServiceImpl(userMapper, userRepository);
+        habitController = new HabitController(userService);
+    }
+
+    /**
+     * Авторизация пользователя
+     */
+    @Override
+    void enter() {
+        UserResponse userResponse;
+        while (true) {
+            System.out.println(ENTER_USER);
+            String input = scannerString();
+
+            switch (input) {
+                case ("in") -> {
+                    userResponse = getUserAfterAuthentication();
+                    reminderService.start(userResponse.getId());
+                    modesForUsers(userResponse.getId());
+                }
+                case ("up") -> {
+                    userResponse = createUser();
+                    reminderService.start(userResponse.getId());
+                    modesForUsers(userResponse.getId());
+                }
+                case ("exit") -> {
+                    return;
+                }
+
+                default -> wrongInput();
+            }
+        }
+    }
+
+    /**
+     * Режим управления либо данными пользователя или его привычками
+     * @param idUser - id пользователя
+     */
+    public void modesForUsers(UUID idUser){
+        while (true) {
+            UserResponse userResponse = getUser(idUser);
+
+            if (userResponse != null) {
+                System.out.println(MODES_FOR_USER);
+
+                String answer = scannerString();
+
+                switch (answer) {
+                    case "1" -> editUser(idUser);
+
+                    case "2" -> readUser(idUser);
+
+                    case "3" -> habitController.crudHabits(idUser);
+
+                    case "4" -> habitController.readHabits(idUser);
+
+                    case "5" -> habitController.getHabitFulfillmentStatisticsByIdUser(idUser);
+
+                    case "6" -> habitController.getPercentSuccessHabitsByIdUser(idUser);
+
+                    case "7" -> habitController.reportHabitByIdUser(idUser);
+
+                    case "exit" -> {
+                        reminderService.stop();
+                        return;
+                    }
+                    default -> wrongInput();
+                }
+            } else return;
+        }
+    }
 
     /**
      * Функция получения нового пользователя
@@ -49,9 +145,8 @@ public class UserController {
                 userRequest.setEmail(email);
 
                 while (true) {
-                    System.out.println("Пароль должен содержать 8 символов латинского алфавита, " +
-                            "минимум одну заглавную букву, " +
-                            "одну маленькую букву либо спец. символ, либо цифру.");
+                    System.out.println(MESSAGE_PASSWORD);
+
                     String password = password();
 
                     if (userMiddleware.checkPassword(password)) {
@@ -103,7 +198,6 @@ public class UserController {
         System.out.println("Ваши данные: ");
         System.out.println("Имя =  " + userResponse.getName());
         System.out.println("Почта =  " + userResponse.getEmail());
-        System.out.println("Пароль =  " + userResponse.getPassword());
         System.out.println("Статус =  " + userResponse.isActive());
         System.out.println("----------------------------------------------");
     }
@@ -114,26 +208,21 @@ public class UserController {
      * @param idUser - id пользователя
      */
     public void editUser(UUID idUser) {
-        System.out.println("Вы хотите изменить:");
-        System.out.println("1 - имя");
-        System.out.println("2 - email");
-        System.out.println("3 - пароль");
-        System.out.println("4 - удалить профиль");
-        System.out.println("exit - выход из режима редактирования пользователя");
+        System.out.println(EDIT_USER);
 
         String answer = scannerString();
         switch (answer) {
             case "1" -> {
                 System.out.println("Введите новое имя: ");
                 String name = scannerString();
-                if (!name.isBlank() && name.isEmpty()) {
+                if (!name.isBlank() && !name.isEmpty()) {
                     userService.updateName(idUser, name);
                     editUser(idUser);
                 } else wrongInput();
             }
             case "2" -> {
                 String email = email();
-                if (!email.isBlank() && email.isEmpty()) {
+                if (!email.isBlank() && !email.isEmpty()) {
                     userService.updateEmail(idUser, email);
                     editUser(idUser);
                 } else wrongInput();
@@ -157,7 +246,6 @@ public class UserController {
         }
     }
 
-    //рекрусивный метод ввода пароля
     /**
      * Функция получения пользователя по id при проверке пароля,
      * если пароль не совпадает, то предлагается переустановить пароль
@@ -169,10 +257,12 @@ public class UserController {
         String password = password();
 
         UserResponse UserFromService = userService.findById(idUserFromCheckEmail);
-        if (userMiddleware.checkPassword(password, UserFromService)) {
+
+        User userFromRepository = userRepository.findById(idUserFromCheckEmail);
+        if (userMiddleware.checkPassword(password, userFromRepository)) {
             return UserFromService;
         } else {
-            System.out.println("Пароль введен не верно! Хотите восстановить пароль(y) или попробовать еще попытку(n)? [y/n]");
+            System.out.println(RECOVER_PASSWORD);
             String answer = scannerString();
 
             switch (answer) {
@@ -183,7 +273,10 @@ public class UserController {
                     return userService.findById(idUserFromCheckEmail);
                 }
                 case "n" -> recursionForPassword(idUserFromCheckEmail);
-                default -> wrongInput();
+                default -> {
+                    wrongInput();
+                    recursionForPassword(idUserFromCheckEmail);
+                }
             }
         }
         return UserFromService;
@@ -220,8 +313,7 @@ public class UserController {
      * Ответ при неправильном вводе в консоль
      */
     public static void wrongInput() {
-        System.out.println("Неправильный ввод!");
-        System.out.println("----------------------------------------------");
+        System.out.println(WRONG_INPUT);
 
     }
 
