@@ -2,7 +2,13 @@ package com.lushnikova.homework_2.repository;
 
 
 import com.lushnikova.homework_2.model.Admin;
+import liquibase.Contexts;
+import liquibase.LabelExpression;
 import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -14,7 +20,7 @@ import java.sql.*;
 
 import static com.lushnikova.homework_2.config.Environment.PASSWORD;
 import static com.lushnikova.homework_2.config.Environment.USER;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("Класс тестирования репозитория администраторов")
 @Testcontainers
@@ -23,10 +29,6 @@ class AdminRepositoryTest {
 
     private final static DockerImageName postgres = DockerImageName.parse("postgres:13.3");
 
-    static String schema = "CREATE SCHEMA demo";
-    static String table = "create demo.table admins(id int primary key, email varchar(30), password varchar(30))";
-    static final String SELECT_ADMIN_BY_EMAIL = "SELECT * FROM demo.admins WHERE id = ?";
-
 
     private AdminRepository adminRepository;
 
@@ -34,10 +36,7 @@ class AdminRepositoryTest {
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(postgres.asCompatibleSubstituteFor("postgres"))
             .withExposedPorts(5432)
             .withUsername(USER)
-            .withPassword(PASSWORD)
-            .withInitScript(schema)
-            .withInitScript(table);
-
+            .withPassword(PASSWORD);
 
 
     @BeforeAll
@@ -48,7 +47,6 @@ class AdminRepositoryTest {
     @AfterAll
     static void afterAll() {
         postgreSQLContainer.stop();
-        postgreSQLContainer.close();
     }
 
 
@@ -56,6 +54,9 @@ class AdminRepositoryTest {
     @BeforeEach
     void setUp() {
         Connection connection = DriverManager.getConnection(postgreSQLContainer.getJdbcUrl(), postgreSQLContainer.getUsername(), postgreSQLContainer.getPassword());
+        Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+        Liquibase liquibase = new Liquibase("db/changelog/db.changelog-test.xml", new ClassLoaderResourceAccessor(), database);
+        liquibase.update(new Contexts(), new LabelExpression());
         adminRepository = new AdminRepository(connection);
     }
 
@@ -73,47 +74,18 @@ class AdminRepositoryTest {
 
         adminRepository.save(admin);
 
-        assertEquals(admin, findByEmail(email));
+        assertNotNull(adminRepository.findById(2L));
     }
 
     @SneakyThrows
-    private Admin getAdmin(ResultSet resultSet) {
-        Admin admin = new Admin();
-        admin.setId(resultSet.getLong("id"));
-        admin.setEmail(resultSet.getString("email"));
-        admin.setPassword(resultSet.getString("password"));
-        return admin;
+    @Test
+    @DisplayName("Изменение пароля администратора")
+    void shouldUpdatePasswordAdmin() {
+        String password = "password";
+        long id = 1l;
+        adminRepository.updatePassword(id, password);
+
+        assertNotNull(adminRepository.findById(id).getPassword(), password);
     }
-
-    /*@SneakyThrows
-    public Admin findById(Long id){
-        Admin admin = null;
-        try(Connection connection = DriverManager.getConnection(postgreSQLContainer.getJdbcUrl(), USER, PASSWORD);
-        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ADMIN_BY_ID)){
-            preparedStatement.setLong(1, id);
-
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            admin = getAdmin(resultSet);
-        }
-        return admin;
-    }*/
-
-    @SneakyThrows
-    public Admin findByEmail(String email) {
-        Admin admin;
-        try (Connection connection = DriverManager.getConnection(postgreSQLContainer.getJdbcUrl(), USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ADMIN_BY_EMAIL)) {
-            preparedStatement.setString(1, email);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            admin = getAdmin(resultSet);
-        }
-
-        return admin;
-    }
-
 
 }

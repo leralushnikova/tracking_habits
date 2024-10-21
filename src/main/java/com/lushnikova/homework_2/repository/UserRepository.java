@@ -1,14 +1,10 @@
 package com.lushnikova.homework_2.repository;
 
-import com.lushnikova.homework_1.model.Habit;
 import com.lushnikova.homework_2.model.User;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static com.lushnikova.homework_2.config.SQL_Query.*;
 
