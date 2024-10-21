@@ -68,7 +68,7 @@ public class SQL_Query {
 
     public static final String UPDATE_HABIT_PUSH_TIME = "UPDATE demo.habits SET push_time = ? WHERE id = ?";
 
-    public static final String INSERT_INTO_ADMINS = "INSERT INTO demo.admins(id, email, password) VALUES (?, ?, ?)";
+    public static final String INSERT_INTO_ADMINS = "INSERT INTO demo.admins(email, password) VALUES (?, ?)";
 
     public static final String SELECT_ADMIN_BY_ID = "SELECT * FROM demo.admins WHERE id = ?";
 

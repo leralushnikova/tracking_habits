@@ -38,9 +38,8 @@ public class AdminRepository {
      */
     public void save(Admin admin) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_ADMINS);
-        preparedStatement.setLong(1, admin.getId());
-        preparedStatement.setString(2, admin.getEmail());
-        preparedStatement.setString(3, admin.getPassword());
+        preparedStatement.setString(1, admin.getEmail());
+        preparedStatement.setString(2, admin.getPassword());
         preparedStatement.executeUpdate();
     }
 
