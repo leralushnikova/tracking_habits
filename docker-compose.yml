@@ -11,17 +11,3 @@ services:
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     ports:
       - '5432:5432'
-    volumes:
-      - postgres_habits:/var/lib/postgresql/data
-
-  liquibase:
-    image: liquibase/liquibase:4.9.1
-    container_name: Liquibase_container
-    depends_on:
-      - postgres_habits
-    hostname: liquibase
-    env_file: .env
-    volumes:
-      - ./src/resources/db/changelog/:/db/changelog/
-    # Command to run the liquibase update service
-    command: --url=jdbc:postgresql://localhost:5432/postgres?user=${DATABASE_USERNAME}&password=${DATABASE_PASSWORD} --changeLogFile=/src/resources/db/changelog/changelog.xml update

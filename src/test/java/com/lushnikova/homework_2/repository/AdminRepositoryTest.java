@@ -18,8 +18,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.sql.*;
 
-import static com.lushnikova.homework_2.config.Environment.PASSWORD;
-import static com.lushnikova.homework_2.config.Environment.USER;
+import static com.lushnikova.homework_2.config.Environment.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("Класс тестирования репозитория администраторов")
@@ -35,8 +34,8 @@ class AdminRepositoryTest {
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(postgres.asCompatibleSubstituteFor("postgres"))
             .withExposedPorts(5432)
-            .withUsername(USER)
-            .withPassword(PASSWORD);
+            .withUsername(getUSER())
+            .withPassword(getPassword());
 
 
     @BeforeAll

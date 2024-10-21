@@ -22,8 +22,7 @@ import java.sql.DriverManager;
 import java.sql.Time;
 import java.time.LocalDate;
 
-import static com.lushnikova.homework_2.config.Environment.PASSWORD;
-import static com.lushnikova.homework_2.config.Environment.USER;
+import static com.lushnikova.homework_2.config.Environment.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HabitRepositoryTest {
@@ -35,8 +34,8 @@ class HabitRepositoryTest {
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(postgres.asCompatibleSubstituteFor("postgres"))
             .withExposedPorts(5432)
-            .withUsername(USER)
-            .withPassword(PASSWORD);
+            .withUsername(getUSER())
+            .withPassword(getPassword());
 
 
     @BeforeAll

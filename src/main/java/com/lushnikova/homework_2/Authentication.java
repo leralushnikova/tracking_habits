@@ -62,7 +62,7 @@ public class Authentication {
      * Процедура запуска метода инициализации
      */
     public void main() {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUSER(), getPassword())) {
             userRepository = new UserRepository(connection);
             habitRepository = new HabitRepository(connection);
 
