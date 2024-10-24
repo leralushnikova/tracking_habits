@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
+import static com.lushnikova.homework_1.consts.RegexConsts.DATE_FORMAT;
+
 /**
  * Класс проверки формата даты
  */
@@ -16,7 +18,7 @@ public class DateMiddleware {
      */
     //проверка даты
     public boolean checkDate(LocalDate date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
         try {
             format.parse(date.toString());
             return true;
