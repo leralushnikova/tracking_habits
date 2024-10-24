@@ -100,14 +100,6 @@ public class UserResponse {
     }
 
     /**
-     * Функция получения значения поля {@link UserResponse#password}
-     * @return возвращает пароль пользователя
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
      * Процедура определения значения поля {@link UserResponse#password}
      * @param password - пароль
      */
@@ -174,7 +166,6 @@ public class UserResponse {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", isActive=" + isActive +
                 ", habits=" + habits +
                 '}';

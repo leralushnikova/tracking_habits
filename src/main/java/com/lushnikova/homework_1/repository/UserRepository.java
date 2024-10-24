@@ -2,17 +2,13 @@ package com.lushnikova.homework_1.repository;
 
 import com.lushnikova.homework_1.model.Habit;
 import com.lushnikova.homework_1.model.User;
-import com.lushnikova.homework_1.model.enums.Repeat;
-import com.lushnikova.homework_1.model.enums.Statistics;
-import com.lushnikova.homework_1.model.enums.Status;
+import com.lushnikova.homework_1.model.enum_for_model.Repeat;
+import com.lushnikova.homework_1.model.enum_for_model.Statistics;
+import com.lushnikova.homework_1.model.enum_for_model.Status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.*;
 
 /**
  * Класс Repository для пользователей.
@@ -22,7 +18,7 @@ public class UserRepository {
     private static final UserRepository INSTANCE;
 
     /** Поле списка пользователй */
-    private final CopyOnWriteArrayList<User> users;
+    private final Set<User> users;
 
     /** Статический блок инициализации по созданию репозитория единожды */
     static {
@@ -34,7 +30,7 @@ public class UserRepository {
      * и созданий списка пользователей
      */
     private UserRepository() {
-        users = new CopyOnWriteArrayList<>();
+        users = new HashSet<>();
 
         User user1 = new User("Jame", "jame@gmail.com", "jame");
 
@@ -144,7 +140,7 @@ public class UserRepository {
      * @param name - новое имя пользователя
      */
     public synchronized void updateName(UUID id, String name) {
-      findById(id).setName(name);
+        findById(id).setName(name);
     }
 
     /**
@@ -351,8 +347,8 @@ public class UserRepository {
      * Функция получения списка администраторов {@link UserRepository#users}
      * @return возвращает копию списка администраторов
      */
-    public synchronized List<User> findAll() {
-        return new ArrayList<>(users);
+    public synchronized Set<User> findAll() {
+        return users;
     }
 
 

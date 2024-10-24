@@ -2,10 +2,7 @@ package com.lushnikova.homework_1.repository;
 
 import com.lushnikova.homework_1.model.Admin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.*;
 
 /**
  * Класс Repository для администраторов.
@@ -15,7 +12,7 @@ public class AdminRepository {
     private static final AdminRepository INSTANCE;
 
     /** Поле списка администраторов */
-    private final CopyOnWriteArrayList<Admin> admins;
+    private final Set<Admin> admins;
 
     /** Статический блок инициализации по созданию репозитория единожды */
     static {
@@ -27,7 +24,7 @@ public class AdminRepository {
      * и созданий списка администраторов
      */
     private AdminRepository() {
-        admins = new CopyOnWriteArrayList<>();
+        admins = new HashSet<>();
 
         for (int i = 0; i < 3; i++) {
             Admin admin = new Admin();
@@ -72,8 +69,8 @@ public class AdminRepository {
      * Функция получения списка администраторов {@link AdminRepository#admins}
      * @return возвращает копию списка администраторов
      */
-    public synchronized List<Admin> findAll(){
-        return new ArrayList<>(admins);
+    public synchronized Set<Admin> findAll(){
+        return admins;
     }
 
 

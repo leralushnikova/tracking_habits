@@ -1,14 +1,13 @@
 package com.lushnikova.homework_1.model;
 
-import com.lushnikova.homework_1.model.enums.Repeat;
-import com.lushnikova.homework_1.model.enums.Statistics;
-import com.lushnikova.homework_1.model.enums.Status;
+import com.lushnikova.homework_1.model.enum_for_model.Repeat;
+import com.lushnikova.homework_1.model.enum_for_model.Statistics;
+import com.lushnikova.homework_1.model.enum_for_model.Status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Класс Пользователя
@@ -34,7 +33,7 @@ public class User {
     private boolean isActive;
 
     /** Список привычек пользователя*/
-    private final CopyOnWriteArrayList<Habit> habits = new CopyOnWriteArrayList<>();
+    private final List<Habit> habits = new ArrayList<>();
 
     /**
      * Нестатический блок инициализации для генерации уникального идентификатора
@@ -221,9 +220,11 @@ public class User {
      */
     public void deleteHabit(Long idHabit){
         habits.removeIf(habit -> habit.getId().equals(idHabit));
-        for (int i = 0; i < habits.size(); i++) {
-            habits.get(i).setId((long) (i + 1));
+        int i = 0;
+        for (Habit habit : habits) {
+            habit.setId((long) (i++));
         }
+
     }
 
     /**
