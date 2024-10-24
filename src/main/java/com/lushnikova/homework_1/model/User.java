@@ -33,7 +33,7 @@ public class User {
     private boolean isActive;
 
     /** Список привычек пользователя*/
-    private final Set<Habit> habits = new HashSet<>();
+    private final List<Habit> habits = new ArrayList<>();
 
     /**
      * Нестатический блок инициализации для генерации уникального идентификатора
@@ -131,7 +131,7 @@ public class User {
      * Функция получения списка привычек {@link User#habits}
      * @return возвращает список привычек пользователя
      */
-    public Set<Habit> getHabits() {
+    public List<Habit> getHabits() {
         return habits;
     }
 
