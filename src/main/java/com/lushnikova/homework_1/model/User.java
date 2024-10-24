@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Класс Пользователя
@@ -34,7 +33,7 @@ public class User {
     private boolean isActive;
 
     /** Список привычек пользователя*/
-    private final CopyOnWriteArrayList<Habit> habits = new CopyOnWriteArrayList<>();
+    private final Set<Habit> habits = new HashSet<>();
 
     /**
      * Нестатический блок инициализации для генерации уникального идентификатора
@@ -132,7 +131,7 @@ public class User {
      * Функция получения списка привычек {@link User#habits}
      * @return возвращает список привычек пользователя
      */
-    public List<Habit> getHabits() {
+    public Set<Habit> getHabits() {
         return habits;
     }
 
@@ -221,9 +220,11 @@ public class User {
      */
     public void deleteHabit(Long idHabit){
         habits.removeIf(habit -> habit.getId().equals(idHabit));
-        for (int i = 0; i < habits.size(); i++) {
-            habits.get(i).setId((long) (i + 1));
+        int i = 0;
+        for (Habit habit : habits) {
+            habit.setId((long) (i++));
         }
+
     }
 
     /**
