@@ -1,7 +1,7 @@
 package com.lushnikova.homework_2.controller;
 
-import com.lushnikova.homework_2.dto.req.UserRequest;
-import com.lushnikova.homework_2.dto.resp.UserResponse;
+import com.lushnikova.homework_2.dto.request.UserRequest;
+import com.lushnikova.homework_2.dto.response.UserResponse;
 import com.lushnikova.homework_2.mapper.UserMapper;
 import com.lushnikova.homework_2.middleware.Middleware;
 import com.lushnikova.homework_2.middleware.UserMiddleware;
@@ -64,16 +64,10 @@ public class UserController extends Controller {
         this.userMiddleware = new UserMiddleware();
         this.userMapper = userMapper;
         this.habitController = new HabitController(habitRepository);
+        userService = new UserServiceImpl(userMapper, userRepository);
         reminderService = new ReminderService(habitRepository);
     }
 
-    /**
-     * Процедура создания сервиса пользователя
-     */
-    @Override
-    public void createService() {
-        userService = new UserServiceImpl(userMapper, userRepository);
-    }
 
     /**
      * Авторизация пользователя

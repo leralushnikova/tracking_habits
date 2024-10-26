@@ -1,7 +1,7 @@
 package com.lushnikova.homework_2.service.impl;
 
-import com.lushnikova.homework_2.dto.req.UserRequest;
-import com.lushnikova.homework_2.dto.resp.UserResponse;
+import com.lushnikova.homework_2.dto.request.UserRequest;
+import com.lushnikova.homework_2.dto.response.UserResponse;
 import com.lushnikova.homework_2.mapper.UserMapper;
 import com.lushnikova.homework_2.model.User;
 import com.lushnikova.homework_2.repository.UserRepository;

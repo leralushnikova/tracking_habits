@@ -1,8 +1,8 @@
 package com.lushnikova.homework_2.service.impl;
 
 import com.lushnikova.homework_2.model.ENUM.Statistics;
-import com.lushnikova.homework_2.dto.req.HabitRequest;
-import com.lushnikova.homework_2.dto.resp.HabitResponse;
+import com.lushnikova.homework_2.dto.request.HabitRequest;
+import com.lushnikova.homework_2.dto.response.HabitResponse;
 import com.lushnikova.homework_2.mapper.HabitMapper;
 import com.lushnikova.homework_2.model.Habit;
 import com.lushnikova.homework_2.model.ENUM.Repeat;

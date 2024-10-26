@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="008-insert_into_users" author="lera">
+
+        <insert schemaName="demo" tableName="habits">
+            <column name="id" valueSequenceNext="habits_id_seq"/>
+            <column name="user_id" value="1"/>
+            <column name="title" value="habit1"/>
+            <column name="description" value="habit1"/>
+            <column name="repeat" value="DAILY"/>
+            <column name="status" value="CREATED"/>
+            <column name="create_at" value="2024-10-08"/>
+        </insert>
+
+        <insert schemaName="demo" tableName="habits">
+            <column name="id" valueSequenceNext="habits_id_seq"/>
+            <column name="user_id" value="1"/>
+            <column name="title" value="habit2"/>
+            <column name="description" value="habit2"/>
+            <column name="repeat" value="WEEKLY"/>
+            <column name="status" value="IN_PROGRESS"/>
+            <column name="create_at" value="2024-10-09"/>
+        </insert>
+
+        <insert schemaName="demo" tableName="habits">
+            <column name="id" valueSequenceNext="habits_id_seq"/>
+            <column name="user_id" value="2"/>
+            <column name="title" value="habit3"/>
+            <column name="description" value="habit3"/>
+            <column name="repeat" value="DAILY"/>
+            <column name="status" value="DONE"/>
+            <column name="create_at" value="2024-10-10"/>
+        </insert>
+
+        <insert schemaName="demo" tableName="habits">
+            <column name="id" valueSequenceNext="habits_id_seq"/>
+            <column name="user_id" value="3"/>
+            <column name="title" value="habit4"/>
+            <column name="description" value="habit4"/>
+            <column name="repeat" value="WEEKLY"/>
+            <column name="status" value="CREATED"/>
+            <column name="create_at" value="2024-10-11"/>
+        </insert>
+
+        <insert schemaName="demo" tableName="habits">
+            <column name="id" valueSequenceNext="habits_id_seq"/>
+            <column name="user_id" value="1"/>
+            <column name="title" value="habit5"/>
+            <column name="description" value="habit5"/>
+            <column name="repeat" value="DAILY"/>
+            <column name="status" value="IN_PROGRESS"/>
+            <column name="create_at" value="2024-10-08"/>
+        </insert>
+
+        <insert schemaName="demo" tableName="habits">
+            <column name="id" valueSequenceNext="habits_id_seq"/>
+            <column name="user_id" value="2"/>
+            <column name="title" value="habit6"/>
+            <column name="description" value="habit6"/>
+            <column name="repeat" value="WEEKLY"/>
+            <column name="status" value="DONE"/>
+            <column name="create_at" value="2024-10-09"/>
+        </insert>
+
+        <insert schemaName="demo" tableName="habits">
+            <column name="id" valueSequenceNext="habits_id_seq"/>
+            <column name="user_id" value="3"/>
+            <column name="title" value="habit7"/>
+            <column name="description" value="habit7"/>
+            <column name="repeat" value="DAILY"/>
+            <column name="status" value="CREATED"/>
+            <column name="create_at" value="2024-10-10"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

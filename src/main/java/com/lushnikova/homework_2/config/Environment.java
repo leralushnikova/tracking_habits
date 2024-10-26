@@ -1,43 +1,37 @@
 package com.lushnikova.homework_2.config;
 
+import com.lushnikova.Solution;
+import lombok.Getter;
+
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
  * Класс констант для подключения к БД
  */
 public class Environment {
+    @Getter
     private static String PASSWORD;
+    @Getter
     private static String USER;
-    private static String URL = "jdbc:postgresql://localhost:5432/postgres";
+    @Getter
+    private static String URL ;
 
     static {
-        try {
-            String configFilePath = ".env";
-            FileInputStream propsInput = new FileInputStream(configFilePath);
-            Properties prop = new Properties();
-            prop.load(propsInput);
+        String configLiquibase = "db/changelog/liquibase.properties";
 
-            USER = prop.getProperty("DATABASE_USERNAME");
-            PASSWORD = prop.getProperty("DATABASE_PASSWORD");
-            URL = prop.getProperty("JDBC_DRIVER_VERSION");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        Properties prop = new Properties();
+        try (InputStream in = Environment.class.getClassLoader().getResourceAsStream(configLiquibase)){
+            prop.load(in);
+
+            URL = prop.getProperty("url");
+            USER = prop.getProperty("username");
+            PASSWORD = prop.getProperty("password");
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Could not read properties file");
         }
     }
-
-    public static String getUSER() {
-        return USER;
-    }
-    public static String getPassword() {
-        return PASSWORD;
-    }
-    public static String getURL() {
-        return URL;
-    }
-
 }

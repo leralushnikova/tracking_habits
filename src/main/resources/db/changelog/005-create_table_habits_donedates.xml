@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="005-create_table_habits_donedates" author="lera">
+
+        <createTable schemaName="demo" tableName="habits_donedates">
+
+            <column name="habit_id" type="integer">
+                <constraints primaryKey="false" nullable="false"/>
+            </column>
+
+            <column name="done_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+
+        <addForeignKeyConstraint baseTableSchemaName="demo"
+                                 baseColumnNames="habit_id"
+                                 baseTableName="habits_donedates"
+                                 deleteCascade="true"
+                                 constraintName="fk_habits_donedates_habit_id"
+                                 referencedTableSchemaName="demo"
+                                 referencedColumnNames="id"
+                                 referencedTableName="habits"/>
+    </changeSet>
+
+</databaseChangeLog>

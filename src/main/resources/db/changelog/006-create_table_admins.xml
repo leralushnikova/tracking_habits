@@ -5,15 +5,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="003-create_table_users" author="lera">
+    <changeSet id="006-create_table_admins" author="lera">
 
-        <createTable  schemaName="demo" tableName="users">
+        <createTable  schemaName="demo" tableName="admins">
             <column name="id" type="integer" >
                 <constraints primaryKey="true" nullable="false" />
-            </column>
-
-            <column name="name" type="varchar(30)">
-                <constraints nullable="false"/>
             </column>
 
             <column name="email" type="varchar(30)">
@@ -24,15 +20,11 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="is_active" type="boolean">
-                <constraints nullable="true"/>
-            </column>
         </createTable>
 
         <addDefaultValue  columnName="id"
-                          defaultValueSequenceNext="users_id_seq"
+                          defaultValueSequenceNext="admins_id_seq"
                           schemaName="demo"
-                          tableName="users"/>
-
+                          tableName="admins"/>
     </changeSet>
 </databaseChangeLog>

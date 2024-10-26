@@ -35,12 +35,14 @@ public class AdminRepository {
      * Процедура сохранения администратора
      *
      * @param admin - объект администратора
+     * @throws SQLException
      */
     public void save(Admin admin) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_ADMINS);
-        preparedStatement.setString(1, admin.getEmail());
-        preparedStatement.setString(2, admin.getPassword());
-        preparedStatement.executeUpdate();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_ADMINS)){
+            preparedStatement.setString(1, admin.getEmail());
+            preparedStatement.setString(2, admin.getPassword());
+            preparedStatement.executeUpdate();
+        }
     }
 
 
@@ -49,14 +51,18 @@ public class AdminRepository {
      *
      * @param id - id администратора
      * @return возвращает объект администратора
+     * @throws SQLException
      */
     public Admin findById(Long id) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ADMIN_BY_ID);
-        preparedStatement.setLong(1, id);
+        try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ADMIN_BY_ID)) {
+            preparedStatement.setLong(1, id);
 
-        ResultSet resultSet = preparedStatement.executeQuery();
-        resultSet.next();
-        return getAdmin(resultSet);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+
+                resultSet.next();
+                return getAdmin(resultSet);
+            }
+        }
     }
 
     /**
@@ -79,12 +85,14 @@ public class AdminRepository {
      *
      * @param id          - объект id администратора
      * @param newPassword - пароль администратора
+     * @throws SQLException
      */
     public void updatePassword(Long id, String newPassword) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ADMIN_PASSWORD);
-        preparedStatement.setString(1, newPassword);
-        preparedStatement.setLong(2, id);
-        preparedStatement.executeUpdate();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ADMIN_PASSWORD)){
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        }
     }
 
 
@@ -92,14 +100,18 @@ public class AdminRepository {
      * Функция получения списка администраторов
      *
      * @return возвращает копию списка администраторов
+     * @throws SQLException
      */
     public synchronized List<Admin> findAll() throws SQLException {
         List<Admin> list = new ArrayList<>();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(SELECT_ADMINS);
-        while (resultSet.next()) {
-            list.add(getAdmin(resultSet));
+
+        try(Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SELECT_ADMINS)){
+
+            while (resultSet.next()) {
+                list.add(getAdmin(resultSet));
+            }
+            return list;
         }
-        return list;
     }
 }

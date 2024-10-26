@@ -1,4 +1,4 @@
-package com.lushnikova.homework_2.dto.resp;
+package com.lushnikova.homework_2.dto.response;
 
 
 import lombok.*;

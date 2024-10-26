@@ -6,8 +6,9 @@
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="004-create_table_habits" author="lera">
-        <!--<createTable tableName="habits">
-            <column name="id" type="serial">
+        <createTable schemaName="demo" tableName="habits">
+
+            <column name="id" type="integer">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
@@ -43,21 +44,20 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
                 <constraints nullable="true"/>
             </column>
 
-        </createTable>-->
-        <sql>
-            create table demo.habits
-            (
-                id          serial primary key,
-                user_id     int references demo.users (id) on delete cascade,
-                title       varchar(50),
-                description varchar(255),
-                repeat      varchar(10),
-                status      varchar(15),
-                create_at   date,
-                streak      int,
-                push_time   time
+        </createTable>
 
-            );
-        </sql>
+        <addDefaultValue columnName="id"
+                         defaultValueSequenceNext="habits_id_seq"
+                         schemaName="demo"
+                         tableName="habits"/>
+
+        <addForeignKeyConstraint baseTableSchemaName="demo"
+                                 baseColumnNames="user_id"
+                                 baseTableName="habits"
+                                 deleteCascade="true"
+                                 constraintName="fk_habits_user_id"
+                                 referencedTableSchemaName="demo"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
     </changeSet>
 </databaseChangeLog>

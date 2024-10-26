@@ -1,8 +1,8 @@
 package com.lushnikova.homework_2.service;
 
-import com.lushnikova.homework_2.dto.req.AdminRequest;
-import com.lushnikova.homework_2.dto.resp.AdminResponse;
-import com.lushnikova.homework_2.dto.resp.UserResponse;
+import com.lushnikova.homework_2.dto.request.AdminRequest;
+import com.lushnikova.homework_2.dto.response.AdminResponse;
+import com.lushnikova.homework_2.dto.response.UserResponse;
 
 import java.sql.SQLException;
 import java.util.List;

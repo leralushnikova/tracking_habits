@@ -42,14 +42,15 @@ public class HabitRepository {
      * @throws SQLException
      */
     public void save(Habit habit, Long idUser) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_HABITS);
-        preparedStatement.setLong(1, idUser);
-        preparedStatement.setString(2, habit.getTitle());
-        preparedStatement.setString(3, habit.getDescription());
-        preparedStatement.setString(4, habit.getRepeat().name());
-        preparedStatement.setString(5, Status.CREATED.name());
-        preparedStatement.setDate(6, Date.valueOf(LocalDate.now().toString()));
-        preparedStatement.executeUpdate();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_HABITS)){
+            preparedStatement.setLong(1, idUser);
+            preparedStatement.setString(2, habit.getTitle());
+            preparedStatement.setString(3, habit.getDescription());
+            preparedStatement.setString(4, habit.getRepeat().name());
+            preparedStatement.setString(5, Status.CREATED.name());
+            preparedStatement.setDate(6, Date.valueOf(LocalDate.now().toString()));
+            preparedStatement.executeUpdate();
+        }
     }
 
 
@@ -60,13 +61,14 @@ public class HabitRepository {
      * @throws SQLException
      */
     public Habit findById(Long id) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABIT_BY_ID);
-        preparedStatement.setLong(1, id);
+        try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABIT_BY_ID)){
+            preparedStatement.setLong(1, id);
 
-        ResultSet resultSet = preparedStatement.executeQuery();
-        resultSet.next();
-
-        return getHabit(resultSet);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                resultSet.next();
+                return getHabit(resultSet);
+            }
+        }
     }
 
     /**
@@ -116,15 +118,18 @@ public class HabitRepository {
     public List<Habit> findAll(Long idUser) throws SQLException {
 
         List<Habit> list = new ArrayList<>();
-        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABITS_BY_ID_USER);
-        preparedStatement.setLong(1, idUser);
-        ResultSet resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABITS_BY_ID_USER)){
+            preparedStatement.setLong(1, idUser);
 
-            list.add(getHabit(resultSet));
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()) {
+
+                    list.add(getHabit(resultSet));
+                }
+                return list;
+            }
         }
-        return list;
     }
 
     /**
@@ -137,16 +142,19 @@ public class HabitRepository {
     public List<Habit> getHabitsByStatus(Long idUser, Status status) throws SQLException {
 
         List<Habit> list = new ArrayList<>();
-        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABITS_BY_STATUS_BY_ID_USER);
-        preparedStatement.setLong(1, idUser);
-        preparedStatement.setString(2, status.name());
-        ResultSet resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()) {
+        try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABITS_BY_STATUS_BY_ID_USER)){
+            preparedStatement.setLong(1, idUser);
+            preparedStatement.setString(2, status.name());
 
-            list.add(getHabit(resultSet));
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()) {
+
+                    list.add(getHabit(resultSet));
+                }
+                return list;
+            }
         }
-        return list;
     }
 
     /**
@@ -160,17 +168,18 @@ public class HabitRepository {
     public List<Habit> getHabitsByDate(Long idUser, Date date) throws SQLException {
 
         List<Habit> list = new ArrayList<>();
-        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABITS_BY_DATE_BY_ID_USER);
-        preparedStatement.setLong(1, idUser);
-        preparedStatement.setDate(2, date);
 
-        ResultSet resultSet = preparedStatement.executeQuery();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABITS_BY_DATE_BY_ID_USER)){
+            preparedStatement.setLong(1, idUser);
+            preparedStatement.setDate(2, date);
 
-        while (resultSet.next()) {
-
-            list.add(getHabit(resultSet));
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()) {
+                    list.add(getHabit(resultSet));
+                }
+                return list;
+            }
         }
-        return list;
     }
 
 
@@ -181,10 +190,11 @@ public class HabitRepository {
      * @throws SQLException
      */
     public void updateTitleByIdHabit(Long id, String newTitle) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_TITLE);
-        preparedStatement.setString(1, newTitle);
-        preparedStatement.setLong(2, id);
-        preparedStatement.executeUpdate();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_TITLE)){
+            preparedStatement.setString(1, newTitle);
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        }
     }
 
     /**
@@ -194,10 +204,11 @@ public class HabitRepository {
      * @throws SQLException
      */
     public void updateDescriptionByIdHabit(Long id, String newDescription) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_DESCRIPTION);
-        preparedStatement.setString(1, newDescription);
-        preparedStatement.setLong(2, id);
-        preparedStatement.executeUpdate();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_DESCRIPTION)){
+            preparedStatement.setString(1, newDescription);
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        }
     }
 
     /**
@@ -207,10 +218,11 @@ public class HabitRepository {
      * @throws SQLException
      */
     public void updateRepeatByIdHabit(Long id, Repeat newRepeat) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_REPEAT);
-        preparedStatement.setString(1, newRepeat.name());
-        preparedStatement.setLong(2, id);
-        preparedStatement.executeUpdate();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_REPEAT)){
+            preparedStatement.setString(1, newRepeat.name());
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        }
     }
 
     /**
@@ -220,10 +232,11 @@ public class HabitRepository {
      * @throws SQLException
      */
     public void updateStatusByIdHabit(Long id, Status newStatus) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_STATUS);
-        preparedStatement.setString(1, newStatus.name());
-        preparedStatement.setLong(2, id);
-        preparedStatement.executeUpdate();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_STATUS)){
+            preparedStatement.setString(1, newStatus.name());
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        }
     }
 
     /**
@@ -232,9 +245,10 @@ public class HabitRepository {
      * @throws SQLException
      */
     public void delete(Long id) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(DELETE_HABIT);
-        preparedStatement.setLong(1, id);
-        preparedStatement.executeUpdate();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(DELETE_HABIT)){
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+        }
     }
 
     /**
@@ -285,15 +299,18 @@ public class HabitRepository {
      * @throws SQLException
      */
     private Set<Date> listDoneDates(Long id) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_DONE_DATES_BY_ID_HABIT);
-        preparedStatement.setLong(1, id);
+        try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_DONE_DATES_BY_ID_HABIT)){
+            preparedStatement.setLong(1, id);
 
-        Set<Date> date = new TreeSet<>();
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()) {
-            date.add(resultSet.getDate("done_date"));
+            Set<Date> date = new TreeSet<>();
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()) {
+                    date.add(resultSet.getDate("done_date"));
+                }
+                return date;
+            }
         }
-        return date;
     }
 
     /**
@@ -304,22 +321,26 @@ public class HabitRepository {
      */
     public void setDoneDates(Long id) throws SQLException {
         LocalDate date = LocalDate.now();
-        PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_HABIT_DANEDATES);
-        preparedStatement.setLong(1, id);
-        preparedStatement.setDate(2, Date.valueOf(date.toString()));
-        preparedStatement.executeUpdate();
 
-        Set<Date> dates = listDoneDates(id);
-        int streak = findById(id).getStreak();
-        if (dates.toString().contains(date.minusDays(1).toString())) {
-            streak++;
-        } else streak = 1;
+        try(PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_HABIT_DANEDATES);
+            PreparedStatement preparedStatement1 = connection.prepareStatement(UPDATE_HABIT_STREAK)){
 
-        PreparedStatement preparedStatement1 = connection.prepareStatement(UPDATE_HABIT_STREAK);
-        preparedStatement1.setInt(1, streak);
-        preparedStatement1.setLong(2, id);
+            preparedStatement.setLong(1, id);
+            preparedStatement.setDate(2, Date.valueOf(date.toString()));
+            preparedStatement.executeUpdate();
 
-        preparedStatement1.executeUpdate();
+            Set<Date> dates = listDoneDates(id);
+            int streak = findById(id).getStreak();
+
+            if (dates.toString().contains(date.minusDays(1).toString())) {
+                streak++;
+            } else streak = 1;
+
+            preparedStatement1.setInt(1, streak);
+            preparedStatement1.setLong(2, id);
+
+            preparedStatement1.executeUpdate();
+        }
     }
 
     /**
@@ -364,6 +385,7 @@ public class HabitRepository {
      */
     public void reportHabit(Long id) throws SQLException {
         Habit habit = findById(id);
+
         System.out.println("Название: " + habit.getTitle());
         System.out.println("Описание: " + habit.getDescription());
         System.out.println("Статус: " + habit.getStatus());
@@ -386,10 +408,11 @@ public class HabitRepository {
      * @throws SQLException
      */
     public void switchOnOrOffPushNotification(Long id, Time pushTime) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_PUSH_TIME);
-        preparedStatement.setTime(1, pushTime);
-        preparedStatement.setLong(2, id);
-        preparedStatement.executeUpdate();
+        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_HABIT_PUSH_TIME)){
+            preparedStatement.setTime(1, pushTime);
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        }
     }
 
 }

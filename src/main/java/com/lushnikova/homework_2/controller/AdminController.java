@@ -1,7 +1,7 @@
 package com.lushnikova.homework_2.controller;
 
-import com.lushnikova.homework_2.dto.resp.AdminResponse;
-import com.lushnikova.homework_2.dto.resp.UserResponse;
+import com.lushnikova.homework_2.dto.response.AdminResponse;
+import com.lushnikova.homework_2.dto.response.UserResponse;
 import com.lushnikova.homework_2.mapper.UserMapper;
 import com.lushnikova.homework_2.middleware.AdminMiddleware;
 import com.lushnikova.homework_2.middleware.Middleware;
@@ -21,20 +21,16 @@ import static com.lushnikova.homework_2.consts.ModesConsts.*;
  * Класс Controller для администратора
  */
 public class AdminController extends Controller {
-    /** Поле репозиторий пользователей*/
-    private final UserRepository userRepository;
 
     /** Поле репозиторий администраторов*/
     private final AdminRepository adminRepository;
 
     /** Поле сервис администраторов*/
-    private AdminService adminService;
+    private final AdminService adminService;
 
     /** Поле инструмент проверки*/
     private final Middleware middleware;
 
-    /** Поле преобразования пользователей*/
-    private final UserMapper userMapper;
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
@@ -44,17 +40,8 @@ public class AdminController extends Controller {
      *
      */
     public AdminController(UserRepository userRepository, UserMapper userMapper, Connection connection) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
         this.adminRepository = new AdminRepository(connection);
         middleware = new AdminMiddleware();
-    }
-
-    /**
-     * Процедура создания сервиса администратора
-     */
-    @Override
-    public void createService() {
         adminService = new AdminServiceImpl(userRepository, adminRepository, userMapper);
     }
 

@@ -1,6 +1,6 @@
 package com.lushnikova.homework_2.middleware;
 
-import com.lushnikova.homework_2.dto.resp.AdminResponse;
+import com.lushnikova.homework_2.dto.response.AdminResponse;
 import com.lushnikova.homework_2.model.Admin;
 
 /**

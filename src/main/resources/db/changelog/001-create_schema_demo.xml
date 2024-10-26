@@ -7,19 +7,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="001-create_schema_demo" author="lera">
         <sql>
-            drop sequence if exists serial;
-
-            drop table if exists demo.admins;
-
-            drop table if exists demo.habits_donedates;
-
-            drop table if exists demo.habits;
-
-            drop table if exists demo.users;
-
-            drop schema if exists demo;
-
-            CREATE SCHEMA demo;
+            CREATE SCHEMA if not exists demo;
         </sql>
     </changeSet>
 </databaseChangeLog>

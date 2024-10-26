@@ -32,7 +32,7 @@ public class UserRepository {
     private UserRepository() {
         users = new HashSet<>();
 
-        User user1 = new User("Jame", "jame@gmail.com", "jame");
+        /*User user1 = new User("Jame", "jame@gmail.com", "jame");
 
         User user2 = new User("Kirill", "kirill@gmail.com", "kirill");
 
@@ -107,7 +107,7 @@ public class UserRepository {
         }
 
         users.add(user1);
-        users.add(user2);
+        users.add(user2);*/
     }
 
     /** Возвращение экземпляра репозитория*/

@@ -1,4 +1,4 @@
-package com.lushnikova.homework_2.dto.req;
+package com.lushnikova.homework_2.dto.request;
 
 import com.lushnikova.homework_2.model.ENUM.Repeat;
 import lombok.*;

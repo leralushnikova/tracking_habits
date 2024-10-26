@@ -1,8 +1,8 @@
 package com.lushnikova.homework_2.service.impl;
 
-import com.lushnikova.homework_2.dto.req.AdminRequest;
-import com.lushnikova.homework_2.dto.resp.AdminResponse;
-import com.lushnikova.homework_2.dto.resp.UserResponse;
+import com.lushnikova.homework_2.dto.request.AdminRequest;
+import com.lushnikova.homework_2.dto.response.AdminResponse;
+import com.lushnikova.homework_2.dto.response.UserResponse;
 import com.lushnikova.homework_2.mapper.AdminMapper;
 import com.lushnikova.homework_2.mapper.UserMapper;
 import com.lushnikova.homework_2.model.Admin;
