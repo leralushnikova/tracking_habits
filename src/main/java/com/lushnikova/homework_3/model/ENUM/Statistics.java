@@ -1,4 +1,4 @@
-package com.lushnikova.homework_2.model.enum_for_model;
+package com.lushnikova.homework_3.model.ENUM;
 
 /**
  * enum для статистики

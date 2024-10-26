@@ -1,6 +1,6 @@
 package com.lushnikova.homework_2.dto.req;
 
-import com.lushnikova.homework_2.model.enum_for_model.Repeat;
+import com.lushnikova.homework_2.model.ENUM.Repeat;
 import lombok.*;
 
 /**

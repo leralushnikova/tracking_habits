@@ -1,7 +1,7 @@
 package com.lushnikova.homework_2.dto.resp;
 
-import com.lushnikova.homework_2.model.enum_for_model.Repeat;
-import com.lushnikova.homework_2.model.enum_for_model.Status;
+import com.lushnikova.homework_2.model.ENUM.Repeat;
+import com.lushnikova.homework_2.model.ENUM.Status;
 import lombok.*;
 
 import java.sql.Date;

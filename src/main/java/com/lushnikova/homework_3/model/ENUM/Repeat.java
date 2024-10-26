@@ -1,4 +1,4 @@
-package com.lushnikova.homework_1.model.enum_for_model;
+package com.lushnikova.homework_3.model.ENUM;
 
 /**
  * enum для частоты повторений

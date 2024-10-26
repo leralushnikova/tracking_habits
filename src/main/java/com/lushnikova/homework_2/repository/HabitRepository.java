@@ -1,9 +1,9 @@
 package com.lushnikova.homework_2.repository;
 
-import com.lushnikova.homework_2.model.enum_for_model.Statistics;
+import com.lushnikova.homework_2.model.ENUM.Statistics;
 import com.lushnikova.homework_2.model.Habit;
-import com.lushnikova.homework_2.model.enum_for_model.Repeat;
-import com.lushnikova.homework_2.model.enum_for_model.Status;
+import com.lushnikova.homework_2.model.ENUM.Repeat;
+import com.lushnikova.homework_2.model.ENUM.Status;
 
 import java.sql.*;
 import java.sql.Date;
