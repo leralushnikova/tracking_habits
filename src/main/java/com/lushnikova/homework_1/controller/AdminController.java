@@ -2,63 +2,91 @@ package com.lushnikova.homework_1.controller;
 
 import com.lushnikova.homework_1.dto.resp.AdminResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
-import com.lushnikova.homework_1.exception.ModelNotFound;
+import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
+import com.lushnikova.homework_1.middleware.AdminMiddleware;
 import com.lushnikova.homework_1.middleware.Middleware;
+import com.lushnikova.homework_1.model.Admin;
+import com.lushnikova.homework_1.repository.AdminRepository;
+import com.lushnikova.homework_1.repository.UserRepository;
 import com.lushnikova.homework_1.service.AdminService;
+import com.lushnikova.homework_1.service.impl.AdminServiceImpl;
 
 import java.util.List;
 import java.util.UUID;
 
+import static com.lushnikova.homework_1.consts.ModesConsts.*;
+import static com.lushnikova.homework_1.controller.UserController.wrongInput;
+
 /**
  * Класс Controller для администратора
  */
-public class AdminController {
+public class AdminController extends Controller{
+    /** Поле репозиторий пользователей*/
+    private final UserRepository userRepository;
+
+    /** Поле репозиторий администраторов*/
+    private final AdminRepository adminRepository;
 
     /** Поле сервис администраторов*/
-    private final AdminService adminService;
+    private AdminService adminService;
 
     /** Поле инструмент проверки*/
     private final Middleware middleware;
+    /** Поле преобразования пользователей*/
+    private final UserMapper userMapper;
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
-     * @param adminService - сервис администраторов
-     * @param middleware - инструмент проверки
+     * @param userRepository - репозиторий пользователей
      */
-    public AdminController(AdminService adminService, Middleware middleware) {
-        this.adminService = adminService;
-        this.middleware = middleware;
+    public AdminController(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.adminRepository = AdminRepository.getInstance();
+        middleware = new AdminMiddleware();
     }
 
     /**
-     * Функция получения администратора
-     * проверки его почты и пароля при входе
-     * @return возвращение найденного администратора
+     * Процедура создания сервиса администратора
      */
-    public AdminResponse getAdminAfterAuthentication() {
-        while (true){
-            String email = UserController.email();
-            UUID idUserFromCheckEmail = checkEmail(email);
+    @Override
+    public void createService() {
+        adminService = new AdminServiceImpl(userRepository, adminRepository, userMapper);
+    }
 
-            if(idUserFromCheckEmail != null){
-                return recursionByPassword(idUserFromCheckEmail);
-            } else System.out.println("Данного администратора не существует");
+    /**
+     * Авторизация администратора
+     */
+    @Override
+    void enter() {
+        getAdminAfterAuthentication();
+        modesForUsers();
+    }
+
+    /**
+     * Процедура проверки почты и пароля
+     * администратора при входе
+     */
+    public void getAdminAfterAuthentication() {
+        String email = UserController.email();
+        UUID idUserFromCheckEmail = checkEmail(email);
+
+        if (idUserFromCheckEmail != null) {
+            recursionByPassword(idUserFromCheckEmail);
+        } else {
+            System.out.println("Данного администратора не существует");
+            getAdminAfterAuthentication();
         }
     }
 
     /**
      * Процедура получения списка пользователей и их привычек,
      * а так же режим по управлению пользователями
-     * @throws ModelNotFound
      */
-    public void modesForUsers() throws ModelNotFound {
-        while (true) {
-            System.out.println("Выберите:");
-            System.out.println("1 - просмотреть список пользователей и их привычки");
-            System.out.println("2 - заблокировать пользователя");
-            System.out.println("3 - удалить пользователя");
-            System.out.println("exit - выход");
+    public void modesForUsers() {
 
+        while (true) {
+            System.out.println(MODES_FOR_USER_ADMIN);
 
             String answer = UserController.scannerString();
             switch (answer) {
@@ -89,7 +117,7 @@ public class AdminController {
 
                 }
                 case "3" -> {
-                    System.out.println("Введите id пользователя ");
+                    System.out.println("Введите id пользователя: ");
                     try {
                         UUID idUser = UUID.fromString(UserController.scannerString());
                         UserResponse userResponse = adminService.findByIdUser(idUser);
@@ -104,41 +132,43 @@ public class AdminController {
                     }
                 }
                 case "exit" -> {return;}
-                default -> UserController.wrongInput();
+                default -> wrongInput();
             }
         }
     }
 
     /**
-     * Функция получения администратора по id при проверке пароля,
+     * Процедура проверки пароля администратора,
      * если пароль не совпадает, то предлагается переустановить пароль
      * @param idUserFromCheckEmail - id администратора
-     * @return возвращает объект администратора
      */
-    private AdminResponse recursionByPassword(UUID idUserFromCheckEmail){
+    private void recursionByPassword(UUID idUserFromCheckEmail){
 
         String password = UserController.password();
 
-        AdminResponse adminFromService = adminService.findById(idUserFromCheckEmail);
+        Admin adminFromRepository = adminRepository.findById(idUserFromCheckEmail);
 
-        if (middleware.checkPassword(password, adminFromService)) {
-            return adminFromService;
-        } else {
-            System.out.println("Пароль введен не верно! Хотите восстановить пароль(y) или попробовать еще попытку(n)? [y/n]");
+        if (!middleware.checkPassword(password, adminFromRepository)) {
+            System.out.println(RECOVER_PASSWORD);
+
             String answer = UserController.scannerString();
 
             switch (answer) {
                 case "y" -> {
                     System.out.println("Введите новый пароль: ");
+
                     String newPassword = UserController.scannerString();
+
                     adminService.updatePassword(idUserFromCheckEmail, newPassword);
-                    return adminService.findById(idUserFromCheckEmail);
+
                 }
                 case "n" -> recursionByPassword(idUserFromCheckEmail);
-                default -> UserController.wrongInput();
+                default -> {
+                    wrongInput();
+                    recursionByPassword(idUserFromCheckEmail);
+                }
             }
         }
-        return adminFromService;
     }
 
     /**
@@ -146,16 +176,14 @@ public class AdminController {
      * @return возвращает значение заблокирован пользователь или нет
      */
     private boolean blockUser() {
-        System.out.println("Выберите:");
-        System.out.println("1 - заблокировать пользователя");
-        System.out.println("2 - разблокировать пользователя");
+        System.out.println(BLOCK_USER);
 
         String answer = UserController.scannerString();
         switch (answer) {
             case "1" -> {return false;}
             case "2" -> {return true;}
             default -> {
-                UserController.wrongInput();
+                wrongInput();
                 blockUser();
             }
         }
@@ -177,11 +205,11 @@ public class AdminController {
     }
 
     /**
-     * Функция получения списка администраторов {@link AdminService#findAllAdmins()}
+     * Функция получения списка администраторов {@link AdminService#findAll()}
      * @return возвращает список администраторов
      */
     private List<AdminResponse> listAdmins(){
-        return adminService.findAllAdmins();
+        return adminService.findAll();
     }
 
     /**

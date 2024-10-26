@@ -2,8 +2,9 @@ package com.lushnikova.homework_1.repository;
 
 import com.lushnikova.homework_1.model.Habit;
 import com.lushnikova.homework_1.model.User;
-import com.lushnikova.homework_1.model.enums.Repeat;
-import com.lushnikova.homework_1.model.enums.Status;
+import com.lushnikova.homework_1.model.enum_for_model.Repeat;
+import com.lushnikova.homework_1.model.enum_for_model.Status;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -11,10 +12,12 @@ import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Класс тестирования репозитория пользователей")
 class UserRepositoryTest {
     private final UserRepository userRepository = UserRepository.getInstance();
 
     @Test
+    @DisplayName("Сохранение пользователя в репозиторий")
     void shouldSaveUser() {
         User user = createUser();
         userRepository.save(user);
@@ -25,6 +28,7 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Изменение имени пользователя")
     void shouldUpdateNameUser() {
         User user = createUser();
         userRepository.save(user);
@@ -40,6 +44,7 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Обновление почты пользователя")
     void shouldUpdateEmailUser() {
         User user = createUser();
         userRepository.save(user);
@@ -55,6 +60,7 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Изменение пароля пользователя")
     void shouldUpdatePasswordUser() {
         User user = createUser();
         userRepository.save(user);
@@ -72,19 +78,9 @@ class UserRepositoryTest {
     }
 
     @Test
-    void shouldDeleteUser() {
-        User user = getUserById(1);
-
-        userRepository.delete(user.getId());
-
-        User userFromRepository = userRepository.findById(user.getId());
-
-        assertNull(userFromRepository);
-    }
-
-    @Test
+    @DisplayName("Добавление привычки пользователю")
     void shouldAddHabitByIdUser() {
-        User user = getUserById(1);
+        User user = getUserById();
 
         Habit habit = createHabit();
 
@@ -96,8 +92,9 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Изменение названия привычки")
     void shouldUpdateTitleHabit(){
-        User user = getUserById(1);
+        User user = getUserById();
 
         int idHabit = 1;
         Habit habit = user.getHabits().get(idHabit);
@@ -112,8 +109,9 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Изменение описания привычки")
     void shouldUpdateDescriptionHabit(){
-        User user = getUserById(0);
+        User user = getUserById();
 
         int idHabit = 3;
         Habit habit = user.getHabits().get(idHabit);
@@ -128,8 +126,9 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Изменение частоты повторения привычки")
     void shouldRepeatTitleHabit(){
-        User user = getUserById(0);
+        User user = getUserById();
 
         int idHabit = 3;
         Habit habit = user.getHabits().get(idHabit);
@@ -144,8 +143,9 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Изменение статуса привычки")
     void shouldStatusTitleHabit(){
-        User user = getUserById(0);
+        User user = getUserById();
 
         int idHabit = 3;
         Habit habit = user.getHabits().get(idHabit);
@@ -160,8 +160,9 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Удаление привычки")
     void shouldDeleteHabit(){
-        User user = getUserById(0);
+        User user = getUserById();
 
         long idHabit = 3;
 
@@ -181,8 +182,9 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Отметка, что привычка выполнения")
     void shouldSetDoneDatesHabit(){
-        User user = getUserById(0);
+        User user = getUserById();
 
         long idHabit = 2;
 
@@ -204,8 +206,9 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Включение уведомления привычки в определенное время")
     void shouldSwitchOnPushNotification(){
-        User user = getUserById(0);
+        User user = getUserById();
 
         LocalTime localTime = LocalTime.parse("11:00");
 
@@ -220,8 +223,9 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Выключение уведомления привычки")
     void shouldSwitchOffPushNotification(){
-        User user = getUserById(0);
+        User user = getUserById();
 
         long idHabit = 2;
 
@@ -234,15 +238,39 @@ class UserRepositoryTest {
     }
 
 
+    @Test
+    @DisplayName("Удаление пользователя")
+    void shouldDeleteUser() {
+        User user = getUserById();
 
-    private User getUserById(int i){
-        return userRepository.findAll().get(i);
+        userRepository.delete(user.getId());
+
+        User userFromRepository = userRepository.findById(user.getId());
+
+        assertNull(userFromRepository);
     }
 
+
+    /**
+     * Функция получения пользователя
+     * @return возвращает объект пользователя
+     */
+    private User getUserById(){
+        return userRepository.findAll().stream().filter(el -> el.getName().equals("Jame")).findFirst().orElse(null);
+    }
+
+    /**
+     * Процедура создания пользователя
+     * @return возвращает объект пользователя
+     */
     private User createUser() {
         return new User("user", "user@gmail.com", "user");
     }
 
+    /**
+     * Процедура создания привычки
+     * @return возвращает объект привычки
+     */
     private Habit createHabit() {
         return new Habit("habit", "habit", Repeat.WEEKLY);
     }

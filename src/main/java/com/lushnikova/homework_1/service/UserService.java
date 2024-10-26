@@ -4,10 +4,9 @@ import com.lushnikova.homework_1.dto.req.HabitRequest;
 import com.lushnikova.homework_1.dto.req.UserRequest;
 import com.lushnikova.homework_1.dto.resp.HabitResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
-import com.lushnikova.homework_1.exception.ModelNotFound;
-import com.lushnikova.homework_1.model.enums.Repeat;
-import com.lushnikova.homework_1.model.enums.Statistics;
-import com.lushnikova.homework_1.model.enums.Status;
+import com.lushnikova.homework_1.model.enum_for_model.Repeat;
+import com.lushnikova.homework_1.model.enum_for_model.Statistics;
+import com.lushnikova.homework_1.model.enum_for_model.Status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +16,7 @@ import java.util.UUID;
 /**
  * Интерфейс Service по управлению пользователями и их привычек
  */
-public interface UserService {
+public interface UserService extends Service{
 
     /** Процедура сохранения пользователя
      * @param userRequest - пользователя
@@ -62,35 +61,31 @@ public interface UserService {
      * Процедура добавления привычки пользователя
      * @param idUser - id пользователя
      * @param habitRequest - привычка
-     * @throws ModelNotFound
      */
-    void addHabitByIdUser(UUID idUser, HabitRequest habitRequest) throws ModelNotFound;
+    void addHabitByIdUser(UUID idUser, HabitRequest habitRequest);
 
     /**
      * Функция получения списка привычек пользователя
      * @param idUser - id пользователя
-     * @throws ModelNotFound
      * @return возвращает список привычек по idUser
      */
-    List<HabitResponse> getHabitsByIdUser(UUID idUser) throws ModelNotFound;
+    List<HabitResponse> getHabitsByIdUser(UUID idUser);
 
     /**
      * Функция получения списка привычек пользователя по статусу
      * @param idUser - id пользователя
      * @param status - статус привычки
-     * @throws ModelNotFound
      * @return возвращает список привычек пользователя по статусу
      */
-    List<HabitResponse> getHabitsByStatusByIdUser(UUID idUser, Status status) throws ModelNotFound;
+    List<HabitResponse> getHabitsByStatusByIdUser(UUID idUser, Status status);
 
     /**
      * Функция получения списка привычек пользователя по дате создания
      * @param idUser - id пользователя
      * @param localDate - дата создания
-     * @throws ModelNotFound
      * @return возвращает список привычек пользователя по дате создания
      */
-    List<HabitResponse> getHabitsByLocalDateByIdUser(UUID idUser, LocalDate localDate) throws ModelNotFound;
+    List<HabitResponse> getHabitsByLocalDateByIdUser(UUID idUser, LocalDate localDate);
 
     /**
      * Процедура обновления названия привычки пользователя
@@ -170,12 +165,6 @@ public interface UserService {
      */
     List<UserResponse> findAll();
 
-    /**
-     * Процедура определения значения поля
-     * @param idUser - id пользователя
-     * @param isActive - блокировка
-     */
-    void setIsActiveByIdUser(UUID idUser, boolean isActive) throws ModelNotFound;
 
     /**
      * Процедура включения отправки уведомления привычки в указанное время
@@ -183,12 +172,12 @@ public interface UserService {
      * @param idHabit - id привычки
      * @param pushTime - время уведомления привычки
      */
-    void switchOnPushNotificationByIdUser(UUID idUser, Long idHabit, LocalTime pushTime) throws ModelNotFound;
+    void switchOnPushNotificationByIdUser(UUID idUser, Long idHabit, LocalTime pushTime);
 
     /**
      * Процедура выключения уведомления привычки
      * @param idUser - id пользователя
      * @param idHabit - id привычки
      */
-    void switchOffPushNotificationByIdUser(UUID idUser, Long idHabit) throws ModelNotFound;
+    void switchOffPushNotificationByIdUser(UUID idUser, Long idHabit);
 }

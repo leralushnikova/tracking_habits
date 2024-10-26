@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="004-create_table_habits" author="lera">
+        <!--<createTable tableName="habits">
+            <column name="id" type="serial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="title" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="repeat" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="create_at" type="date">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="streak" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="push_time" type="time">
+                <constraints nullable="true"/>
+            </column>
+
+        </createTable>-->
+        <sql>
+            create table demo.habits
+            (
+                id          serial primary key,
+                user_id     int references demo.users (id) on delete cascade,
+                title       varchar(50),
+                description varchar(255),
+                repeat      varchar(10),
+                status      varchar(15),
+                create_at   date,
+                streak      int,
+                push_time   time
+
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>

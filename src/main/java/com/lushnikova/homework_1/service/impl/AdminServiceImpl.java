@@ -3,12 +3,11 @@ package com.lushnikova.homework_1.service.impl;
 import com.lushnikova.homework_1.dto.req.AdminRequest;
 import com.lushnikova.homework_1.dto.resp.AdminResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
-import com.lushnikova.homework_1.exception.ModelNotFound;
 import com.lushnikova.homework_1.mapper_mapstruct.AdminMapper;
+import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
 import com.lushnikova.homework_1.model.Admin;
 import com.lushnikova.homework_1.repository.AdminRepository;
 import com.lushnikova.homework_1.repository.UserRepository;
-import com.lushnikova.homework_1.service.UserService;
 import com.lushnikova.homework_1.service.AdminService;
 
 import java.util.List;
@@ -18,8 +17,8 @@ import java.util.UUID;
  * Класс Service по управлению администраторами и пользователями
  */
 public class AdminServiceImpl implements AdminService {
-    /** Поле сервис пользователей*/
-    private final UserService userService;
+    /** Поле репозиторий пользователей*/
+    private final UserRepository userRepository;
 
     /** Поле репозиторий администраторов*/
     private final AdminRepository adminRepository;
@@ -27,15 +26,18 @@ public class AdminServiceImpl implements AdminService {
     /** Поле преобразования администраторов*/
     private final AdminMapper adminMapper;
 
+    /** Поле преобразования пользователей*/
+    private final UserMapper userMapper;
+
     /**
      * Конструктор - создание нового объекта с определенными значениями
-     * @param userService - сервис пользователей
-     * @param adminRepository - репозиторий администраторов
+     * @param userRepository - сервис пользователей
      * инициализация поля преобразования администраторов
      */
-    public AdminServiceImpl(UserService userService, AdminRepository adminRepository) {
-        this.userService = userService;
-        this.adminRepository = adminRepository;
+    public AdminServiceImpl(UserRepository userRepository, AdminRepository repository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.adminRepository = repository;
+        this.userMapper = userMapper;
         this.adminMapper = AdminMapper.INSTANCE;
     }
 
@@ -44,7 +46,7 @@ public class AdminServiceImpl implements AdminService {
      * @param adminRequest - объект администратора
      */
     @Override
-    public void saveAdmin(AdminRequest adminRequest) {
+    public void save(AdminRequest adminRequest) {
         adminRepository.save(adminMapper.mapToEntity(adminRequest));
     }
 
@@ -73,13 +75,13 @@ public class AdminServiceImpl implements AdminService {
      * @return возвращает списка администраторов
      */
     @Override
-    public List<AdminResponse> findAllAdmins() {
+    public List<AdminResponse> findAll() {
         return adminRepository.findAll().stream().map(adminMapper::mapToResponse).toList();
     }
 
     @Override
     public UserResponse findByIdUser(UUID idUser) {
-        return userService.findById(idUser);
+        return userMapper.mapToResponse(userRepository.findById(idUser));
     }
 
     /**
@@ -88,7 +90,7 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public List<UserResponse> findAllUsers() {
-        return userService.findAll();
+        return userRepository.findAll().stream().map(userMapper::mapToResponse).toList();
     }
 
     /**
@@ -97,7 +99,7 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public void deleteUser(UUID idUser) {
-        userService.delete(idUser);
+        userRepository.delete(idUser);
     }
 
     /**
@@ -106,8 +108,8 @@ public class AdminServiceImpl implements AdminService {
      * @param isActive - блокировка пользователя
      */
     @Override
-    public void blockByIdUser(UUID idUser, boolean isActive) throws ModelNotFound {
-        userService.setIsActiveByIdUser(idUser, isActive);
+    public void blockByIdUser(UUID idUser, boolean isActive){
+        userRepository.setIsActiveByIdUser(idUser, isActive);
     }
 
 }

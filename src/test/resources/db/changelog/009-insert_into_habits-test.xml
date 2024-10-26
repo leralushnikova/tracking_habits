@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="009-insert_into_users-test" author="lera">
+        <sql>
+            insert into demo.habits (user_id, title, description, repeat, status, create_at)
+            values (1, 'habit1', 'habit1', 'DAILY', 'CREATED', '2024-10-08'),
+                   (2, 'habit2', 'habit2', 'WEEKLY', 'IN_PROGRESS', '2024-10-16'),
+                   (1, 'habit3', 'habit3', 'DAILY', 'DONE', '2024-10-15'),
+                   (1, 'habit4', 'habit4', 'DAILY', 'CREATED', '2024-10-14'),
+                   (3, 'habit5', 'habit5', 'DAILY', 'CREATED', '2024-10-17'),
+                   (3, 'habit6', 'habit6', 'WEEKLY', 'IN_PROGRESS', '2024-10-13'),
+                   (2, 'habit7', 'habit7', 'DAILY', 'CREATED', '2024-10-12'),
+                   (2, 'habit8', 'habit8', 'WEEKLY', 'DONE', '2024-10-1');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

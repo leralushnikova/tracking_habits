@@ -8,9 +8,9 @@ import com.lushnikova.homework_1.mapper_mapstruct.HabitMapper;
 import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
 import com.lushnikova.homework_1.model.Habit;
 import com.lushnikova.homework_1.model.User;
-import com.lushnikova.homework_1.model.enums.Repeat;
-import com.lushnikova.homework_1.model.enums.Statistics;
-import com.lushnikova.homework_1.model.enums.Status;
+import com.lushnikova.homework_1.model.enum_for_model.Repeat;
+import com.lushnikova.homework_1.model.enum_for_model.Statistics;
+import com.lushnikova.homework_1.model.enum_for_model.Status;
 import com.lushnikova.homework_1.service.UserService;
 import com.lushnikova.homework_1.repository.UserRepository;
 
@@ -242,15 +242,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setDoneDatesHabitByIdUser(UUID idUser, Long idHabit) {
         userRepository.setDoneDatesHabitByIdUser(idUser, idHabit);
-    }
-
-    /**
-     * Процедура определения значения поля {@link UserRepository#setIsActiveByIdUser(UUID, boolean)}
-     * @param idUser - id пользователя
-     * @param isActive - блокировка
-     */
-    public void setIsActiveByIdUser(UUID idUser, boolean isActive) {
-        userRepository.setIsActiveByIdUser(idUser, isActive);
     }
 
     /**
