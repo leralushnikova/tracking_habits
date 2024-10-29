@@ -23,4 +23,13 @@ public interface JsonParseService {
      * @return возвращает объект из json
      */
     Object readObject(InputStream inputStream, Class object);
+
+    /**
+     * Операция сериализации Java-объекта в строку
+     * @param object - объект класса
+     * @return возвращает строку
+     */
+    String writeToJson(Object object) throws JsonParseException;
+
+
 }

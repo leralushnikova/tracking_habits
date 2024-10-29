@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
+import static com.lushnikova.homework_2.consts.ErrorConsts.WRONG_REQUEST;
 import static com.lushnikova.homework_2.consts.ModesConsts.*;
 
 /**
@@ -132,7 +133,7 @@ public class UserController extends Controller {
                     }
                 } else return;
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                System.err.println(WRONG_REQUEST);
             }
         }
     }
@@ -226,7 +227,7 @@ public class UserController extends Controller {
             System.out.println("Статус =  " + userResponse.getIsActive());
             System.out.println("----------------------------------------------");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(WRONG_REQUEST);
         }
     }
 
@@ -285,7 +286,7 @@ public class UserController extends Controller {
                 default -> wrongInput();
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(WRONG_REQUEST);
         }
     }
 

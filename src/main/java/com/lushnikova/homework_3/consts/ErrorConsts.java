@@ -4,6 +4,9 @@ import lombok.experimental.UtilityClass;
 
 import static com.lushnikova.homework_3.consts.StringConsts.*;
 
+/**
+ * Утилитный класс для указания ошибок
+ */
 @UtilityClass
 public class ErrorConsts {
         public static final String ADMIN_EXISTS = "Admin already exists!";

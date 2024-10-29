@@ -2,6 +2,9 @@ package com.lushnikova.homework_3.consts;
 
 import lombok.experimental.UtilityClass;
 
+/**
+ * Утилитный класс выбора режимов
+ */
 @UtilityClass
 public class StringConsts {
     public static final String CREATE = "CREATE";

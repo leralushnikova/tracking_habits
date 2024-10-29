@@ -55,4 +55,21 @@ public class JsonParseServiceImpl implements JsonParseService {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Операция сериализации Java-объекта в строку
+     * @param object - объект класса
+     * @return возвращает строку
+     */
+    @Override
+    public String writeToJson(Object object) throws JsonParseException {
+        try {
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new JsonParseException();
+        }
+    }
 }

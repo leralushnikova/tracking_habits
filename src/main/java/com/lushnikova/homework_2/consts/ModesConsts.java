@@ -128,10 +128,4 @@ public class ModesConsts {
             ----------------------------------------------
             """;
 
-    public static final String WRONG_REQUEST = "Неверно введен id";
-
-
-
-
-
 }

@@ -12,6 +12,7 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
@@ -20,6 +21,8 @@ import java.sql.DriverManager;
 import static com.lushnikova.homework_2.config.Environment.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Класс тестирования репозитория пользователей")
+@Testcontainers
 class UserRepositoryTest {
     private final static DockerImageName postgres = DockerImageName.parse("postgres:13.3");
 

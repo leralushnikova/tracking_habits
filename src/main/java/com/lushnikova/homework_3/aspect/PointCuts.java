@@ -2,6 +2,7 @@ package com.lushnikova.homework_3.aspect;
 
 import org.aspectj.lang.annotation.Pointcut;
 
+/** Класс поинткатов для аспектов*/
 public class PointCuts {
     @Pointcut("within(@com.lushnikova.homework_3.annotations.Loggable *)")
     public void isAnnotateLoggable() {}

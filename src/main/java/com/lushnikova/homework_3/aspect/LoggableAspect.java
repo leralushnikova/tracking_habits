@@ -4,9 +4,11 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 
+/** Класс Аспектов - аудит действий пользователя */
 @Aspect
 public class LoggableAspect {
 
+    /** Измерение времени выполнения методов любых*/
     @Around("PointCuts.isAnnotateLoggable() && PointCuts.isAllExecution()")
     public Object loggingTime(ProceedingJoinPoint pjp) throws Throwable {
         long startTime = System.currentTimeMillis();

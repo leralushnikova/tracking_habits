@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.lushnikova.homework_2.consts.ErrorConsts.WRONG_REQUEST;
 import static com.lushnikova.homework_2.consts.ModesConsts.*;
 import static com.lushnikova.homework_2.controller.UserController.*;
 
