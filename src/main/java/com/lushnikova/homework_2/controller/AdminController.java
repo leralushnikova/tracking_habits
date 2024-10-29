@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.lushnikova.homework_2.consts.ModesConsts.*;
+import static com.lushnikova.homework_2.controller.UserController.*;
 
 /**
  * Класс Controller для администратора
@@ -64,12 +65,10 @@ public class AdminController extends Controller {
             Long idUserFromCheckEmail = checkEmail(email);
             if (idUserFromCheckEmail != null) {
                 recursionByPassword(idUserFromCheckEmail);
-            } else {
-                System.out.println("Данного администратора не существует");
-                getAdminAfterAuthentication();
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Данного администратора не существует");
+            getAdminAfterAuthentication();
         }
     }
 
@@ -89,7 +88,7 @@ public class AdminController extends Controller {
                         adminService.findAllUsers().forEach(System.out::println);
                         System.out.println("----------------------------------------------");
                     } catch (SQLException e) {
-                        System.out.println(e.getMessage());
+                        System.err.println(WRONG_REQUEST);
                     }
 
                 }
@@ -100,17 +99,19 @@ public class AdminController extends Controller {
                         UserResponse userResponse = adminService.findByIdUser(idUser);
                         if (userResponse != null) {
                             boolean flag = blockUser();
+
                             if(flag) {
                                 System.out.println("Пользователь разблокирован");
-                            } else {
+                            }
+                            else {
                                 System.out.println("Пользователь заблокирован");
                             }
                             System.out.println("----------------------------------------------");
                             adminService.blockByIdUser(userResponse.getId(), flag);
                         }
-                        else wrongLong();
+                        else throw new SQLException();
                     } catch (IllegalArgumentException | SQLException e){
-                        System.out.println(e.getMessage());
+                        System.err.println(WRONG_REQUEST);
                     }
 
                 }
@@ -124,13 +125,13 @@ public class AdminController extends Controller {
                             System.out.println("Пользователь удален!");
                             System.out.println("----------------------------------------------");
                         }
-                        else wrongLong();
+                        else throw new SQLException();
                     } catch (IllegalArgumentException | SQLException e){
-                        System.out.println(e.getMessage());
+                        System.err.println(WRONG_REQUEST);
                     }
                 }
                 case "exit" -> {return;}
-                default -> UserController.wrongInput();
+                default -> wrongInput();
             }
         }
     }
@@ -140,16 +141,11 @@ public class AdminController extends Controller {
      * если пароль не совпадает, то предлагается переустановить пароль
      * @param idUserFromCheckEmail - id администратора
      */
-    private void recursionByPassword(Long idUserFromCheckEmail){
+    private void recursionByPassword(Long idUserFromCheckEmail) throws SQLException{
 
-        String password = UserController.password();
+        String password = password();
 
-        Admin adminFromRepository = null;
-        try {
-            adminFromRepository = adminRepository.findById(idUserFromCheckEmail);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        Admin adminFromRepository = adminRepository.findById(idUserFromCheckEmail);
 
         if (!middleware.checkPassword(password, adminFromRepository)) {
             System.out.println(RECOVER_PASSWORD);
@@ -162,16 +158,12 @@ public class AdminController extends Controller {
 
                     String newPassword = UserController.scannerString();
 
-                    try {
-                        adminService.updatePassword(idUserFromCheckEmail, newPassword);
-                    } catch (SQLException e) {
-                        System.out.println(e.getMessage());
-                    }
-
+                    adminService.updatePassword(idUserFromCheckEmail, newPassword);
                 }
                 case "n" -> recursionByPassword(idUserFromCheckEmail);
+
                 default -> {
-                    UserController.wrongInput();
+                    wrongInput();
                     recursionByPassword(idUserFromCheckEmail);
                 }
             }
@@ -190,7 +182,7 @@ public class AdminController extends Controller {
             case "1" -> {return false;}
             case "2" -> {return true;}
             default -> {
-                UserController.wrongInput();
+                wrongInput();
                 blockUser();
             }
         }
@@ -208,7 +200,7 @@ public class AdminController extends Controller {
                 return adminResponse.getId();
             }
         }
-        return null;
+        throw new SQLException();
     }
 
     /**
@@ -219,10 +211,4 @@ public class AdminController extends Controller {
         return adminService.findAll();
     }
 
-    /**
-     * Ответ при неправильном вводе id
-     */
-    private void wrongLong(){
-        System.out.println("Неверно введен id");
-    }
 }

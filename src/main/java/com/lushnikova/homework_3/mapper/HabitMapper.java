@@ -1,7 +1,7 @@
 package com.lushnikova.homework_3.mapper;
 
-import com.lushnikova.homework_3.dto.req.HabitRequest;
-import com.lushnikova.homework_3.dto.resp.HabitResponse;
+import com.lushnikova.homework_3.dto.request.HabitRequest;
+import com.lushnikova.homework_3.dto.response.HabitResponse;
 import com.lushnikova.homework_3.model.Habit;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

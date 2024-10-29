@@ -1,9 +1,10 @@
 package com.lushnikova.homework_3.service.impl;
 
-import com.lushnikova.homework_3.dto.req.HabitRequest;
-import com.lushnikova.homework_3.dto.req.UserRequest;
-import com.lushnikova.homework_3.dto.resp.HabitResponse;
-import com.lushnikova.homework_3.dto.resp.UserResponse;
+import com.lushnikova.homework_3.annotations.Loggable;
+import com.lushnikova.homework_3.dto.request.HabitRequest;
+import com.lushnikova.homework_3.dto.request.UserRequest;
+import com.lushnikova.homework_3.dto.response.HabitResponse;
+import com.lushnikova.homework_3.dto.response.UserResponse;
 import com.lushnikova.homework_3.mapper.HabitMapper;
 import com.lushnikova.homework_3.mapper.UserMapper;
 import com.lushnikova.homework_3.model.Habit;
@@ -21,6 +22,7 @@ import java.util.List;
 /**
  * Класс Service по управлению пользователями и их привычек
  */
+@Loggable
 public class UserServiceImpl implements UserService {
     /** Поле преобразования привычек*/
     private final HabitMapper habitMapper;

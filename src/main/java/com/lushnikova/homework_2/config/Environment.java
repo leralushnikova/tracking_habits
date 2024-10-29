@@ -31,7 +31,7 @@ public class Environment {
             PASSWORD = prop.getProperty("password");
 
         } catch (IOException e) {
-            System.err.println("Could not read properties file");
+            System.err.println("Не удалось прочитать файл");
         }
     }
 }

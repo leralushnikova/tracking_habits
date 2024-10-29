@@ -1,11 +1,12 @@
 package com.lushnikova.homework_3.service.impl;
 
-import com.lushnikova.homework_3.dto.resp.UserResponse;
+import com.lushnikova.homework_3.annotations.Loggable;
+import com.lushnikova.homework_3.dto.response.UserResponse;
 import com.lushnikova.homework_3.mapper.AdminMapper;
 import com.lushnikova.homework_3.mapper.UserMapper;
 import com.lushnikova.homework_3.repository.UserRepository;
-import com.lushnikova.homework_3.dto.req.AdminRequest;
-import com.lushnikova.homework_3.dto.resp.AdminResponse;
+import com.lushnikova.homework_3.dto.request.AdminRequest;
+import com.lushnikova.homework_3.dto.response.AdminResponse;
 import com.lushnikova.homework_3.model.Admin;
 import com.lushnikova.homework_3.repository.AdminRepository;
 import com.lushnikova.homework_3.service.AdminService;
@@ -16,6 +17,7 @@ import java.util.UUID;
 /**
  * Класс Service по управлению администраторами и пользователями
  */
+@Loggable
 public class AdminServiceImpl implements AdminService {
     /** Поле репозиторий пользователей*/
     private final UserRepository userRepository;

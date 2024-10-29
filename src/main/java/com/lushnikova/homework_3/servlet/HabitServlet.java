@@ -1,10 +1,11 @@
 package com.lushnikova.homework_3.servlet;
 
+import com.lushnikova.homework_3.annotations.Loggable;
 import com.lushnikova.homework_3.middleware.DateMiddleware;
 import com.lushnikova.homework_3.model.ENUM.Repeat;
 import com.lushnikova.homework_3.model.ENUM.Statistics;
-import com.lushnikova.homework_3.dto.req.HabitRequest;
-import com.lushnikova.homework_3.dto.resp.ErrorResponse;
+import com.lushnikova.homework_3.dto.request.HabitRequest;
+import com.lushnikova.homework_3.dto.response.ErrorResponse;
 import com.lushnikova.homework_3.exception.JsonParseException;
 import com.lushnikova.homework_3.exception.ModelNotFound;
 import com.lushnikova.homework_3.mapper.UserMapper;
@@ -33,6 +34,7 @@ import static com.lushnikova.homework_3.consts.WebConsts.HABITS_PATH;
 /**
  * Класс Servlet для работы с привычками
  */
+@Loggable
 @WebServlet(HABITS_PATH)
 public class HabitServlet extends HttpServlet {
 
@@ -148,8 +150,6 @@ public class HabitServlet extends HttpServlet {
                 if (repeat == null) sendOkAndObject(resp, getError(WRONG_REPEAT, resp));
                 else {
                     userService.addHabitByIdUser(idUser, habitRequest);
-
-                    System.out.println("Saved habit");//сделать логгом
                     sendOk(resp);
                 }
 
@@ -184,15 +184,11 @@ public class HabitServlet extends HttpServlet {
                 if (habitRequest.getTitle() != null) {
 
                     userService.updateTitleByIdHabitByIdUser(idUser, idHabit, habitRequest.getTitle());
-
-                    System.out.println("Updated habit's title");//сделать логгом
                     sendOk(resp);
 
                 } else if (habitRequest.getDescription() != null) {
 
                     userService.updateDescriptionByIdHabitByIdUser(idUser, idHabit, habitRequest.getDescription());
-
-                    System.out.println("Updated habit's description");//сделать логгом
                     sendOk(resp);
 
                 } else if (habitRequest.getRepeat() != null) {
@@ -202,8 +198,6 @@ public class HabitServlet extends HttpServlet {
                     if(repeat == null ) sendOkAndObject(resp, getError(WRONG_REPEAT, resp));
                     else {
                         userService.updateRepeatByIdHabitByIdUser(idUser, idHabit, repeat);
-
-                        System.out.println("Updated habit's repeat");//сделать логгом
                         sendOk(resp);
                     }
 
@@ -213,8 +207,6 @@ public class HabitServlet extends HttpServlet {
                     if (status == null) sendOkAndObject(resp, getError(WRONG_STATUS, resp));
                     else {
                         userService.updateStatusByIdHabitByIdUser(idUser, idHabit, status);
-
-                        System.out.println("Updated habit's status");//сделать логгом
                         sendOk(resp);
                     }
 
@@ -222,8 +214,6 @@ public class HabitServlet extends HttpServlet {
 
                     if (habitRequest.getDoneDate().equals(YES)) {
                         userService.setDoneDatesHabitByIdUser(idUser, idHabit);
-
-                        System.out.println("Updated habit was done date");//сделать логгом
                         sendOk(resp);
                     }
 
@@ -231,8 +221,6 @@ public class HabitServlet extends HttpServlet {
 
                     if (habitRequest.getPushTime().equals(NO)) {
                         userService.switchOffPushNotificationByIdUser(idUser, idHabit);
-
-                        System.out.println("Habit's notification is off");//сделать логгом
                         sendOk(resp);
                     } else {
 
@@ -240,8 +228,6 @@ public class HabitServlet extends HttpServlet {
 
                             LocalTime time = LocalTime.parse(habitRequest.getPushTime());
                             userService.switchOnPushNotificationByIdUser(idUser, idHabit, time);
-
-                            System.out.println("Habit's notification is on " + time);//сделать логгом
                             sendOk(resp);
                         } else sendOkAndObject(resp, getError(WRONG_TIME, resp));
 
@@ -273,8 +259,6 @@ public class HabitServlet extends HttpServlet {
 
             try {
                 userService.deleteHabitByIdUser(idUser, idHabit);
-
-                System.out.println("Deleted habit");//сделать логгом
                 sendOk(resp);
             } catch (ModelNotFound e) {
                 sendOkAndObject(resp, getError(WRONG_REQUEST, resp));

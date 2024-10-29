@@ -35,7 +35,7 @@ class HabitRepositoryTest {
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(postgres.asCompatibleSubstituteFor("postgres"))
             .withExposedPorts(5432)
             .withUsername(getUSER())
-            .withPassword(getPassword());
+            .withPassword(getPASSWORD());
 
 
     @BeforeAll

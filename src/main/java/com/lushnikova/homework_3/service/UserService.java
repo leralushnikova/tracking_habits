@@ -1,9 +1,10 @@
 package com.lushnikova.homework_3.service;
 
-import com.lushnikova.homework_3.dto.req.HabitRequest;
-import com.lushnikova.homework_3.dto.req.UserRequest;
-import com.lushnikova.homework_3.dto.resp.HabitResponse;
-import com.lushnikova.homework_3.dto.resp.UserResponse;
+import com.lushnikova.homework_3.annotations.Loggable;
+import com.lushnikova.homework_3.dto.request.HabitRequest;
+import com.lushnikova.homework_3.dto.request.UserRequest;
+import com.lushnikova.homework_3.dto.response.HabitResponse;
+import com.lushnikova.homework_3.dto.response.UserResponse;
 import com.lushnikova.homework_3.exception.ModelNotFound;
 import com.lushnikova.homework_3.model.ENUM.Repeat;
 import com.lushnikova.homework_3.model.ENUM.Statistics;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * Интерфейс Service по управлению пользователями и их привычек
  */
+@Loggable
 public interface UserService extends Service{
 
     /** Процедура сохранения пользователя

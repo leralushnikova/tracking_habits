@@ -1,11 +1,12 @@
 package com.lushnikova.homework_3.servlet;
 
+import com.lushnikova.homework_3.annotations.Loggable;
 import com.lushnikova.homework_3.middleware.AdminMiddleware;
 import com.lushnikova.homework_3.middleware.Middleware;
-import com.lushnikova.homework_3.dto.resp.UserResponse;
+import com.lushnikova.homework_3.dto.response.UserResponse;
 import com.lushnikova.homework_3.exception.ModelNotFound;
-import com.lushnikova.homework_3.dto.req.AdminRequest;
-import com.lushnikova.homework_3.dto.resp.ErrorResponse;
+import com.lushnikova.homework_3.dto.request.AdminRequest;
+import com.lushnikova.homework_3.dto.response.ErrorResponse;
 import com.lushnikova.homework_3.service.impl.AdminServiceImpl;
 import com.lushnikova.homework_3.service.AdminService;
 import com.lushnikova.homework_3.service.JsonParseService;
@@ -27,6 +28,7 @@ import static com.lushnikova.homework_3.consts.WebConsts.USERS_PATH;
 /**
  * Класс Servlet для работы с администраторами
  */
+@Loggable
 @WebServlet(ADMINS_PATH)
 public class AdminServlet extends HttpServlet {
 
@@ -96,8 +98,6 @@ public class AdminServlet extends HttpServlet {
 
                 if(middleware.checkPassword(adminRequest.getPassword())) {
                     adminService.save(adminRequest);
-
-                    System.out.println("Saved admin");//сделать логгом
                     sendOk(resp);
                 }
                 else sendOkAndObject(resp, getError(WRONG_PASSWORD, resp));
@@ -131,8 +131,6 @@ public class AdminServlet extends HttpServlet {
 
                 if(middleware.checkPassword(adminRequest.getPassword())) {
                     adminService.updatePassword(idAdmin, adminRequest.getPassword());
-
-                    System.out.println("Updated admin's password");//сделать логгом
                     sendOk(resp);
                 }
                 else sendOkAndObject(resp, getError(WRONG_PASSWORD, resp));
@@ -144,10 +142,7 @@ public class AdminServlet extends HttpServlet {
                 UserResponse userResponse = (UserResponse) jsonParseService.readObject(req.getInputStream(), UserResponse.class);
 
                 if (userResponse.isActive() != null) {
-
                     adminService.blockByIdUser(idUser, userResponse.isActive());
-
-                    System.out.println("Blocked user");//сделать логгом
                     sendOk(resp);
                 }
             }
@@ -171,18 +166,12 @@ public class AdminServlet extends HttpServlet {
         try {
             if (paramId.contains(ID_ADMIN)) {
                 Long idAdmin = Long.parseLong(paramId.substring(8));
-
-
                 adminService.delete(idAdmin);
-
-                System.out.println("Deleted admin");//сделать логгом
                 sendOk(resp);
             }
             else if (paramId.contains(ID_USER)) {
                 Long idUser = Long.parseLong(paramId.substring(7));
-
                 adminService.deleteUser(idUser);
-                System.out.println("Deleted user");//сделать логгом
                 sendOk(resp);
             }
             else sendOkAndObject(resp, getError(WRONG_REQUEST, resp));
@@ -216,7 +205,6 @@ public class AdminServlet extends HttpServlet {
     /** Функция формирования ошибки*/
     @SneakyThrows
     private byte[] getError(String error, HttpServletResponse resp){
-//        resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         return jsonParseService.writeValueAsBytes(new ErrorResponse(error, resp.getStatus()));
     }
 

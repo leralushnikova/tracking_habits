@@ -59,7 +59,7 @@ public class UserRepository {
 
             int year = 2024;
             int month = random.nextInt(10);
-            int day = random.nextInt(30);
+            int day = random.nextInt(28);
             LocalDate createdAt = LocalDate.of(year, month + 1, day + 1);
             habit.setCreatedAt(createdAt);
 

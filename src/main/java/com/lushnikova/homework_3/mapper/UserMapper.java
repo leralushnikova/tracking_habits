@@ -1,7 +1,7 @@
 package com.lushnikova.homework_3.mapper;
 
-import com.lushnikova.homework_3.dto.req.UserRequest;
-import com.lushnikova.homework_3.dto.resp.UserResponse;
+import com.lushnikova.homework_3.dto.request.UserRequest;
+import com.lushnikova.homework_3.dto.response.UserResponse;
 import com.lushnikova.homework_3.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

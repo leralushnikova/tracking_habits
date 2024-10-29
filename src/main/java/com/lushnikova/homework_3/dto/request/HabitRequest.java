@@ -1,4 +1,4 @@
-package com.lushnikova.homework_3.dto.req;
+package com.lushnikova.homework_3.dto.request;
 
 
 import java.time.LocalDate;

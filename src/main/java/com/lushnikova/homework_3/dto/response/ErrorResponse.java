@@ -1,4 +1,4 @@
-package com.lushnikova.homework_3.dto.resp;
+package com.lushnikova.homework_3.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -43,14 +43,9 @@ public class Authentication {
         String answer = scannerString();
 
         switch (answer) {
-            case "1" -> {
-                controller = new AdminController(userRepository, userMapper, connection);
-            }
-            case "2" -> {
-                controller = new UserController(userRepository, habitRepository, userMapper);
-            }
-            case "exit" -> {
-            }
+            case "1" -> controller = new AdminController(userRepository, userMapper, connection);
+            case "2" -> controller = new UserController(userRepository, habitRepository, userMapper);
+            case "exit" -> {}
             default -> {
                 wrongInput();
                 initializer(connection);
@@ -72,7 +67,7 @@ public class Authentication {
                 this.initializer(connection);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 }

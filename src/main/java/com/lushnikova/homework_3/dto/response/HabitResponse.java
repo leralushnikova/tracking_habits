@@ -1,4 +1,4 @@
-package com.lushnikova.homework_3.dto.resp;
+package com.lushnikova.homework_3.dto.response;
 
 import com.lushnikova.homework_3.model.ENUM.Repeat;
 import com.lushnikova.homework_3.model.ENUM.Status;

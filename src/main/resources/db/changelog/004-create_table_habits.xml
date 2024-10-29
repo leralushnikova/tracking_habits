@@ -24,11 +24,11 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="repeat" type="varchar(10)">
+            <column name="repeat" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="status" type="varchar(10)">
+            <column name="status" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
 

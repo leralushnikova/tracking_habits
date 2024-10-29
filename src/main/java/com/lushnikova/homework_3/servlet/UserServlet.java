@@ -1,9 +1,10 @@
 package com.lushnikova.homework_3.servlet;
 
+import com.lushnikova.homework_3.annotations.Loggable;
 import com.lushnikova.homework_3.middleware.DateMiddleware;
 import com.lushnikova.homework_3.reminder.ReminderService;
-import com.lushnikova.homework_3.dto.req.UserRequest;
-import com.lushnikova.homework_3.dto.resp.ErrorResponse;
+import com.lushnikova.homework_3.dto.request.UserRequest;
+import com.lushnikova.homework_3.dto.response.ErrorResponse;
 import com.lushnikova.homework_3.exception.JsonParseException;
 import com.lushnikova.homework_3.exception.ModelNotFound;
 import com.lushnikova.homework_3.mapper.UserMapper;
@@ -30,6 +31,7 @@ import static com.lushnikova.homework_3.consts.WebConsts.USERS_PATH;
 /**
  * Класс Servlet для работы с пользователями
  */
+@Loggable
 @WebServlet(USERS_PATH)
 public class UserServlet extends HttpServlet {
 
@@ -114,10 +116,7 @@ public class UserServlet extends HttpServlet {
             if (!middleware.checkEmail(userRequest)) {
 
                 if(middleware.checkPassword(userRequest.getPassword())) {
-
                     userService.save(userRequest);
-
-                    System.out.println("Saved user");//сделать логгом
                     sendOk(resp);
                 }
                 else sendOkAndObject(resp, getError(WRONG_PASSWORD, resp));
@@ -150,8 +149,6 @@ public class UserServlet extends HttpServlet {
 
                     if(middleware.checkPassword(userRequest.getPassword())) {
                         userService.updatePassword(id, userRequest.getPassword());
-
-                        System.out.println("Updated user's password");//сделать логгом
                         sendOk(resp);
                     }
                     else sendOkAndObject(resp, getError(WRONG_PASSWORD, resp));
@@ -160,16 +157,12 @@ public class UserServlet extends HttpServlet {
 
                     if (!middleware.checkEmail(userRequest)) {
                         userService.updateEmail(id, userRequest.getEmail());
-
-                        System.out.println("Updated user's email");
                         sendOk(resp);
                     }
                     else sendOkAndObject(resp, getError(USER_EXISTS, resp));
 
                 } else if(userRequest.getName() != null) {
                     userService.updateName(id, userRequest.getName());
-
-                    System.out.println("Updated user's name");
                     sendOk(resp);
                 }
 
@@ -194,8 +187,6 @@ public class UserServlet extends HttpServlet {
             Long id = Long.parseLong(paramId.substring(7));
             try {
                 userService.delete(id);
-
-                System.out.println("Deleted user");//сделать логгом
                 sendOk(resp);
             } catch (ModelNotFound e) {
                 sendOkAndObject(resp, getError(WRONG_REQUEST, resp));

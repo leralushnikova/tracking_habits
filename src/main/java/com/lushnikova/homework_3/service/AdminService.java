@@ -1,15 +1,17 @@
 package com.lushnikova.homework_3.service;
 
-import com.lushnikova.homework_3.dto.resp.UserResponse;
+import com.lushnikova.homework_3.annotations.Loggable;
+import com.lushnikova.homework_3.dto.response.UserResponse;
 import com.lushnikova.homework_3.exception.ModelNotFound;
-import com.lushnikova.homework_3.dto.req.AdminRequest;
-import com.lushnikova.homework_3.dto.resp.AdminResponse;
+import com.lushnikova.homework_3.dto.request.AdminRequest;
+import com.lushnikova.homework_3.dto.response.AdminResponse;
 
 import java.util.List;
 
 /**
  * Интерфейс Service по управлению администраторами и пользователями
  */
+@Loggable
 public interface AdminService extends Service{
 
     /**

@@ -38,10 +38,6 @@ public class UserController extends Controller {
      */
     private final Middleware userMiddleware;
 
-    /**
-     * Поле преобразования пользователей
-     */
-    private final UserMapper userMapper;
 
     /**
      * Поле контроллер привычек
@@ -62,7 +58,6 @@ public class UserController extends Controller {
     public UserController(UserRepository userRepository, HabitRepository habitRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMiddleware = new UserMiddleware();
-        this.userMapper = userMapper;
         this.habitController = new HabitController(habitRepository);
         userService = new UserServiceImpl(userMapper, userRepository);
         reminderService = new ReminderService(habitRepository);
@@ -155,7 +150,7 @@ public class UserController extends Controller {
             String email = email();
 
             try {
-                if (checkEmail(email) != null) System.out.println("Данная почта уже существует");
+                if (checkEmail(email) != null) throw new SQLException();
                 else {
                     userRequest.setEmail(email);
 
@@ -167,17 +162,14 @@ public class UserController extends Controller {
                         if (userMiddleware.checkPassword(password)) {
                             userRequest.setPassword(password);
 
-                            try {
-                                userService.save(userRequest);
-                                return;
-                            } catch (SQLException e) {
-                                System.out.println(e.getMessage());
-                            }
-                        } else wrongInput();
+                            userService.save(userRequest);
+                            return;
+                        }
+                        else wrongInput();
                     }
                 }
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                System.err.println("Данная почта уже существует");
             }
         }
     }
@@ -188,29 +180,24 @@ public class UserController extends Controller {
      * @return возвращение объекта пользователя
      */
     public UserResponse getUserAfterAuthentication() {
-        try {
-            while (true) {
-                String email = email();
+        while (true) {
+            String email = email();
 
-                try {
-                    Long idUserFromCheckEmail = checkEmail(email);
-                    UserResponse userResponse = userService.findById(idUserFromCheckEmail);
+            try {
+                Long idUserFromCheckEmail = checkEmail(email);
 
-                    if (userResponse.getIsActive()) {
-                        if (idUserFromCheckEmail != null) {
-                            return recursionForPassword(idUserFromCheckEmail);
-                        } else System.out.println("Данный пользователь не зарегистрирован");
+                if (idUserFromCheckEmail != null) {
+                    UserResponse userResponse = getUser(idUserFromCheckEmail);
 
-                    } else System.out.println("Пользователь заблокирован!");
+                    if (userResponse.getIsActive()) return recursionForPassword(idUserFromCheckEmail);
+                    else System.out.println("Пользователь заблокирован!");
 
-                } catch (NullPointerException e) {
-                    System.out.println("Данный пользователь не зарегистрирован");
-                }
+                } else throw new SQLException();
+
+            } catch (NullPointerException | SQLException e) {
+                System.err.println("Данный пользователь не зарегистрирован");
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
-        return null;
     }
 
     /**
@@ -232,7 +219,7 @@ public class UserController extends Controller {
     public void readUser(Long id) {
         UserResponse userResponse;
         try {
-            userResponse = userService.findById(id);
+            userResponse = getUser(id);
             System.out.println("Ваши данные: ");
             System.out.println("Имя =  " + userResponse.getName());
             System.out.println("Почта =  " + userResponse.getEmail());
@@ -309,40 +296,36 @@ public class UserController extends Controller {
      * @param idUserFromCheckEmail - id пользователя
      * @return возвращает объект пользователя
      */
-    private UserResponse recursionForPassword(Long idUserFromCheckEmail) {
-        try {
-            String password = password();
+    private UserResponse recursionForPassword(Long idUserFromCheckEmail) throws SQLException{
 
-            UserResponse userFromService = userService.findById(idUserFromCheckEmail);
+        String password = password();
 
-            User userFromRepository = userRepository.findById(idUserFromCheckEmail);
+        UserResponse userFromService = getUser(idUserFromCheckEmail);
 
-            if (userMiddleware.checkPassword(password, userFromRepository)) {
-                return userFromService;
-            } else {
+        User userFromRepository = userRepository.findById(idUserFromCheckEmail);
 
-                System.out.println(RECOVER_PASSWORD);
-                String answer = scannerString();
+        if (userMiddleware.checkPassword(password, userFromRepository)) {
+            return userFromService;
+        } else {
 
-                switch (answer) {
-                    case "y" -> {
-                        System.out.println("Введите новый пароль: ");
-                        String newPassword = scannerString();
-                        userService.updatePassword(idUserFromCheckEmail, newPassword);
-                        return userService.findById(idUserFromCheckEmail);
-                    }
-                    case "n" -> recursionForPassword(idUserFromCheckEmail);
-                    default -> {
-                        wrongInput();
-                        recursionForPassword(idUserFromCheckEmail);
-                    }
+            System.out.println(RECOVER_PASSWORD);
+            String answer = scannerString();
+
+            switch (answer) {
+                case "y" -> {
+                    System.out.println("Введите новый пароль: ");
+                    String newPassword = scannerString();
+                    userService.updatePassword(idUserFromCheckEmail, newPassword);
+                    return getUser(idUserFromCheckEmail);
+                }
+                case "n" -> recursionForPassword(idUserFromCheckEmail);
+                default -> {
+                    wrongInput();
+                    recursionForPassword(idUserFromCheckEmail);
                 }
             }
-            return userFromService;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
-        return null;
+        return userFromService;
     }
 
     /**
@@ -379,7 +362,7 @@ public class UserController extends Controller {
      * Ответ при неправильном вводе в консоль
      */
     public static void wrongInput() {
-        System.out.println(WRONG_INPUT);
+        System.err.println(WRONG_INPUT);
 
     }
 

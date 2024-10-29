@@ -1,7 +1,7 @@
 package com.lushnikova.homework_3.mapper;
 
-import com.lushnikova.homework_3.dto.req.AdminRequest;
-import com.lushnikova.homework_3.dto.resp.AdminResponse;
+import com.lushnikova.homework_3.dto.request.AdminRequest;
+import com.lushnikova.homework_3.dto.response.AdminResponse;
 import com.lushnikova.homework_3.model.Admin;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
