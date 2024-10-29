@@ -298,7 +298,7 @@ public class HabitServlet extends HttpServlet {
      * @param s - ввод
      * @return возвращает статус привычки
      */
-    private Status getStatus(String s) {
+    public static Status getStatus(String s) {
         switch (s) {
             case CREATE -> {
                 return Status.CREATED;
@@ -319,7 +319,7 @@ public class HabitServlet extends HttpServlet {
      * @param s - ввод
      * @return возвращает частоты повторения привычки
      */
-    private Repeat getRepeat(String s) {
+    public static Repeat getRepeat(String s) {
         switch (s) {
             case DAILY -> {
                 return Repeat.DAILY;
