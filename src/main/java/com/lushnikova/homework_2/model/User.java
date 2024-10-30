@@ -1,5 +1,6 @@
 package com.lushnikova.homework_2.model;
 
+import com.lushnikova.homework_2.model.ENUM.Role;
 import lombok.*;
 
 /**
@@ -31,4 +32,7 @@ public class User {
      * isActive = false - пользователя заблокирован
      */
     private Boolean isActive;
+
+    /** Поле роль пользователь или админ */
+    private Role role;
 }

@@ -27,6 +27,10 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
             <column name="is_active" type="boolean">
                 <constraints nullable="true"/>
             </column>
+
+            <column name="role" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addDefaultValue  columnName="id"

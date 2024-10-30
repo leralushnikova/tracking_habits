@@ -1,6 +1,7 @@
 package com.lushnikova.homework_2.dto.response;
 
 
+import com.lushnikova.homework_2.model.ENUM.Role;
 import lombok.*;
 
 /**
@@ -30,6 +31,10 @@ public class UserResponse {
     @Getter
     private Boolean isActive;
 
+    @Getter
+    /** Поле роль пользователь или админ */
+    private Role role;
+
     @Override
     public String toString() {
         return "UserResponse{" +
@@ -37,6 +42,7 @@ public class UserResponse {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", isActive=" + isActive +
+                ", role=" + role +
                 '}';
     }
 }

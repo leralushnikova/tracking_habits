@@ -6,11 +6,11 @@
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
-    <changeSet id="008-insert_into_users" author="lera">
+    <changeSet id="007-insert_into_users" author="lera">
 
         <insert schemaName="demo" tableName="habits">
             <column name="id" valueSequenceNext="habits_id_seq"/>
-            <column name="user_id" value="1"/>
+            <column name="user_id" value="2"/>
             <column name="title" value="habit1"/>
             <column name="description" value="habit1"/>
             <column name="repeat" value="DAILY"/>
@@ -20,7 +20,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
         <insert schemaName="demo" tableName="habits">
             <column name="id" valueSequenceNext="habits_id_seq"/>
-            <column name="user_id" value="1"/>
+            <column name="user_id" value="2"/>
             <column name="title" value="habit2"/>
             <column name="description" value="habit2"/>
             <column name="repeat" value="WEEKLY"/>
@@ -30,7 +30,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
         <insert schemaName="demo" tableName="habits">
             <column name="id" valueSequenceNext="habits_id_seq"/>
-            <column name="user_id" value="2"/>
+            <column name="user_id" value="3"/>
             <column name="title" value="habit3"/>
             <column name="description" value="habit3"/>
             <column name="repeat" value="DAILY"/>
@@ -40,7 +40,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
         <insert schemaName="demo" tableName="habits">
             <column name="id" valueSequenceNext="habits_id_seq"/>
-            <column name="user_id" value="3"/>
+            <column name="user_id" value="4"/>
             <column name="title" value="habit4"/>
             <column name="description" value="habit4"/>
             <column name="repeat" value="WEEKLY"/>
@@ -50,7 +50,7 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
         <insert schemaName="demo" tableName="habits">
             <column name="id" valueSequenceNext="habits_id_seq"/>
-            <column name="user_id" value="1"/>
+            <column name="user_id" value="5"/>
             <column name="title" value="habit5"/>
             <column name="description" value="habit5"/>
             <column name="repeat" value="DAILY"/>

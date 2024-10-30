@@ -96,6 +96,17 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(id);
     }
 
+    /**
+     * Процедура блокирования пользователя {@link UserRepository#setIsActive(Long, boolean)}
+     * @param idUser - id пользователя
+     * @param isActive - блокировка пользователя
+     * @throws SQLException
+     */
+    @Override
+    public void blockByIdUser(Long idUser, boolean isActive) throws SQLException {
+        userRepository.setIsActive(idUser, isActive);
+    }
+
 
     /**
      * Функция получения списка администраторов {@link UserRepository#findAll()}

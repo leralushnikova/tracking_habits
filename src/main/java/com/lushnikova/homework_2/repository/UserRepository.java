@@ -1,5 +1,6 @@
 package com.lushnikova.homework_2.repository;
 
+import com.lushnikova.homework_2.model.ENUM.Role;
 import com.lushnikova.homework_2.model.User;
 
 import java.sql.*;
@@ -40,6 +41,7 @@ public class UserRepository {
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setBoolean(4, true);
+            preparedStatement.setString(5, user.getRole().name());
             preparedStatement.executeUpdate();
             return user;
         }
@@ -77,6 +79,14 @@ public class UserRepository {
         user.setEmail(resultSet.getString("email"));
         user.setPassword(resultSet.getString("password"));
         user.setIsActive(resultSet.getBoolean("is_active"));
+
+        String roleString = resultSet.getString("role");
+        Role role = null;
+        switch (roleString) {
+            case "USER" -> role = Role.USER;
+            case "ADMIN" -> role = Role.ADMIN;
+        }
+        user.setRole(role);
         return user;
     }
 
@@ -153,6 +163,21 @@ public class UserRepository {
     public void setIsActive(Long id, boolean isActive) throws SQLException {
         try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_IS_ACTIVE)){
             preparedStatement.setBoolean(1, isActive);
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    /**
+     * Процедура определения значения поля
+     *
+     * @param id - id пользователя
+     * @param role - роль
+     * @throws SQLException
+     */
+    public void setRole(Long id, Role role) throws SQLException {
+        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_ROLE)){
+            preparedStatement.setString(1, role.name());
             preparedStatement.setLong(2, id);
             preparedStatement.executeUpdate();
         }

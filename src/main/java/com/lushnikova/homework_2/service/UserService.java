@@ -57,10 +57,19 @@ public interface UserService extends Service {
     void delete(Long id) throws SQLException;
 
     /**
+     * Процедура блокирования пользователя
+     * @param idUser - id пользователя
+     * @param isActive - блокировка пользователя
+     * @throws SQLException
+     */
+    void blockByIdUser(Long idUser, boolean isActive) throws SQLException;
+
+    /**
      * Функция получения списка администраторов
      * @return возвращает копию списка администраторов
      * @throws SQLException
      */
     List<UserResponse> findAll() throws SQLException;
+
 
 }

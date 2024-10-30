@@ -2,15 +2,12 @@ package com.lushnikova.homework_2.controller;
 
 import com.lushnikova.homework_2.dto.request.UserRequest;
 import com.lushnikova.homework_2.dto.response.UserResponse;
-import com.lushnikova.homework_2.mapper.UserMapper;
 import com.lushnikova.homework_2.middleware.Middleware;
-import com.lushnikova.homework_2.middleware.UserMiddleware;
 import com.lushnikova.homework_2.model.User;
 import com.lushnikova.homework_2.reminder.ReminderService;
 import com.lushnikova.homework_2.repository.HabitRepository;
 import com.lushnikova.homework_2.repository.UserRepository;
 import com.lushnikova.homework_2.service.UserService;
-import com.lushnikova.homework_2.service.impl.UserServiceImpl;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,7 +24,7 @@ public class UserController extends Controller {
     /**
      * Поле сервис пользователей
      */
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * Поле репозиторий пользователей
@@ -37,7 +34,7 @@ public class UserController extends Controller {
     /**
      * Поле инструмент проверки
      */
-    private final Middleware userMiddleware;
+    private final Middleware middleware;
 
 
     /**
@@ -56,11 +53,11 @@ public class UserController extends Controller {
      *
      * @param userRepository - репозиторий пользователей
      */
-    public UserController(UserRepository userRepository, HabitRepository habitRepository, UserMapper userMapper) {
+    public UserController(UserRepository userRepository, HabitRepository habitRepository, UserService userService, Middleware middleware) {
         this.userRepository = userRepository;
-        this.userMiddleware = new UserMiddleware();
+        this.middleware = middleware;
         this.habitController = new HabitController(habitRepository);
-        userService = new UserServiceImpl(userMapper, userRepository);
+        this.userService = userService;
         reminderService = new ReminderService(habitRepository);
     }
 
@@ -160,7 +157,7 @@ public class UserController extends Controller {
 
                         String password = password();
 
-                        if (userMiddleware.checkPassword(password)) {
+                        if (middleware.checkPassword(password)) {
                             userRequest.setPassword(password);
 
                             userService.save(userRequest);
@@ -264,7 +261,7 @@ public class UserController extends Controller {
                 }
                 case "3" -> {
                     String password = password();
-                    if (userMiddleware.checkPassword(password) && !password.isEmpty() && !password.isBlank()) {
+                    if (middleware.checkPassword(password) && !password.isEmpty() && !password.isBlank()) {
 
 
                         userService.updatePassword(idUser, password);
@@ -305,7 +302,7 @@ public class UserController extends Controller {
 
         User userFromRepository = userRepository.findById(idUserFromCheckEmail);
 
-        if (userMiddleware.checkPassword(password, userFromRepository)) {
+        if (middleware.checkPassword(password, userFromRepository)) {
             return userFromService;
         } else {
 
@@ -384,7 +381,7 @@ public class UserController extends Controller {
      */
     private Long checkEmail(String email) throws SQLException {
         for (UserResponse userResponse : listUsers()) {
-            if (userMiddleware.checkEmail(email, userResponse)) {
+            if (middleware.checkEmail(email, userResponse)) {
                 return userResponse.getId();
             }
         }

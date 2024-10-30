@@ -1,5 +1,6 @@
 package com.lushnikova.homework_2.dto.request;
 
+import com.lushnikova.homework_2.model.ENUM.Role;
 import lombok.*;
 
 
@@ -21,4 +22,7 @@ public class UserRequest {
 
     /** Поле пароль */
     private String password;
+
+    /** Поле роль пользователь или админ */
+    private Role role;
 }
