@@ -31,7 +31,7 @@ public class PointCuts {
     @Pointcut("isAnnotateLoggable() && execution(public void addHabitByIdUser(..))")
     public void addHabitServiceMethod(){}
 
-    @Pointcut("isAnnotateLoggable() && execution(public void * getHabits*(..))")
+    @Pointcut("isAnnotateLoggable() && execution(public void getHabits*(..))")
     public void habitsForUserServiceMethod(){}
 
     @Pointcut("isAnnotateLoggable() && execution(public void updateTitleByIdHabitByIdUser(..))")
