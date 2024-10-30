@@ -1,5 +1,6 @@
 package com.lushnikova.homework_3.dto.request;
 
+import com.lushnikova.homework_3.model.ENUM.Role;
 
 import java.util.Objects;
 
@@ -21,6 +22,9 @@ public class UserRequest {
      */
     private Boolean isActive;
 
+    /** Поле роль пользователь или админ */
+    private Role role;
+
     /**
      * Пустой конструктор для создания нового объекта
      */
@@ -34,11 +38,12 @@ public class UserRequest {
      * @param password - пароль
      * @param isActive - блокировка пользователя
      */
-    public UserRequest(String name, String email, String password, Boolean isActive) {
+    public UserRequest(String name, String email, String password, Boolean isActive, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.isActive = isActive;
+        this.role = role;
     }
 
     /**
@@ -106,6 +111,22 @@ public class UserRequest {
     }
 
     /**
+     * Функция получения значения поля {@link UserRequest#role}
+     * @return возвращает роль
+     */
+    public Role getRole() {
+        return role;
+    }
+
+    /**
+     * Процедура определения значения поля {@link UserRequest#role}
+     * @param role - роль
+     */
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    /**
      * Переопределенный метод {@link Object#equals(Object)}
      */
     @Override
@@ -132,6 +153,7 @@ public class UserRequest {
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

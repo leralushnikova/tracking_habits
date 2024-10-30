@@ -1,5 +1,6 @@
 package com.lushnikova.homework_3.repository;
 
+import com.lushnikova.homework_3.model.ENUM.Role;
 import com.lushnikova.homework_3.model.Habit;
 import com.lushnikova.homework_3.model.User;
 import com.lushnikova.homework_3.model.ENUM.Repeat;
@@ -32,9 +33,12 @@ public class UserRepository {
     private UserRepository() {
         users = new HashSet<>();
 
-        User user1 = new User(1L, "Jame", "jame@gmail.com", "jame");
+        User admin = new User(1L, "Admin", "admin@gmail.com", "admin", Role.ADMIN);
+        users.add(admin);
 
-        User user2 = new User(2L, "Kirill", "kirill@gmail.com", "kirill");
+        User user1 = new User(2L, "Jame", "jame@gmail.com", "jame", Role.USER);
+
+        User user2 = new User(3L, "Kirill", "kirill@gmail.com", "kirill", Role.USER);
 
         Random random = new Random();
 
@@ -162,6 +166,16 @@ public class UserRepository {
      */
     public synchronized void updatePassword(Long id, String password) {
         findById(id).setPassword(password);
+    }
+
+    /**
+     * Процедура обновления роли пользователя {@link User#setRole(Role)}
+     * пользователя берем из {@link UserRepository#findById(Long)}
+     * @param id - id пользователя
+     * @param role - новая роль
+     */
+    public synchronized void updateRole(Long id, Role role) {
+        findById(id).setRole(role);
     }
 
     /**

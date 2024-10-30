@@ -1,6 +1,5 @@
 package com.lushnikova.homework_3.servlet;
 
-import com.lushnikova.homework_3.mapper.UserMapper;
 import com.lushnikova.homework_3.repository.UserRepository;
 import com.lushnikova.homework_3.service.JsonParseService;
 import com.lushnikova.homework_3.service.UserService;
@@ -32,34 +31,8 @@ class UserServletTest {
     HttpServletResponse response = mock(HttpServletResponse.class);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     UserServlet userServlet = new UserServlet();
-    UserService userService = new UserServiceImpl(UserMapper.INSTANCE, UserRepository.getInstance());
+    UserService userService = new UserServiceImpl(UserRepository.getInstance());
     JsonParseService jsonParseService = new JsonParseServiceImpl();
-
-    @DisplayName("Список пользователей")
-    @SneakyThrows
-    @Test
-    void doGetUsers() {
-
-        when(response.getOutputStream()).thenReturn(new ServletOutputStream() {
-            @Override
-            public boolean isReady() {return false;}
-
-            @Override
-            public void setWriteListener(WriteListener writeListener) {}
-
-            @Override
-            public void write(int b){
-                outputStream.write(b);
-            }
-        });
-
-        userServlet.doGet(request, response);
-
-//            System.out.println(outputStream.toString());
-//            System.out.println(jsonParseService.writeToJson(userService.findAll()));
-        assertEquals(outputStream.toString(), jsonParseService.writeToJson(userService.findAll()));
-    }
-
 
     @DisplayName("Получение данных пользователя")
     @SneakyThrows
@@ -143,7 +116,7 @@ class UserServletTest {
     @SneakyThrows
     @Test
     void doPut() {
-        long idUser = 1;
+        long idUser = 2;
         String localhost = "/idUser" + idUser;
         String name = "James";
         String updateUserName = "{\"name\":\"" + name + "\"}";

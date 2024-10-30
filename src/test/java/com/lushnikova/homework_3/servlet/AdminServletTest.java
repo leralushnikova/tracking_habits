@@ -1,10 +1,10 @@
 package com.lushnikova.homework_3.servlet;
 
 import com.lushnikova.homework_3.repository.UserRepository;
-import com.lushnikova.homework_3.service.AdminService;
 import com.lushnikova.homework_3.service.JsonParseService;
-import com.lushnikova.homework_3.service.impl.AdminServiceImpl;
+import com.lushnikova.homework_3.service.UserService;
 import com.lushnikova.homework_3.service.impl.JsonParseServiceImpl;
+import com.lushnikova.homework_3.service.impl.UserServiceImpl;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,18 +26,16 @@ class AdminServletTest {
     HttpServletResponse response = mock(HttpServletResponse.class);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     AdminServlet adminServlet = new AdminServlet();
-    AdminService adminService = new AdminServiceImpl();
-    JsonParseService jsonParseService = new JsonParseServiceImpl();
     UserRepository userRepository = UserRepository.getInstance();
+    UserService userService = new UserServiceImpl(userRepository);
+    JsonParseService jsonParseService = new JsonParseServiceImpl();
 
 
     @DisplayName("Список пользователей")
     @SneakyThrows
     @Test
     void doGetUsers() {
-        String localhost = "/users";
 
-        when(request.getPathInfo()).thenReturn(localhost);
         when(response.getOutputStream()).thenReturn(new ServletOutputStream() {
             @Override
             public boolean isReady() {return false;}
@@ -53,7 +51,7 @@ class AdminServletTest {
 
         adminServlet.doGet(request, response);
 
-        assertEquals(outputStream.toString(), jsonParseService.writeToJson(adminService.findAllUsers()));
+        assertEquals(outputStream.toString(), jsonParseService.writeToJson(userService.findAll()));
     }
 
     @DisplayName("Блокировка пользователя")
@@ -70,7 +68,7 @@ class AdminServletTest {
 
         adminServlet.doPut(request, response);
 
-        assertEquals(isActive, userRepository.findById(idUser).isActive());
+        assertEquals(isActive, userService.findById(idUser).isActive());
     }
 
     @DisplayName("Удаление пользователя")
@@ -84,6 +82,6 @@ class AdminServletTest {
 
         adminServlet.doDelete(request, response);
 
-        assertNull(userRepository.findById(idUser));
+        assertNull(userService.findById(idUser));
     }
 }

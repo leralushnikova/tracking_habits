@@ -220,7 +220,7 @@ public class LoggableAspect {
 
     @AfterThrowing(pointcut = "PointCuts.findAllUserServiceMethod()")
     public void loggingAfterThrowingAllUsers(JoinPoint joinPoint){
-        System.out.println("Метод " + joinPoint.getSignature() + " не удалось просмотреть все пользователей");
+        System.out.println("Метод " + joinPoint.getSignature() + " не удалось просмотреть всех пользователей");
     }
 
     @AfterReturning(pointcut = "PointCuts.blockUserServiceMethod()")

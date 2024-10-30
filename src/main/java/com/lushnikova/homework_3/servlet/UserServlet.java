@@ -52,9 +52,8 @@ public class UserServlet extends HttpServlet {
      */
     public UserServlet() {
         jsonParseService = new JsonParseServiceImpl();
-        UserMapper userMapper = UserMapper.INSTANCE;
         UserRepository userRepository = UserRepository.getInstance();
-        userService = new UserServiceImpl(userMapper, userRepository);
+        userService = new UserServiceImpl(userRepository);
         middleware = new UserMiddleware(userService);
         this.dateMiddleware =  new DateMiddleware();
         new ReminderService(userRepository);
@@ -94,7 +93,7 @@ public class UserServlet extends HttpServlet {
                 }
 
             }
-            else response = jsonParseService.writeValueAsBytes(userService.findAll());
+            else response = getError(WRONG_REQUEST, resp);
         } catch (JsonParseException | ModelNotFound e) {
             response = getError(WRONG_REQUEST, resp);
         }

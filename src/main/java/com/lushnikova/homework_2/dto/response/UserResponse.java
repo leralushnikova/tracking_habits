@@ -31,10 +31,13 @@ public class UserResponse {
     @Getter
     private Boolean isActive;
 
-    @Getter
     /** Поле роль пользователь или админ */
+    @Getter
     private Role role;
 
+    /**
+     * Переопределенный метод {@link Object#toString}
+     */
     @Override
     public String toString() {
         return "UserResponse{" +

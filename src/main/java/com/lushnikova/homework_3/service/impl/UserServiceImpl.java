@@ -5,8 +5,10 @@ import com.lushnikova.homework_3.dto.request.HabitRequest;
 import com.lushnikova.homework_3.dto.request.UserRequest;
 import com.lushnikova.homework_3.dto.response.HabitResponse;
 import com.lushnikova.homework_3.dto.response.UserResponse;
+import com.lushnikova.homework_3.exception.ModelNotFound;
 import com.lushnikova.homework_3.mapper.HabitMapper;
 import com.lushnikova.homework_3.mapper.UserMapper;
+import com.lushnikova.homework_3.model.ENUM.Role;
 import com.lushnikova.homework_3.model.Habit;
 import com.lushnikova.homework_3.model.User;
 import com.lushnikova.homework_3.model.ENUM.Repeat;
@@ -35,12 +37,11 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
-     * @param userMapper - инструмент преобразования пользователей
      * @param userRepository - репозиторий пользователей
      * инициализация поля преобразования привычек
      */
-    public UserServiceImpl(UserMapper userMapper, UserRepository userRepository) {
-        this.userMapper = userMapper;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userMapper = UserMapper.INSTANCE;
         this.userRepository = userRepository;
         this.habitMapper = HabitMapper.INSTANCE;
     }
@@ -92,6 +93,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePassword(Long id, String password) {
         userRepository.updatePassword(id, password);
+    }
+
+    /**
+     * Процедура обновления роли пользователя {@link User#setRole(Role)}
+     * пользователя берем из {@link UserRepository#findById(Long)}
+     *
+     * @param id   - id пользователя
+     * @param role - новая роль
+     */
+    @Override
+    public void updateRole(Long id, Role role) throws ModelNotFound {
+        userRepository.updateRole(id, role);
     }
 
     /**
@@ -274,5 +287,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> findAll() {
         return userRepository.findAll().stream().map(userMapper::mapToResponse).toList();
+    }
+
+    /**
+          * Процедура блокирования пользователя {@link UserRepository#setIsActiveByIdUser(Long, boolean)}
+          * @param idUser - id пользователя
+          * @param isActive - блокировка пользователя
+          */
+    @Override
+    public void blockByIdUser(Long idUser, boolean isActive){
+        userRepository.setIsActiveByIdUser(idUser, isActive);
     }
 }

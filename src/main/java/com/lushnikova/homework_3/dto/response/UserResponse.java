@@ -1,5 +1,7 @@
 package com.lushnikova.homework_3.dto.response;
 
+import com.lushnikova.homework_3.model.ENUM.Role;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +24,9 @@ public class UserResponse {
     /**  Поле блокировка пользователя */
     private Boolean isActive;
 
+    /** Поле роль пользователь или админ */
+    private Role role;
+
     /** Список привычек пользователя*/
     private List<HabitResponse> habits;
 
@@ -40,13 +45,14 @@ public class UserResponse {
      * @param isActive - блокировка пользователя
      * @param habits - cписок привычек пользователя
      */
-    public UserResponse(Long id, String name, String email, String password, Boolean isActive, List<HabitResponse> habits) {
+    public UserResponse(Long id, String name, String email, String password, Boolean isActive, Role role, List<HabitResponse> habits) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.isActive = isActive;
         this.habits = habits;
+        this.role = role;
     }
 
     /**
@@ -122,6 +128,22 @@ public class UserResponse {
     }
 
     /**
+     * Функция получения значения поля {@link UserResponse#role}
+     * @return возвращает роль
+     */
+    public Role getRole() {
+        return role;
+    }
+
+    /**
+     * Процедура определения значения поля {@link UserResponse#role}
+     * @param role - роль
+     */
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    /**
      * Функция получения списка привычек {@link UserResponse#habits}
      * @return возвращает список привычек пользователя
      */
@@ -164,6 +186,8 @@ public class UserResponse {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", isActive=" + isActive +'}';
+                ", isActive=" + isActive +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

@@ -1,6 +1,5 @@
 package com.lushnikova.homework_3.servlet;
 
-import com.lushnikova.homework_3.mapper.UserMapper;
 import com.lushnikova.homework_3.model.ENUM.Status;
 import com.lushnikova.homework_3.repository.UserRepository;
 import com.lushnikova.homework_3.service.JsonParseService;
@@ -31,7 +30,7 @@ class HabitServletTest {
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    UserService userService = new UserServiceImpl(UserMapper.INSTANCE, UserRepository.getInstance());
+    UserService userService = new UserServiceImpl(UserRepository.getInstance());
     HabitServlet habitServlet = new HabitServlet();
     JsonParseService jsonParseService = new JsonParseServiceImpl();
 
@@ -173,7 +172,7 @@ class HabitServletTest {
     @SneakyThrows
     @Test
     void doPutHabitTitle(){
-        long idUser = 1;
+        long idUser = 2;
         long idHabit = 1;
         String localhost = "/idUser" + idUser + "/idHabit" + idHabit;
         String title = "new title";
@@ -213,7 +212,7 @@ class HabitServletTest {
     @SneakyThrows
     @Test
     void doPutHabitStatus(){
-        long idUser = 1;
+        long idUser = 2;
         long idHabit = 1;
         String localhost = "/idUser" + idUser + "/idHabit" + idHabit;
         String status = IN_PROGRESS;

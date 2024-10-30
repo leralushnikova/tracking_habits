@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Интерфейс Service по управлению пользователями и их привычек
  */
-public interface UserService extends Service {
+public interface UserService{
 
     /** Процедура сохранения пользователя
      * @param userRequest - пользователя

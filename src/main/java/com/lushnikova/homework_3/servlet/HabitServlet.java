@@ -51,9 +51,8 @@ public class HabitServlet extends HttpServlet {
 
     public HabitServlet() {
         jsonParseService = new JsonParseServiceImpl();
-        UserMapper userMapper = UserMapper.INSTANCE;
         UserRepository userRepository = UserRepository.getInstance();
-        userService = new UserServiceImpl(userMapper, userRepository);
+        userService = new UserServiceImpl(userRepository);
         this.dateMiddleware =  new DateMiddleware();
     }
 

@@ -7,8 +7,11 @@ import com.lushnikova.homework_3.dto.response.HabitResponse;
 import com.lushnikova.homework_3.dto.response.UserResponse;
 import com.lushnikova.homework_3.exception.ModelNotFound;
 import com.lushnikova.homework_3.model.ENUM.Repeat;
+import com.lushnikova.homework_3.model.ENUM.Role;
 import com.lushnikova.homework_3.model.ENUM.Statistics;
 import com.lushnikova.homework_3.model.ENUM.Status;
+import com.lushnikova.homework_3.model.User;
+import com.lushnikova.homework_3.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,7 +21,7 @@ import java.util.List;
  * Интерфейс Service по управлению пользователями и их привычек
  */
 @Loggable
-public interface UserService extends Service{
+public interface UserService {
 
     /** Процедура сохранения пользователя
      * @param userRequest - пользователя
@@ -56,6 +59,14 @@ public interface UserService extends Service{
      * @throws ModelNotFound
      */
     void updatePassword(Long id, String password)  throws ModelNotFound;
+
+    /**
+     * Процедура обновления роли пользователя {@link User#setRole(Role)}
+     * пользователя берем из {@link UserRepository#findById(Long)}
+     * @param id - id пользователя
+     * @param role - новая роль
+     */
+    void updateRole(Long id, Role role) throws ModelNotFound;
 
     /**
      * Процедура удаления пользователя,
@@ -202,6 +213,14 @@ public interface UserService extends Service{
      * @throws ModelNotFound
      */
     void switchOffPushNotificationByIdUser(Long idUser, Long idHabit)  throws ModelNotFound;
+
+    /**
+          * Процедура блокирования пользователя
+          * @param idUser - id пользователя
+          * @param isActive - блокировка пользователя
+          * @throws ModelNotFound
+          */
+    void blockByIdUser(Long idUser, boolean isActive)  throws ModelNotFound;
 
 
 }

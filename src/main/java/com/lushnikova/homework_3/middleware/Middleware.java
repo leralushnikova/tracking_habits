@@ -2,7 +2,7 @@ package com.lushnikova.homework_3.middleware;
 
 
 import com.lushnikova.homework_3.consts.RegexConsts;
-import com.lushnikova.homework_3.service.Service;
+import com.lushnikova.homework_3.service.UserService;
 
 /**
  * Операции проверки
@@ -10,13 +10,13 @@ import com.lushnikova.homework_3.service.Service;
 public abstract class Middleware {
 
     /** Поле сервис*/
-    protected Service service;
+    protected UserService service;
 
     /**
      * Конструктор - создание нового объекта
      * @param service - сервис
      */
-    public Middleware(Service service) {
+    public Middleware(UserService service) {
         this.service = service;
     }
 
@@ -27,13 +27,6 @@ public abstract class Middleware {
      */
     public abstract boolean checkEmail(Object object);
 
-    /**
-     * Операция проверки пароля
-     * @param password - пароль
-     * @param object - объект
-     * @return возвращает подтверждения совпадений
-     */
-//    public abstract boolean checkPassword(String password, Object object);
 
     /**
      * Операция проверки пароля с регулярным выражение {@link RegexConsts#REGEX_PASSWORD}

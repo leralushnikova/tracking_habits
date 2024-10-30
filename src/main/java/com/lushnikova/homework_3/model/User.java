@@ -1,5 +1,6 @@
 package com.lushnikova.homework_3.model;
 
+import com.lushnikova.homework_3.model.ENUM.Role;
 import com.lushnikova.homework_3.model.ENUM.Repeat;
 import com.lushnikova.homework_3.model.ENUM.Statistics;
 import com.lushnikova.homework_3.model.ENUM.Status;
@@ -32,6 +33,9 @@ public class User {
      */
     private boolean isActive;
 
+    /** Поле роль пользователь или админ */
+    private Role role;
+
     /** Список привычек пользователя*/
     private final List<Habit> habits = new ArrayList<>();
 
@@ -55,11 +59,12 @@ public class User {
      * @param email - почта
      * @param password - пароль
      */
-    public User(Long id, String name, String email, String password) {
+    public User(Long id, String name, String email, String password, Role role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
 
@@ -125,6 +130,22 @@ public class User {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Функция получения значения поля {@link User#role}
+     * @return возвращает роль
+     */
+    public Role getRole() {
+        return role;
+    }
+
+    /**
+     * Процедура определения значения поля {@link User#role}
+     * @param role - роль
+     */
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     /**
@@ -377,6 +398,8 @@ public class User {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", isActive=" + isActive +
+                ", role=" + role +
                 ", habits=" + habits +
                 '}';
     }

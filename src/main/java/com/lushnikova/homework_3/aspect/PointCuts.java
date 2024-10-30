@@ -67,7 +67,7 @@ public class PointCuts {
     @Pointcut("isAnnotateLoggable() && execution(public void switchOffPushNotificationByIdUser(..))")
     public void switchOffPushNotificationServiceMethod(){}
 
-    @Pointcut("isAnnotateLoggable() && execution(public * com.lushnikova.homework_3.service.AdminService.findAll())")
+    @Pointcut("isAnnotateLoggable() && execution(public * findAll())")
     public void findAllUserServiceMethod(){}
 
     @Pointcut("isAnnotateLoggable() && execution(public void blockByIdUser(..))")
