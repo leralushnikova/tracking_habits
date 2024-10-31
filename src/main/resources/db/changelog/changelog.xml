@@ -5,12 +5,12 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <include file="001-create_schema_demo.xml" relativeToChangelogFile="false"/>
-    <include file="002-create_sequence.xml" relativeToChangelogFile="false"/>
-    <include file="003-create_table_users.xml" relativeToChangelogFile="false"/>
-    <include file="004-create_table_habits.xml" relativeToChangelogFile="false"/>
-    <include file="005-create_table_habits_donedates.xml" relativeToChangelogFile="false"/>
-    <include file="006-insert_into_users.xml" relativeToChangelogFile="false"/>
-    <include file="007-insert_into_habits.xml" relativeToChangelogFile="false"/>
-    <include file="008-insert_into_habits_donedates.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/001-create_schema_demo.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/002-create_sequence.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/003-create_table_users.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/004-create_table_habits.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/005-create_table_habits_donedates.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/006-insert_into_users.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/007-insert_into_habits.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/008-insert_into_habits_donedates.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

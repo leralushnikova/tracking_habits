@@ -1,0 +1,10 @@
+spring:
+  config:
+    import: optional:file:.env
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    user: data
+    username: data
+    password: data
+  liquibase:
+    changeLogFile: db/changelog/changelog.xml
