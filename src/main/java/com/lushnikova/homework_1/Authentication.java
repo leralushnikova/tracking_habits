@@ -62,7 +62,7 @@ public class Authentication {
     /**
      * Процедура запуска метода инициализации
      */
-    public void main() {
+    public void start() {
         this.initializer();
         if (controller != null) {
             controller.render();

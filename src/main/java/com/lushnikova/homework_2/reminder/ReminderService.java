@@ -41,18 +41,17 @@ public class ReminderService {
         running = true;
         thread = new Thread(() -> {
             while (running) {
+
                 try {
                     checkReminders(idUser);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                try {
                     Thread.sleep(60 * 1000); // Пауза на 1 минуту
-                } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());
+                } catch (InterruptedException | SQLException e) {
+                    System.err.println("Поток отправки уведомления привычек остановлен");
                 }
+
             }
         });
+
         thread.start();
     }
 

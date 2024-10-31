@@ -5,7 +5,7 @@ package com.lushnikova.homework_2.config;
  */
 public class SQL_Query {
 
-    public static final String INSERT_INTO_USERS = "INSERT INTO demo.users(name, email, password, is_active) VALUES (?, ?, ?, ?)";
+    public static final String INSERT_INTO_USERS = "INSERT INTO demo.users(name, email, password, is_active, role) VALUES (?, ?, ?, ?, ?)";
 
     public static final String INSERT_INTO_HABITS = "INSERT INTO demo.habits(user_id, title, description, repeat, status, create_at) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -19,7 +19,9 @@ public class SQL_Query {
 
     public static final String UPDATE_USER_PASSWORD = "UPDATE demo.users SET password = ? WHERE id = ?";
 
-    public static final String UPDATE_USER_IS_ACTIVE = "UPDATE demo.users SET is_active = ? WHERE id = ?";
+    public static final String UPDATE_USER_IS_ACTIVE = "UPDATE demo.users SET is_active = ? WHERE id = ? and role = 'USER'";
+
+    public static final String UPDATE_USER_ROLE = "UPDATE demo.users SET role = ? WHERE id = ?";
 
     public static final String DELETE_USER = "DELETE FROM demo.users WHERE id = ?";
 

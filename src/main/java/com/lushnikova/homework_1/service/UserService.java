@@ -4,9 +4,9 @@ import com.lushnikova.homework_1.dto.req.HabitRequest;
 import com.lushnikova.homework_1.dto.req.UserRequest;
 import com.lushnikova.homework_1.dto.resp.HabitResponse;
 import com.lushnikova.homework_1.dto.resp.UserResponse;
-import com.lushnikova.homework_1.model.enum_for_model.Repeat;
-import com.lushnikova.homework_1.model.enum_for_model.Statistics;
-import com.lushnikova.homework_1.model.enum_for_model.Status;
+import com.lushnikova.homework_1.model.ENUM.Repeat;
+import com.lushnikova.homework_1.model.ENUM.Statistics;
+import com.lushnikova.homework_1.model.ENUM.Status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

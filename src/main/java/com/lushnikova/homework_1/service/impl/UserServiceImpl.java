@@ -8,9 +8,9 @@ import com.lushnikova.homework_1.mapper_mapstruct.HabitMapper;
 import com.lushnikova.homework_1.mapper_mapstruct.UserMapper;
 import com.lushnikova.homework_1.model.Habit;
 import com.lushnikova.homework_1.model.User;
-import com.lushnikova.homework_1.model.enum_for_model.Repeat;
-import com.lushnikova.homework_1.model.enum_for_model.Statistics;
-import com.lushnikova.homework_1.model.enum_for_model.Status;
+import com.lushnikova.homework_1.model.ENUM.Repeat;
+import com.lushnikova.homework_1.model.ENUM.Statistics;
+import com.lushnikova.homework_1.model.ENUM.Status;
 import com.lushnikova.homework_1.service.UserService;
 import com.lushnikova.homework_1.repository.UserRepository;
 

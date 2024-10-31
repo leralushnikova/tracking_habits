@@ -1,7 +1,7 @@
 package com.lushnikova.homework_2.service;
 
-import com.lushnikova.homework_2.dto.req.UserRequest;
-import com.lushnikova.homework_2.dto.resp.UserResponse;
+import com.lushnikova.homework_2.dto.request.UserRequest;
+import com.lushnikova.homework_2.dto.response.UserResponse;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Интерфейс Service по управлению пользователями и их привычек
  */
-public interface UserService extends Service {
+public interface UserService{
 
     /** Процедура сохранения пользователя
      * @param userRequest - пользователя
@@ -57,10 +57,19 @@ public interface UserService extends Service {
     void delete(Long id) throws SQLException;
 
     /**
+     * Процедура блокирования пользователя
+     * @param idUser - id пользователя
+     * @param isActive - блокировка пользователя
+     * @throws SQLException
+     */
+    void blockByIdUser(Long idUser, boolean isActive) throws SQLException;
+
+    /**
      * Функция получения списка администраторов
      * @return возвращает копию списка администраторов
      * @throws SQLException
      */
     List<UserResponse> findAll() throws SQLException;
+
 
 }

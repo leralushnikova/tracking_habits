@@ -6,8 +6,22 @@
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="002-create_sequence" author="lera">
-        <sql>
-            create sequence serial as int start 1
-        </sql>
+
+        <createSequence cycle="false"
+                        incrementBy="1"
+                        maxValue="9223372036854775807"
+                        minValue="1"
+                        schemaName="demo"
+                        sequenceName="users_id_seq"
+                        startValue="1"/>
+
+        <createSequence cycle="false"
+                        incrementBy="1"
+                        maxValue="9223372036854775807"
+                        minValue="1"
+                        schemaName="demo"
+                        sequenceName="habits_id_seq"
+                        startValue="1"/>
+
     </changeSet>
 </databaseChangeLog>

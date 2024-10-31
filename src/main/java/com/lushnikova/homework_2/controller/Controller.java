@@ -9,14 +9,8 @@ public abstract class Controller {
      * Процедура последовательного выполнения методов
      */
     public void render(){
-        createService();
         enter();
     }
-
-    /**
-     * Процедура создания сервиса
-     */
-    abstract void createService();
 
     /**
      * Авторизация

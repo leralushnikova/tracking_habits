@@ -1,6 +1,6 @@
 package com.lushnikova.homework_1.dto.req;
 
-import com.lushnikova.homework_1.model.enum_for_model.Repeat;
+import com.lushnikova.homework_1.model.ENUM.Repeat;
 
 import java.util.Objects;
 

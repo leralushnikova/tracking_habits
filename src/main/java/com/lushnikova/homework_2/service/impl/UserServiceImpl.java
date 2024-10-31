@@ -1,7 +1,7 @@
 package com.lushnikova.homework_2.service.impl;
 
-import com.lushnikova.homework_2.dto.req.UserRequest;
-import com.lushnikova.homework_2.dto.resp.UserResponse;
+import com.lushnikova.homework_2.dto.request.UserRequest;
+import com.lushnikova.homework_2.dto.response.UserResponse;
 import com.lushnikova.homework_2.mapper.UserMapper;
 import com.lushnikova.homework_2.model.User;
 import com.lushnikova.homework_2.repository.UserRepository;
@@ -94,6 +94,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) throws SQLException {
         userRepository.delete(id);
+    }
+
+    /**
+     * Процедура блокирования пользователя {@link UserRepository#setIsActive(Long, boolean)}
+     * @param idUser - id пользователя
+     * @param isActive - блокировка пользователя
+     * @throws SQLException
+     */
+    @Override
+    public void blockByIdUser(Long idUser, boolean isActive) throws SQLException {
+        userRepository.setIsActive(idUser, isActive);
     }
 
 

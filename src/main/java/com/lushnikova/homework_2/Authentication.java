@@ -1,11 +1,15 @@
 package com.lushnikova.homework_2;
 
+import com.lushnikova.homework_2.middleware.Middleware;
+import com.lushnikova.homework_2.middleware.UserMiddleware;
 import com.lushnikova.homework_2.controller.AdminController;
 import com.lushnikova.homework_2.controller.Controller;
 import com.lushnikova.homework_2.controller.UserController;
 import com.lushnikova.homework_2.mapper.UserMapper;
 import com.lushnikova.homework_2.repository.HabitRepository;
 import com.lushnikova.homework_2.repository.UserRepository;
+import com.lushnikova.homework_2.service.UserService;
+import com.lushnikova.homework_2.service.impl.UserServiceImpl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,35 +29,33 @@ public class Authentication {
      */
     private final UserMapper userMapper = UserMapper.INSTANCE;
 
+    private final Middleware middleware = new UserMiddleware();
+
     /**
      * Поле контроллера
      */
     Controller controller;
 
     private UserRepository userRepository;
+    private UserService userService;
     private HabitRepository habitRepository;
 
     /**
      * Процедура инициализация контроллера
      */
-    private void initializer(Connection connection) {
+    private void initializer() {
 
         System.out.println(ADMIN_OR_USER);
 
         String answer = scannerString();
 
         switch (answer) {
-            case "1" -> {
-                controller = new AdminController(userRepository, userMapper, connection);
-            }
-            case "2" -> {
-                controller = new UserController(userRepository, habitRepository, userMapper);
-            }
-            case "exit" -> {
-            }
+            case "1" -> controller = new AdminController(userRepository, userService, middleware);
+            case "2" -> controller = new UserController(userRepository, habitRepository, userService, middleware);
+            case "exit" -> {}
             default -> {
                 wrongInput();
-                initializer(connection);
+                initializer();
             }
         }
     }
@@ -61,18 +63,20 @@ public class Authentication {
     /**
      * Процедура запуска метода инициализации
      */
-    public void main() {
-        try (Connection connection = DriverManager.getConnection(getURL(), getUSER(), getPassword())) {
+    public void start() {
+        try (Connection connection = DriverManager.getConnection(getURL(), getUSER(), getPASSWORD())) {
             userRepository = new UserRepository(connection);
             habitRepository = new HabitRepository(connection);
 
-            this.initializer(connection);
+            userService = new UserServiceImpl(userMapper, userRepository);
+
+            this.initializer();
             while (controller != null) {
                 controller.render();
-                this.initializer(connection);
+                this.initializer();
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 }

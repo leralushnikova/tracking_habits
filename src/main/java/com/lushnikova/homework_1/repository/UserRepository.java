@@ -2,9 +2,9 @@ package com.lushnikova.homework_1.repository;
 
 import com.lushnikova.homework_1.model.Habit;
 import com.lushnikova.homework_1.model.User;
-import com.lushnikova.homework_1.model.enum_for_model.Repeat;
-import com.lushnikova.homework_1.model.enum_for_model.Statistics;
-import com.lushnikova.homework_1.model.enum_for_model.Status;
+import com.lushnikova.homework_1.model.ENUM.Repeat;
+import com.lushnikova.homework_1.model.ENUM.Statistics;
+import com.lushnikova.homework_1.model.ENUM.Status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,7 +32,7 @@ public class UserRepository {
     private UserRepository() {
         users = new HashSet<>();
 
-        User user1 = new User("Jame", "jame@gmail.com", "jame");
+        /*User user1 = new User("Jame", "jame@gmail.com", "jame");
 
         User user2 = new User("Kirill", "kirill@gmail.com", "kirill");
 
@@ -107,7 +107,7 @@ public class UserRepository {
         }
 
         users.add(user1);
-        users.add(user2);
+        users.add(user2);*/
     }
 
     /** Возвращение экземпляра репозитория*/

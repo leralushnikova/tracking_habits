@@ -1,8 +1,8 @@
 package com.lushnikova.homework_2.repository;
 
 import com.lushnikova.homework_2.model.Habit;
-import com.lushnikova.homework_2.model.enum_for_model.Repeat;
-import com.lushnikova.homework_2.model.enum_for_model.Status;
+import com.lushnikova.homework_2.model.ENUM.Repeat;
+import com.lushnikova.homework_2.model.ENUM.Status;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -14,6 +14,7 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
@@ -25,6 +26,8 @@ import java.time.LocalDate;
 import static com.lushnikova.homework_2.config.Environment.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Класс тестирования репозитория привычек")
+@Testcontainers
 class HabitRepositoryTest {
     private final static DockerImageName postgres = DockerImageName.parse("postgres:13.3");
 
@@ -35,7 +38,7 @@ class HabitRepositoryTest {
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(postgres.asCompatibleSubstituteFor("postgres"))
             .withExposedPorts(5432)
             .withUsername(getUSER())
-            .withPassword(getPassword());
+            .withPassword(getPASSWORD());
 
 
     @BeforeAll

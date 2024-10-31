@@ -1,11 +1,11 @@
 package com.lushnikova.homework_2.controller;
 
-import com.lushnikova.homework_2.dto.req.HabitRequest;
-import com.lushnikova.homework_2.dto.resp.HabitResponse;
+import com.lushnikova.homework_2.dto.request.HabitRequest;
+import com.lushnikova.homework_2.dto.response.HabitResponse;
 import com.lushnikova.homework_2.middleware.DateMiddleware;
-import com.lushnikova.homework_2.model.enum_for_model.Repeat;
-import com.lushnikova.homework_2.model.enum_for_model.Statistics;
-import com.lushnikova.homework_2.model.enum_for_model.Status;
+import com.lushnikova.homework_2.model.ENUM.Repeat;
+import com.lushnikova.homework_2.model.ENUM.Statistics;
+import com.lushnikova.homework_2.model.ENUM.Status;
 import com.lushnikova.homework_2.repository.HabitRepository;
 import com.lushnikova.homework_2.service.HabitService;
 import com.lushnikova.homework_2.service.impl.HabitServiceImpl;
@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+import static com.lushnikova.homework_2.consts.ErrorConsts.*;
 import static com.lushnikova.homework_2.consts.ModesConsts.*;
 import static com.lushnikova.homework_2.controller.UserController.scannerString;
 import static com.lushnikova.homework_2.controller.UserController.wrongInput;
@@ -70,7 +71,7 @@ public class HabitController {
                     default -> UserController.wrongInput();
                 }
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                System.err.println(WRONG_REQUEST);
             }
 
         }
@@ -95,7 +96,7 @@ public class HabitController {
         try {
             habitService.save(habitRequest, idUser);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(NOT_CREATE_HABIT);
         }
     }
 
@@ -115,7 +116,7 @@ public class HabitController {
                     try {
                         habitService.delete(idHabit);
                     } catch (SQLException e) {
-                        System.out.println(e.getMessage());
+                        System.err.println(NOT_DELETE_HABIT);
                     }
 
                     System.out.println("Ваша привычка удалена!");
@@ -123,7 +124,7 @@ public class HabitController {
 
                 } else getErrorHabit();
             } catch (NumberFormatException e) {
-                wrongInput();
+                System.err.println(NOT_DELETE_HABIT);
             }
         } else getErrorHabits();
 
@@ -154,7 +155,7 @@ public class HabitController {
                             try {
                                 habitService.updateTitleByIdHabit(idHabit, title);
                             } catch (SQLException e) {
-                                System.out.println(e.getMessage());
+                                System.err.println(NOT_UPDATE_HABIT);
                             }
                         }
                         case "2" -> {
@@ -164,21 +165,21 @@ public class HabitController {
                             try {
                                 habitService.updateDescriptionByIdHabit(idHabit, description);
                             } catch (SQLException e) {
-                                System.out.println(e.getMessage());
+                                System.err.println(NOT_UPDATE_HABIT);
                             }
                         }
                         case "3" -> {
                             try {
                                 habitService.updateRepeatByIdHabit(idHabit, getRepeat());
                             } catch (SQLException e) {
-                                System.out.println(e.getMessage());
+                                System.err.println(NOT_UPDATE_HABIT);
                             }
                         }
                         case "4" -> {
                             try {
                                 habitService.updateStatusByIdHabit(idHabit, getStatus());
                             } catch (SQLException e) {
-                                System.out.println(e.getMessage());
+                                System.err.println(NOT_UPDATE_HABIT);
                             }
                         }
                         case "exit" -> {
@@ -233,7 +234,7 @@ public class HabitController {
                 }
             } else getErrorHabits();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(WRONG_REQUEST);
         }
 
 
@@ -273,7 +274,7 @@ public class HabitController {
 
             } else getErrorHabits();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(WRONG_REQUEST);
         }
     }
 
@@ -296,11 +297,11 @@ public class HabitController {
                         if (!list.isEmpty()) return list;
                         else System.out.println("Данного списка нет по дате создания!");
                     } catch (SQLException e) {
-                        System.out.println(e.getMessage());
+                        System.err.println(WRONG_REQUEST);
                     }
                 }
             } catch (DateTimeParseException e) {
-                System.out.println("Не верный формат даты!");
+                System.err.println(WRONG_DATE);
             }
         }
     }
@@ -315,7 +316,7 @@ public class HabitController {
         try {
             return habitService.getHabitsByStatus(idUser, status);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(WRONG_REQUEST);
         }
         return null;
     }
@@ -355,14 +356,14 @@ public class HabitController {
                                 return;
                             }
                         } catch (DateTimeParseException e) {
-                            System.out.println("Не верный формат даты!");
+                            System.err.println(WRONG_DATE);
                         }
                     }
                 } else getErrorHabit();
             } else getErrorHabits();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(WRONG_REQUEST);
         }
 
 
@@ -387,12 +388,11 @@ public class HabitController {
                     System.out.println("Процент успешного выполнения привычек = " + percent + "%");
                     System.out.println("----------------------------------------------");
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                    System.err.println(WRONG_REQUEST);
                 }
-
             }
         } catch (DateTimeParseException e) {
-            System.out.println("Не верный формат даты!");
+            System.err.println(WRONG_DATE);
             getPercentSuccessHabitsByIdUser(idUser);
         }
     }
@@ -426,7 +426,7 @@ public class HabitController {
 
                             habitService.switchOnOrOffPushNotification(idHabit, Time.valueOf(localTime.toString()));
                         } catch (DateTimeParseException e ) {
-                            System.out.println("Не верный формат даты!");
+                            System.err.println(WRONG_DATE);
                         }
 
                     }
@@ -442,7 +442,7 @@ public class HabitController {
                 switchOnOrOffHabitsNotification(idUser);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(WRONG_PASSWORD);
         }
 
     }
@@ -465,7 +465,7 @@ public class HabitController {
                 reportHabitByIdUser(idUser);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(WRONG_PASSWORD);
         }
 
 
@@ -495,7 +495,7 @@ public class HabitController {
         try {
             return Long.parseLong(scannerString());
         } catch (NumberFormatException e) {
-            System.out.println("Неправильно введено число");
+            System.err.println("Неправильно введено число");
             return choiceNumber(size);
         }
     }
