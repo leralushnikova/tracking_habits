@@ -22,8 +22,9 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
     @Override
     public void onStartup(@NonNull ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(AppConfig.class);
+        context.register(DatabaseConfig.class);
         context.register(WebConfig.class);
+        context.register(SwaggerConfig.class);
 
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
@@ -38,6 +39,4 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
         registration.setLoadOnStartup(1);
         registration.addMapping("/");
     }
-
-
 }

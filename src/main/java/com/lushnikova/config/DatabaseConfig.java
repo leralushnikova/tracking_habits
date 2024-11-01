@@ -13,12 +13,12 @@ import java.sql.SQLException;
 @ComponentScan(value = "com.lushnikova")
 @PropertySource("classpath:application.yml")
 @EnableAspectJAutoProxy
-public class AppConfig{
+public class DatabaseConfig {
 
     private final Environment environment;
 
     @Autowired
-    public AppConfig(Environment environment) {
+    public DatabaseConfig(Environment environment) {
         this.environment = environment;
     }
 

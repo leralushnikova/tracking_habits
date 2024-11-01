@@ -4,6 +4,7 @@ import com.lushnikova.annotations.Loggable;
 import com.lushnikova.dto.request.UserRequest;
 import com.lushnikova.dto.response.UserResponse;
 import com.lushnikova.service.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
