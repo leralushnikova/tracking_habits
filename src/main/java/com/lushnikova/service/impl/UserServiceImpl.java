@@ -1,5 +1,6 @@
 package com.lushnikova.service.impl;
 
+import com.lushnikova.annotations.Loggable;
 import com.lushnikova.dto.request.UserRequest;
 import com.lushnikova.dto.response.UserResponse;
 import com.lushnikova.mapper.UserMapper;
@@ -14,8 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Класс Service по управлению пользователями и их привычек
+ * Класс по управлению пользователями
  */
+@Loggable
 @Service
 public class UserServiceImpl implements UserService {
 

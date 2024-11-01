@@ -1,10 +1,7 @@
 package com.lushnikova.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 
 import java.sql.Connection;
@@ -15,6 +12,7 @@ import java.sql.SQLException;
 @Configuration
 @ComponentScan(value = "com.lushnikova")
 @PropertySource("classpath:application.yml")
+@EnableAspectJAutoProxy
 public class AppConfig{
 
     private final Environment environment;

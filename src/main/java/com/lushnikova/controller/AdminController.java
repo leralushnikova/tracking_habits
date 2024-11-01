@@ -1,5 +1,6 @@
 package com.lushnikova.controller;
 
+import com.lushnikova.annotations.Loggable;
 import com.lushnikova.dto.request.UserRequest;
 import com.lushnikova.dto.response.UserResponse;
 import com.lushnikova.service.UserService;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import static com.lushnikova.consts.WebConsts.ADMIN_PATH;
 
+@Loggable
 @RestController
 @RequestMapping(ADMIN_PATH)
 public class AdminController {

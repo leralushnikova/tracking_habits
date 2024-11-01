@@ -1,5 +1,6 @@
 package com.lushnikova.controller;
 
+import com.lushnikova.annotations.Loggable;
 import com.lushnikova.dto.request.HabitRequest;
 import com.lushnikova.dto.request.UserRequest;
 import com.lushnikova.dto.response.HabitResponse;
@@ -27,6 +28,7 @@ import java.util.List;
 import static com.lushnikova.consts.StringConsts.*;
 import static com.lushnikova.consts.WebConsts.USERS_PATH;
 
+@Loggable
 @RestController
 @RequestMapping(USERS_PATH)
 public class UserController {
@@ -59,7 +61,7 @@ public class UserController {
                                          @RequestParam(value = "date", required = false) String date) {
 
         if (status != null && date == null) return habitService.getHabitsByStatus(idUser, getStatus(status));
-        else if (status == null) {
+        else if (status == null && date != null) {
             if(dateMiddleware.checkDate(date)) return habitService.getHabitsByDate(idUser, Date.valueOf(date));
         }
         return habitService.findAll(idUser);
@@ -135,7 +137,9 @@ public class UserController {
 
         if (userRequest.getName() != null) userService.updateName(idUser, userRequest.getName());
         else if (userRequest.getEmail() != null) userService.updateEmail(idUser, userRequest.getEmail());
-        else if (userRequest.getPassword() != null) userService.updatePassword(idUser, userRequest.getPassword());
+        else if (userRequest.getPassword() != null) {
+            if(middleware.checkPassword(userRequest.getPassword())) userService.updatePassword(idUser, userRequest.getPassword());
+        }
     }
 
     @PutMapping(value = "/{idUser}/habits/{idHabit}")

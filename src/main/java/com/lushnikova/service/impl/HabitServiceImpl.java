@@ -1,5 +1,6 @@
 package com.lushnikova.service.impl;
 
+import com.lushnikova.annotations.Loggable;
 import com.lushnikova.dto.request.HabitRequest;
 import com.lushnikova.dto.response.HabitResponse;
 import com.lushnikova.mapper.HabitMapper;
@@ -19,6 +20,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Класс по управлению привычками
+ */
+@Loggable
 @Service
 public class HabitServiceImpl implements HabitService {
 
