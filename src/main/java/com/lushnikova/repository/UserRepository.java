@@ -172,21 +172,6 @@ public class UserRepository {
         }
     }
 
-    /**
-     * Процедура определения значения поля
-     *
-     * @param id - id пользователя
-     * @param role - роль
-     * @throws SQLException
-     */
-    public void setRole(Long id, Role role) throws SQLException {
-        try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_ROLE)){
-            preparedStatement.setString(1, role.name());
-            preparedStatement.setLong(2, id);
-            preparedStatement.executeUpdate();
-        }
-    }
-
 
     /**
      * Функция получения списка администраторов

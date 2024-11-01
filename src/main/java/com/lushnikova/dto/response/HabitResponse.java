@@ -4,7 +4,6 @@ import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Status;
 import lombok.*;
 
-import java.sql.Date;
 import java.sql.Time;
 import java.util.Set;
 
@@ -37,7 +36,7 @@ public class HabitResponse {
     private Status status;
 
     /** Поле дата создания */
-    private Date createdAt;
+    private String createdAt;
 
     /** Поле текущая серии выполнений(сколько дней подряд выполнялась привычки)*/
     private Integer streak;
@@ -46,5 +45,5 @@ public class HabitResponse {
     private Time pushTime;
 
     /** Поле история выполнения каждой привычки */
-    private Set<Date> doneDates;
+    private Set<String> doneDates;
 }

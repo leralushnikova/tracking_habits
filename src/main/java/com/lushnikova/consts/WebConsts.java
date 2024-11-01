@@ -7,7 +7,6 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class WebConsts {
-    public static final String ADMINS_PATH = "/admins/*";
+    public static final String ADMIN_PATH = "/admin";
     public static final String USERS_PATH = "/users";
-    public static final String HABITS_PATH = "/habits/*";
 }

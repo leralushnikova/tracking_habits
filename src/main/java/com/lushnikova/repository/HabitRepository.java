@@ -59,13 +59,15 @@ public class HabitRepository {
 
     /**
      * Функция получения привычки
-     * @param id - id привычки
+     * @param idHabit - id привычки
+     * @param idUser- id пользователя
      * @return возвращает объект привычки
      * @throws SQLException
      */
-    public Habit findById(Long id) throws SQLException {
+    public Habit findById(Long idHabit, Long idUser) throws SQLException {
         try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HABIT_BY_ID)){
-            preparedStatement.setLong(1, id);
+            preparedStatement.setLong(1, idHabit);
+            preparedStatement.setLong(2, idUser);
 
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 resultSet.next();
@@ -319,28 +321,28 @@ public class HabitRepository {
     /**
      * Процедура отметки даты, когда выполнялась привычка
      * и подсчета текущей серии выполнения
-     * @param id - id привычки
+     * @param idHabit - id привычки
      * @throws SQLException
      */
-    public void setDoneDates(Long id) throws SQLException {
+    public void setDoneDates(Long idHabit, Long idUser) throws SQLException {
         LocalDate date = LocalDate.now();
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_HABIT_DANEDATES);
             PreparedStatement preparedStatement1 = connection.prepareStatement(UPDATE_HABIT_STREAK)){
 
-            preparedStatement.setLong(1, id);
+            preparedStatement.setLong(1, idHabit);
             preparedStatement.setDate(2, Date.valueOf(date.toString()));
             preparedStatement.executeUpdate();
 
-            Set<Date> dates = listDoneDates(id);
-            int streak = findById(id).getStreak();
+            Set<Date> dates = listDoneDates(idHabit);
+            int streak = findById(idHabit, idUser).getStreak();
 
             if (dates.toString().contains(date.minusDays(1).toString())) {
                 streak++;
             } else streak = 1;
 
             preparedStatement1.setInt(1, streak);
-            preparedStatement1.setLong(2, id);
+            preparedStatement1.setLong(2, idHabit);
 
             preparedStatement1.executeUpdate();
         }
@@ -382,26 +384,32 @@ public class HabitRepository {
     }
 
     /**
-     * Процедура формирование отчета для пользователя по прогрессу выполнения привычки
-     * @param id - id привычки
+     * Функция получения отчета для пользователя по прогрессу выполнения привычки
+     * @param idHabit - id привычки
+     * @param idUser - id пользователя
+     * @return возвращает отчет по привычке
      * @throws SQLException
      */
-    public void reportHabit(Long id) throws SQLException {
-        Habit habit = findById(id);
+    public String reportHabit(Long idHabit, Long idUser) throws SQLException {
+        StringBuilder builder = new StringBuilder();
 
-        System.out.println("Название: " + habit.getTitle());
-        System.out.println("Описание: " + habit.getDescription());
-        System.out.println("Статус: " + habit.getStatus());
-        System.out.println("Частота выполнения: " + habit.getRepeat());
+        Habit habit = findById(idHabit, idUser);
+
+        builder.append("Id пользователя: ").append(habit.getId()).append("\n");
+        builder.append("Название: ").append(habit.getTitle()).append("\n");
+        builder.append("Описание: ").append(habit.getDescription()).append("\n");
+        builder.append("Статус: ").append(habit.getStatus()).append("\n");
+        builder.append("Частота выполнения: ").append(habit.getRepeat()).append("\n");
 
         StringBuilder stringBuilder = new StringBuilder("Уведомления : ");
         if (habit.getPushTime() == null) stringBuilder.append("выкл");
         else stringBuilder.append("вкл").append(" в ").append(habit.getPushTime());
-        System.out.println(stringBuilder);
 
-        System.out.println("Текущая серия выполнений: " + habit.getStreak());
-        System.out.println("Даты выполнения привычки: " + habit.getDoneDates());
-        System.out.println("----------------------------------------------");
+        builder.append(stringBuilder).append("\n");
+        builder.append("Текущая серия выполнений: ").append(habit.getStreak()).append("\n");
+        builder.append("Даты выполнения привычки: ").append(habit.getDoneDates()).append("\n");
+
+        return builder.toString();
     }
 
     /**

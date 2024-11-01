@@ -4,6 +4,7 @@ import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Status;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Set;
@@ -20,12 +21,15 @@ import java.util.Set;
 @Builder
 public class Habit {
     /** Поле идентификатор*/
+    @NotNull
     private Long id;
 
     /** Поле идентификатор пользователя*/
+    @NotNull
     private Long userId;
 
     /** Поле название */
+    @NotNull
     private String title;
 
     /** Поле описание */

@@ -23,6 +23,13 @@ public class UserRequest {
     /** Поле пароль */
     private String password;
 
+    /**
+     * Поле блокировка пользователя
+     * isActive = true - пользователя активен
+     * isActive = false - пользователя заблокирован
+     */
+    private Boolean isActive;
+
     /** Поле роль пользователь или админ */
     private Role role;
 }

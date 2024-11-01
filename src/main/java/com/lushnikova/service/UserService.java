@@ -11,9 +11,10 @@ import java.util.Optional;
  */
 public interface UserService{
 
-    /** Процедура сохранения пользователя
+    /**
+     * Процедура сохранения пользователя
+     *
      * @param userRequest - пользователя
-     * @return возвращает объект пользователя
      */
     Optional<UserResponse> save(UserRequest userRequest);
 

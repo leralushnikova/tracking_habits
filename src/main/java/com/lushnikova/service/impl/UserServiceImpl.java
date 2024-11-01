@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
             User user = userMapper.mapToEntity(userRequest);
             return Optional.of(userMapper.mapToResponse(userRepository.save(user)));
         } catch (SQLException e) {
+            System.err.println("Error with creating user");
             return Optional.empty();
         }
     }

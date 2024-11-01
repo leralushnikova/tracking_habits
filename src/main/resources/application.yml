@@ -6,5 +6,6 @@ spring:
     user: data
     username: data
     password: data
+    driver: org.postgresql.Driver
   liquibase:
     changeLogFile: db/changelog/changelog.xml

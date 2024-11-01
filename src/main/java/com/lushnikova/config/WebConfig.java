@@ -3,6 +3,7 @@ package com.lushnikova.config;
 import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRegistration;
+import lombok.NonNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.WebApplicationInitializer;
@@ -19,7 +20,7 @@ public class WebConfig implements WebApplicationInitializer, WebMvcConfigurer {
 
 
     @Override
-    public void onStartup(ServletContext servletContext) {
+    public void onStartup(@NonNull ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(AppConfig.class);
         context.register(WebConfig.class);

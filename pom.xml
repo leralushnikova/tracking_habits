@@ -33,6 +33,13 @@
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
         <dependency>
@@ -295,8 +302,6 @@
                     <artifactId>liquibase-maven-plugin</artifactId>
                     <version>${liquibase.version}</version>
                     <configuration>
-<!--                        <propertyFile>liquibase.properties</propertyFile>-->
-<!--                        <searchPath>src/main/resources/db/changelog</searchPath>-->
                         <propertyFile>application.yml</propertyFile>
                         <searchPath>src/main/resources</searchPath>
                     </configuration>

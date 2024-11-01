@@ -4,6 +4,8 @@ import com.lushnikova.dto.request.HabitRequest;
 import com.lushnikova.dto.response.HabitResponse;
 import com.lushnikova.model.Habit;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 
 /**
@@ -24,5 +26,11 @@ public interface HabitMapper {
      * @param habit - объект класса Habit
      * @return возвращает объект класса HabitResponse
      */
+    @Mappings({
+            @Mapping(target = "createdAt", dateFormat = "yyyy-MM-dd"),
+            @Mapping(target = "pushTime", dateFormat = "HH:mm"),
+            @Mapping(target = "doneDates", dateFormat = "yyyy-MM-dd")
+    }
+    )
     HabitResponse mapToResponse(Habit habit);
 }

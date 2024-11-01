@@ -11,7 +11,7 @@ public class SQL_Query {
 
     public static final String SELECT_USER_BY_ID = "SELECT * FROM demo.users WHERE id = ?";
 
-    public static final String SELECT_HABIT_BY_ID = "SELECT * FROM demo.habits WHERE id = ?";
+    public static final String SELECT_HABIT_BY_ID = "SELECT * FROM demo.habits WHERE id = ? and user_id = ?";
 
     public static final String UPDATE_USER_NAME = "UPDATE demo.users SET name = ? WHERE id = ?";
 
@@ -69,12 +69,4 @@ public class SQL_Query {
     public static final String UPDATE_HABIT_STREAK= "UPDATE demo.habits SET streak = ? WHERE id = ?";
 
     public static final String UPDATE_HABIT_PUSH_TIME = "UPDATE demo.habits SET push_time = ? WHERE id = ?";
-
-    public static final String INSERT_INTO_ADMINS = "INSERT INTO demo.admins(email, password) VALUES (?, ?)";
-
-    public static final String SELECT_ADMIN_BY_ID = "SELECT * FROM demo.admins WHERE id = ?";
-
-    public static final String UPDATE_ADMIN_PASSWORD = "UPDATE demo.admins SET password = ? WHERE id = ?";
-
-    public static final String SELECT_ADMINS = "SELECT * FROM demo.admins";
 }
