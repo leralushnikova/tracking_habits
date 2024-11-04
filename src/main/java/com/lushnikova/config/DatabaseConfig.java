@@ -8,11 +8,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
 @Configuration
-@ComponentScan(value = "com.lushnikova")
 @PropertySource("classpath:application.yml")
-@EnableAspectJAutoProxy
 public class DatabaseConfig {
 
     private final Environment environment;
