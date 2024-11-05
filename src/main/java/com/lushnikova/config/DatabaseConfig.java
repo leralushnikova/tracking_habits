@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Класс конфигурации базы данных
+ */
 @Configuration
 @PropertySource("classpath:application.yml")
 public class DatabaseConfig {

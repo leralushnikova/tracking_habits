@@ -5,6 +5,7 @@ import com.lushnikova.model.enums.Status;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Set;
@@ -30,6 +31,7 @@ public class Habit {
 
     /** Поле название */
     @NotNull
+    @Size(min = 2, max = 500, message = "min = 2, max = 50")
     private String title;
 
     /** Поле описание */

@@ -23,17 +23,17 @@ public class User {
 
     /** Поле имя */
     @NotNull
-    @Size(min = 3, max = 30)
+    @Size(min = 3, max = 30, message = "min = 3, max = 30")
     private String name;
 
     /** Поле почта */
     @NotNull
-    @Size(min = 3, max = 30)
+    @Size(min = 3, max = 30, message = "min = 3, max = 30")
     private String email;
 
     /** Поле пароль */
     @NotNull
-    @Size(min = 3, max = 30)
+    @Size(min = 3, max = 30, message = "min = 3, max = 30")
     private String password;
 
     /**

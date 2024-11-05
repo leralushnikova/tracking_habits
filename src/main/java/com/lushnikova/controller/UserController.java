@@ -11,7 +11,6 @@ import com.lushnikova.model.enums.Statistics;
 import com.lushnikova.model.enums.Status;
 import com.lushnikova.service.HabitService;
 import com.lushnikova.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +27,33 @@ import java.util.List;
 import static com.lushnikova.consts.StringConsts.*;
 import static com.lushnikova.consts.WebConsts.USERS_PATH;
 
+/**
+ * Класс Controller для пользователя и его привычек
+ */
 @Loggable
 @RestController
 @RequestMapping(USERS_PATH)
 public class UserController {
 
+    /** Поле сервис пользователей*/
     private final UserService userService;
+
+    /** Поле сервис привычек*/
     private final HabitService habitService;
+
+    /** Поле инструмент проверки даты или времени*/
     private final DateMiddleware dateMiddleware;
+
+    /** Поле инструмент проверки пользователей*/
     private final Middleware middleware;
 
-    @Autowired
+    /**
+     * Конструктор - создание нового объекта с определенными значениями
+     * @param userService - сервис пользователей
+     * @param habitService - сервис привычек
+     * @param dateMiddleware - инструмент проверки даты или времени
+     * @param middleware - инструмент проверки пользователей
+     */
     public UserController(UserService userService, HabitService habitService, DateMiddleware dateMiddleware, Middleware middleware) {
         this.userService = userService;
         this.habitService = habitService;
@@ -46,6 +61,11 @@ public class UserController {
         this.middleware = middleware;
     }
 
+    /**
+     * Операция получения пользователя
+     * @param idUser - id пользователя
+     * @return - возвращает объект пользователя
+     */
     @GetMapping(value = "/{idUser}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponse> getUser(@PathVariable("idUser") Long idUser) {
 
@@ -55,6 +75,11 @@ public class UserController {
 
     }
 
+    /**
+     * Операция получения привычек пользователя
+     * @param idUser - id пользователя
+     * @return - возвращает список привычек пользователя
+     */
     @GetMapping(value = "/{idUser}/habits", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<HabitResponse> getHabits(@PathVariable("idUser") Long idUser,
                                          @RequestParam(value = "status", required = false) String status,
@@ -67,6 +92,11 @@ public class UserController {
         return habitService.findAll(idUser);
     }
 
+    /**
+     * Операция получения процента выполненных привычек пользователя
+     * @param idUser - id пользователя
+     * @return - возвращает процент выполненных привычек пользователя
+     */
     @GetMapping(value = "/{idUser}/habits/percent", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> getPercent(@PathVariable("idUser") Long idUser,
                                               @RequestParam(value = "date_from", required = false) String date_from,
@@ -82,6 +112,12 @@ public class UserController {
 
     }
 
+    /**
+     * Операция получения привычки пользователя
+     * @param idUser - id пользователя
+     * @param idHabit - id привычки
+     * @return - возвращает привычку пользователя
+     */
     @GetMapping(value = "/{idUser}/habits/{idHabit}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HabitResponse> getHabit(@PathVariable("idUser") Long idUser,
                                                   @PathVariable("idHabit") Long idHabit) {
@@ -91,6 +127,12 @@ public class UserController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * Операция получения отчета привычки пользователя
+     * @param idUser - id пользователя
+     * @param idHabit - id привычки
+     * @return - возвращает отчета привычки пользователя
+     */
     @GetMapping(value = "/{idUser}/habits/{idHabit}/report", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> reportHabit(@PathVariable("idUser") Long idUser,
                                                   @PathVariable("idHabit") Long idHabit) {
@@ -100,6 +142,11 @@ public class UserController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * Операция получения статистики привычки пользователя
+     * @param idHabit - id привычки
+     * @return - возвращает статистику привычки пользователя
+     */
     @GetMapping(value = "/habits/{idHabit}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> getHabitFulfillmentStatistics(@PathVariable("idHabit") Long idHabit,
                                                       @RequestParam(value = "statistics", required = false) String statistics,
@@ -111,8 +158,10 @@ public class UserController {
         return new ArrayList<>();
     }
 
-
-
+    /**
+     * Операция сохранения пользователя
+     * @return - возвращает объект сохраненного пользователя
+     */
     @PostMapping()
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
         if (middleware.checkPassword(userRequest.getPassword()) && !middleware.checkEmail(userRequest)) {
@@ -120,9 +169,13 @@ public class UserController {
                     .map(habitResponse -> new ResponseEntity<>(habitResponse, HttpStatus.OK))
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND );
     }
 
+    /**
+     * Операция сохранения привычки пользователя
+     * @param idUser - id пользователя
+     */
     @PostMapping(value = "/{idUser}")
     public void createHabit(@PathVariable("idUser") Long idUser,
                             @RequestBody HabitRequest habitRequest) {
@@ -130,7 +183,10 @@ public class UserController {
     }
 
 
-
+    /**
+     * Операция обновления данных пользователя
+     * @param idUser - id пользователя
+     */
     @PutMapping(value = "/{idUser}")
     public void updateName(@PathVariable("idUser") Long idUser,
                            @RequestBody UserRequest userRequest) {
@@ -142,6 +198,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Операция обновления данных привычки пользователя
+     * @param idUser - id пользователя
+     * @param idHabit - id привычки
+     */
     @PutMapping(value = "/{idUser}/habits/{idHabit}")
     public void updateHabit(@PathVariable("idUser") Long idUser,
                             @PathVariable("idHabit") Long idHabit,
@@ -168,12 +229,19 @@ public class UserController {
         }
     }
 
-
+    /**
+     * Операция удаления пользователя
+     * @param idUser - id пользователя
+     */
     @DeleteMapping(value = "/{idUser}")
     public void deleteUser(@PathVariable("idUser") Long idUser) {
         userService.delete(idUser);
     }
 
+    /**
+     * Операция удаления привычки
+     * @param idHabits - id привычки
+     */
     @DeleteMapping(value = "/habits/{idHabits}")
     public void deleteHabit(@PathVariable("idHabits") Long idHabits) {
         habitService.delete(idHabits);
