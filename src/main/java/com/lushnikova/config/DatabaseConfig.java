@@ -1,18 +1,18 @@
 package com.lushnikova.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
  * Класс конфигурации базы данных
  */
 @Configuration
-@PropertySource("classpath:application.yml")
 public class DatabaseConfig {
 
     private final Environment environment;
@@ -22,14 +22,18 @@ public class DatabaseConfig {
         this.environment = environment;
     }
 
-    private final String URL = "url";
-    private final String USER = "user";
-    private final String PASSWORD = "password";
-    private final String DRIVER = "driver";
+    private DataSource source() {
+        DataSourceBuilder<?> dSB = DataSourceBuilder.create();
+        dSB.driverClassName(environment.getProperty("spring.datasource.driver"));
+        dSB.url(environment.getProperty("spring.datasource.url"));
+        dSB.username(environment.getProperty("spring.datasource.username"));
+        dSB.password(environment.getProperty("spring.datasource.password"));
+
+        return dSB.build();
+    }
 
     @Bean
-    public Connection getConnectionFromDriverManager() throws SQLException, ClassNotFoundException {
-        Class.forName(environment.getProperty(DRIVER));
-        return DriverManager.getConnection(environment.getProperty(URL), environment.getProperty(USER), environment.getProperty(PASSWORD));
+    public Connection getConnectionFromDriverManager() throws SQLException{
+        return source().getConnection();
     }
 }

@@ -2,10 +2,10 @@ spring:
   config:
     import: optional:file:.env
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    user: data
-    username: data
-    password: data
+    url: ${JDBC_DRIVER_VERSION}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver: org.postgresql.Driver
   liquibase:
-    changeLogFile: db/changelog/changelog.xml
+    change-log: db/changelog/changelog.xml
+    enabled: true

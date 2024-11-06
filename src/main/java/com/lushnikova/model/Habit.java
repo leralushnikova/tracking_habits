@@ -2,10 +2,10 @@ package com.lushnikova.model;
 
 import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Status;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Set;
