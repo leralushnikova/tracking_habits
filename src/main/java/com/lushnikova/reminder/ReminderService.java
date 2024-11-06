@@ -2,6 +2,8 @@ package com.lushnikova.reminder;
 
 import com.lushnikova.model.Habit;
 import com.lushnikova.repository.HabitRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.time.LocalTime;
@@ -13,6 +15,7 @@ import java.util.List;
  * Класс, который проверяет у пользователя наличие время уведомления привычек
  * и посылает уведомление
  */
+@Component
 public class ReminderService {
     /** Поле существования потока*/
     private volatile boolean running;
@@ -27,6 +30,7 @@ public class ReminderService {
      * Конструктор - создание нового объекта с определенными значениями
      * @param habitRepository - репозиторий пользователей
      */
+    @Autowired
     public ReminderService(HabitRepository habitRepository) {
         this.habitRepository = habitRepository;
     }
