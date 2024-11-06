@@ -166,7 +166,7 @@ public class UserController {
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
         if (middleware.checkPassword(userRequest.getPassword()) && !middleware.checkEmail(userRequest)) {
             return userService.save(userRequest)
-                    .map(habitResponse -> new ResponseEntity<>(habitResponse, HttpStatus.OK))
+                    .map(habitResponse -> new ResponseEntity<>(habitResponse, HttpStatus.CREATED))
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND );
@@ -188,7 +188,7 @@ public class UserController {
      * @param idUser - id пользователя
      */
     @PutMapping(value = "/{idUser}")
-    public void updateName(@PathVariable("idUser") Long idUser,
+    public void updateUser(@PathVariable("idUser") Long idUser,
                            @RequestBody UserRequest userRequest) {
 
         if (userRequest.getName() != null) userService.updateName(idUser, userRequest.getName());
