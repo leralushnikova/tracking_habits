@@ -1,11 +1,14 @@
 package com.lushnikova;
 
+import org.audit_logging.annotations.EnableAuditLogging;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
+/**
+ * Точка старта
+ */
 @SpringBootApplication
-@EnableAspectJAutoProxy
+@EnableAuditLogging
 public class StartApplication {
 
     public static void main(String[] args) {

@@ -1,6 +1,5 @@
 package com.lushnikova.service.impl;
 
-import com.lushnikova.annotations.Loggable;
 import com.lushnikova.dto.request.HabitRequest;
 import com.lushnikova.dto.response.HabitResponse;
 import com.lushnikova.mapper.HabitMapper;
@@ -10,6 +9,7 @@ import com.lushnikova.model.enums.Status;
 import com.lushnikova.model.Habit;
 import com.lushnikova.repository.HabitRepository;
 import com.lushnikova.service.HabitService;
+import org.audit_logging.annotations.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
 package com.lushnikova.controller;
 
-import com.lushnikova.annotations.Loggable;
 import com.lushnikova.dto.request.UserRequest;
 import com.lushnikova.dto.response.UserResponse;
 import com.lushnikova.service.UserService;
+import org.audit_logging.annotations.Loggable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 

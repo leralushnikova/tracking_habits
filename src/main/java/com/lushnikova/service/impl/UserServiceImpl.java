@@ -1,12 +1,12 @@
 package com.lushnikova.service.impl;
 
-import com.lushnikova.annotations.Loggable;
 import com.lushnikova.dto.request.UserRequest;
 import com.lushnikova.dto.response.UserResponse;
 import com.lushnikova.mapper.UserMapper;
 import com.lushnikova.model.User;
 import com.lushnikova.repository.UserRepository;
 import com.lushnikova.service.UserService;
+import org.audit_logging.annotations.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
