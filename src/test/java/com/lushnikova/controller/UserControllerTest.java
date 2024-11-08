@@ -382,7 +382,7 @@ class UserControllerTest {
         return UserRequest.builder()
                 .name(userResponse.getName())
                 .email(userResponse.getEmail())
-                .password("password")
+                .password("passwordLKJ654")
                 .isActive(userResponse.getIsActive())
                 .role(userResponse.getRole())
                 .build();
