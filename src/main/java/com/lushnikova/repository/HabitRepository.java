@@ -4,9 +4,11 @@ import com.lushnikova.model.enums.Repeat;
 import com.lushnikova.model.enums.Statistics;
 import com.lushnikova.model.enums.Status;
 import com.lushnikova.model.Habit;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -31,11 +33,12 @@ public class HabitRepository {
 
     /**
      * Конструктор - создание нового объекта с определенными значениями
-     * @param connection - соединение б/д
+     * @param source - соединение б/д
      */
+    @SneakyThrows
     @Autowired
-    public HabitRepository(Connection connection) {
-        this.connection = connection;
+    public HabitRepository(DataSource source) {
+        this.connection = source.getConnection();
     }
 
     /**

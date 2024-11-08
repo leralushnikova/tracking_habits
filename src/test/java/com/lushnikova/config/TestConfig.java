@@ -1,19 +1,18 @@
 package com.lushnikova.config;
 
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.*;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.TestPropertySource;
 
 import javax.sql.DataSource;
 
-/**
- * Класс конфигурации базы данных
- */
-@Configuration
-public class DatabaseConfig {
-
+@TestConfiguration
+@TestPropertySource(value = "classpath:application.yml")
+public class TestConfig {
     @Bean
-    public DataSource source(Environment environment) {
+    public DataSource dataSource(Environment environment) {
         DataSourceBuilder<?> dSB = DataSourceBuilder.create();
         dSB.driverClassName(environment.getProperty("spring.datasource.driver"));
         dSB.url(environment.getProperty("spring.datasource.url"));

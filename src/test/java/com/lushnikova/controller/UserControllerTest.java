@@ -30,7 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.lushnikova.consts.StringConsts.*;
+import static com.lushnikova.consts.WebConsts.ADMIN_PATH;
 import static com.lushnikova.consts.WebConsts.USERS_PATH;
+import static com.lushnikova.controller.UserController.getStatus;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -85,6 +88,19 @@ class UserControllerTest {
                 .andExpect(content().string(containsString(objectMapper.writeValueAsString(getHabits(idUser)))));
     }
 
+    @DisplayName("Список привычек пользователя по статусу")
+    @Test
+    void shouldGetHabitsByStatus() throws Exception {
+        long idUser = 1;
+        String status = CREATE;
+
+        Mockito.when(habitService.getHabitsByStatus(idUser, getStatus(status))).thenReturn(getHabits(idUser).stream().filter(el->el.getStatus().equals(getStatus(status))).toList());
+
+        mockMvc.perform(get(USERS_PATH + "/{idUser}/habits?status={status}", idUser, status))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(objectMapper.writeValueAsString(getHabits(idUser).stream().filter(el->el.getStatus().equals(getStatus(status))).toList()))));
+    }
+
 
     @DisplayName("Получение процента успешного выполнения привычек за определенный период")
     @Test
@@ -97,6 +113,19 @@ class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @DisplayName("Получение данных привычки пользователя")
+    @Test
+    void shouldGetHabit() throws Exception {
+        long idUser = 1;
+        long idHabit = 1;
+
+        Mockito.when(habitService.findById(idHabit,idUser)).thenReturn(Optional.of(getHabitResponse(idHabit, idUser)));
+
+        mockMvc.perform(get(USERS_PATH + "/{idUser}/habits/{idHabit}", idUser, idHabit))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(objectMapper.writeValueAsString(Optional.of(getHabitResponse(idHabit, idUser))))));
+    }
+
     @DisplayName("Отчет по привычке")
     @Test
     void shouldGetReportHabit() throws Exception {
@@ -106,7 +135,7 @@ class UserControllerTest {
         Mockito.when(habitService.reportHabit(idHabit, idUser)).thenReturn(Optional.of(reportHabit(idHabit, idHabit)));
 
         mockMvc.perform(get(USERS_PATH + "/{idUser}/habits/{idHabit}/report", idUser, idHabit))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isOk())
                 .andExpect(content().string(containsString(reportHabit(idHabit, idHabit))));
 
     }
@@ -121,7 +150,7 @@ class UserControllerTest {
 
         Mockito.when(userService.save(userRequest)).thenReturn(Optional.of(userResponse));
 
-        String json = objectMapper.writeValueAsString(userResponse);
+        String json = objectMapper.writeValueAsString(userRequest);
 
         mockMvc.perform(post(USERS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -151,9 +180,9 @@ class UserControllerTest {
 
     }
 
-    @DisplayName("Обновления данных пользователя")
+    @DisplayName("Обновления имени пользователя")
     @Test
-    void shouldUpdateUser() throws Exception {
+    void shouldUpdateUserName() throws Exception {
         long idUser = 1;
 
         UserRequest userRequest = new UserRequest();
@@ -169,9 +198,28 @@ class UserControllerTest {
         verify(userService, times(1)).updateName(idUser, userRequest.getName());
     }
 
-    @DisplayName("Обновление данных привычки пользователя")
+
+    @DisplayName("Обновления почты пользователя")
     @Test
-    void shouldUpdateHabit() throws Exception {
+    void shouldUpdateUserEmail() throws Exception {
+        long idUser = 1;
+
+        UserRequest userRequest = new UserRequest();
+        userRequest.setEmail("user@email.com");
+
+        String json = objectMapper.writeValueAsString(userRequest);
+
+        mockMvc.perform(put(USERS_PATH + "/{idUser}", idUser)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).updateEmail(idUser, userRequest.getEmail());
+    }
+
+    @DisplayName("Обновление описания привычки пользователя")
+    @Test
+    void shouldUpdateHabitDescription() throws Exception {
         long idUser = 1;
         long idHabit = 1;
 
@@ -188,15 +236,135 @@ class UserControllerTest {
         verify(habitService, times(1)).updateDescriptionByIdHabit(idUser, habitRequest.getDescription());
     }
 
-    @DisplayName("Удаление привычки")
+    @DisplayName("Обновление названия привычки пользователя")
+    @Test
+    void shouldUpdateHabitTitle() throws Exception {
+        long idUser = 1;
+        long idHabit = 1;
+
+        HabitRequest habitRequest = new HabitRequest();
+        habitRequest.setTitle("New title");
+
+        String json = objectMapper.writeValueAsString(habitRequest);
+
+        mockMvc.perform(put(USERS_PATH + "/{idUser}/habits/{idHabit}", idUser, idHabit)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk());
+
+        verify(habitService, times(1)).updateTitleByIdHabit(idUser, habitRequest.getTitle());
+    }
+
+    @DisplayName("Обновление частоты повторения привычки пользователя")
+    @Test
+    void shouldUpdateHabitRepeat() throws Exception {
+        long idUser = 1;
+        long idHabit = 1;
+
+        HabitRequest habitRequest = new HabitRequest();
+        habitRequest.setRepeat(Repeat.DAILY);
+
+        String json = objectMapper.writeValueAsString(habitRequest);
+
+        mockMvc.perform(put(USERS_PATH + "/{idUser}/habits/{idHabit}", idUser, idHabit)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk());
+
+        verify(habitService, times(1)).updateRepeatByIdHabit(idUser, habitRequest.getRepeat());
+    }
+
+    @DisplayName("Обновление статуса привычки пользователя")
+    @Test
+    void shouldUpdateHabitStatus() throws Exception {
+        long idUser = 1;
+        long idHabit = 1;
+
+        HabitRequest habitRequest = new HabitRequest();
+        habitRequest.setStatus(Status.CREATED);
+
+        String json = objectMapper.writeValueAsString(habitRequest);
+
+        mockMvc.perform(put(USERS_PATH + "/{idUser}/habits/{idHabit}", idUser, idHabit)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk());
+
+        verify(habitService, times(1)).updateStatusByIdHabit(idUser, habitRequest.getStatus());
+    }
+
+
+    @DisplayName("Выключение отправки уведомления привычки пользователя")
+    @Test
+    void shouldUpdateHabitNotifications() throws Exception {
+        long idUser = 1;
+        long idHabit = 1;
+
+        HabitRequest habitRequest = new HabitRequest();
+        habitRequest.setPush(NO);
+
+        String json = objectMapper.writeValueAsString(habitRequest);
+
+        mockMvc.perform(put(USERS_PATH + "/{idUser}/habits/{idHabit}", idUser, idHabit)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk());
+
+        verify(habitService, times(1)).switchOnOrOffPushNotification(idHabit, null);
+    }
+
+
+    @DisplayName("Отметка, что за день привычка выполнена")
+    @Test
+    void shouldUpdateHabitDone() throws Exception {
+        long idUser = 1;
+        long idHabit = 1;
+
+        HabitRequest habitRequest = new HabitRequest();
+        habitRequest.setDone(YES);
+
+        String json = objectMapper.writeValueAsString(habitRequest);
+
+        mockMvc.perform(put(USERS_PATH + "/{idUser}/habits/{idHabit}", idUser, idHabit)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk());
+
+        verify(habitService, times(1)).setDoneDates(idHabit, idUser);
+    }
+
+    @DisplayName("Удаление пользователя")
     @Test
     void shouldDeleteUser() throws Exception {
+        long idUser = 2;
+
+        mockMvc.perform(delete(USERS_PATH + "/{idUser}", idUser))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).delete(idUser);
+    }
+
+    @DisplayName("Удаление привычки")
+    @Test
+    void shouldDeleteHabit() throws Exception {
         long idHabit = 2;
 
         mockMvc.perform(delete(USERS_PATH + "/habits/{idHabits}", idHabit))
                 .andExpect(status().isOk());
 
         verify(habitService, times(1)).delete(idHabit);
+    }
+
+    private HabitResponse getHabitResponse(Long idHabit, Long idUser){
+        return HabitResponse.builder()
+                .id(idHabit)
+                .userId(idUser)
+                .title("habit1")
+                .description("habit1")
+                .repeat(Repeat.DAILY)
+                .status(Status.CREATED)
+                .createdAt(LocalDate.of(2024, 10, 11).toString())
+                .build();
     }
 
     private UserResponse getUserResponse(Long idUser){

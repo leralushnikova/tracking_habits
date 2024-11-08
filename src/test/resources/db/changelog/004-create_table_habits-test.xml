@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="004-create_table_habits-test" author="lera">
+        <createTable schemaName="demo" tableName="habits">
+
+            <column name="id" type="integer">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="title" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="repeat" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="create_at" type="date">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="streak" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="push_time" type="time">
+                <constraints nullable="true"/>
+            </column>
+
+        </createTable>
+
+        <addDefaultValue columnName="id"
+                         defaultValueSequenceNext="habits_id_seq"
+                         schemaName="demo"
+                         tableName="habits"/>
+
+        <addForeignKeyConstraint baseTableSchemaName="demo"
+                                 baseColumnNames="user_id"
+                                 baseTableName="habits"
+                                 deleteCascade="true"
+                                 constraintName="fk_habits_user_id"
+                                 referencedTableSchemaName="demo"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+</databaseChangeLog>

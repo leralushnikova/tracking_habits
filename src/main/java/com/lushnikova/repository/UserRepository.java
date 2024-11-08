@@ -2,9 +2,11 @@ package com.lushnikova.repository;
 
 import com.lushnikova.model.enums.Role;
 import com.lushnikova.model.User;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +27,12 @@ public class UserRepository {
     /**
      * Конструктор - создание нового объекта с определенными значениями
      *
-     * @param connection - соединение с б/д
+     * @param source - соединение с б/д
      */
+    @SneakyThrows
     @Autowired
-    public UserRepository(Connection connection) {
-        this.connection = connection;
+    public UserRepository(DataSource source) {
+        this.connection = source.getConnection();
     }
 
     /**

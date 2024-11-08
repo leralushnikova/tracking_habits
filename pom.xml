@@ -37,6 +37,7 @@
         <liquibase.version>4.25.1</liquibase.version>
         <swagger.verion>2.0.2</swagger.verion>
         <spring-boot.version>3.2.0</spring-boot.version>
+        <testcontainers.version>1.20.2</testcontainers.version>
         <jacoco.version>0.8.11</jacoco.version>
     </properties>
 
@@ -129,6 +130,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring-boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
 
