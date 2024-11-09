@@ -21,7 +21,6 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.lushnikova.consts.StringConsts.*;
@@ -108,7 +107,7 @@ public class UserController {
                     .map(integer -> new ResponseEntity<>(integer, HttpStatus.OK))
                     .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -148,14 +147,18 @@ public class UserController {
      * @return - возвращает статистику привычки пользователя
      */
     @GetMapping(value = "/habits/{idHabit}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<String> getHabitFulfillmentStatistics(@PathVariable("idHabit") Long idHabit,
+    public ResponseEntity<List<String>> getHabitFulfillmentStatistics(@PathVariable("idHabit") Long idHabit,
                                                       @RequestParam(value = "statistics", required = false) String statistics,
                                                       @RequestParam(value = "date", required = false) String date) {
 
-        if (dateMiddleware.checkDate(date)) {
-            return habitService.getHabitFulfillmentStatistics(idHabit, LocalDate.parse(date), getStatistics(statistics));
+        if(!statistics.isEmpty() && !statistics.isBlank()){
+            if (!date.isEmpty() && !date.isBlank() && dateMiddleware.checkDate(date)) {
+                var list = habitService.getHabitFulfillmentStatistics(idHabit, LocalDate.parse(date), getStatistics(statistics));
+                return new ResponseEntity<>(list, HttpStatus.OK);
+            }
+            else new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ArrayList<>();
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -167,9 +170,9 @@ public class UserController {
         if (middleware.checkPassword(userRequest.getPassword()) && !middleware.checkEmail(userRequest)) {
             return userService.save(userRequest)
                     .map(habitResponse -> new ResponseEntity<>(habitResponse, HttpStatus.CREATED))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND );
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -276,7 +279,7 @@ public class UserController {
      * @param s - ввод
      * @return возвращает период
      */
-    private Statistics getStatistics(String s) {
+    public static Statistics getStatistics(String s) {
         switch (s) {
             case DAY -> {
                 return Statistics.DAY;

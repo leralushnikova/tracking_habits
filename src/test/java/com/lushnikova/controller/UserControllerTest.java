@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 import static com.lushnikova.consts.StringConsts.*;
 import static com.lushnikova.consts.WebConsts.USERS_PATH;
+import static com.lushnikova.controller.UserController.getStatistics;
 import static com.lushnikova.controller.UserController.getStatus;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertNotNull;
@@ -65,7 +67,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     @DisplayName("Список привычек пользователя")
     @Test
     void shouldGetHabits() throws Exception {
-        long idUser = 1;
+        long idUser = 2;
 
         mockMvc.perform(get(USERS_PATH + "/{idUser}/habits", idUser))
                 .andExpect(status().isOk())
@@ -75,7 +77,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     @DisplayName("Список привычек пользователя по статусу")
     @Test
     void shouldGetHabitsByStatus() throws Exception {
-        long idUser = 1;
+        long idUser = 2;
         String status = CREATE;
 
         mockMvc.perform(get(USERS_PATH + "/{idUser}/habits?status={status}", idUser, status))
@@ -83,11 +85,36 @@ class UserControllerTest extends AbstractIntegrationTest {
                 .andExpect(content().string(containsString(objectMapper.writeValueAsString(habitService.getHabitsByStatus(idUser, getStatus(status))))));
     }
 
+    @DisplayName("Список привычек пользователя по дате создания")
+    @Test
+    void shouldGetHabitsByDate() throws Exception {
+        long idUser = 2;
+        String date = "2024-10-08";
+
+        mockMvc.perform(get(USERS_PATH + "/{idUser}/habits?date={date}", idUser, date))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(objectMapper.writeValueAsString(habitService.getHabitsByDate(idUser, Date.valueOf(date))))));
+    }
+
+
+
+    @DisplayName("Статистика привычки пользователя")
+    @Test
+    void shouldGetHabitFulfillmentStatistics() throws Exception {
+        long idHabit = 1;
+        String statistics = WEEK;
+        String date = "2024-10-08";
+
+        mockMvc.perform(get(USERS_PATH + "/habits/{idHabit}?statistics={statistics}&date={date}", idHabit, statistics, date))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(objectMapper.writeValueAsString(habitService.getHabitFulfillmentStatistics(idHabit, LocalDate.parse(date), getStatistics(statistics))))));
+    }
+
 
     @DisplayName("Получение процента успешного выполнения привычек за определенный период")
     @Test
     void shouldGetPercentSuccessHabits() throws Exception {
-        long idUser = 1;
+        long idUser = 2;
         String date_from = "2024-10-08";
         String date_to = "2024-10-15";
 
@@ -334,7 +361,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     @DisplayName("Удаление пользователя")
     @Test
     void shouldDeleteUser() throws Exception {
-        long idUser = 2;
+        long idUser = 5;
 
         mockMvc.perform(delete(USERS_PATH + "/{idUser}", idUser))
                 .andExpect(status().isOk());
@@ -346,7 +373,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     @Test
     void shouldDeleteHabit() throws Exception {
         long idUser = 2;
-        long idHabit = 2;
+        long idHabit = 3;
 
         mockMvc.perform(delete(USERS_PATH + "/habits/{idHabits}", idHabit))
                 .andExpect(status().isOk());
