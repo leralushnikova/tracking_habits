@@ -398,19 +398,19 @@ public class HabitRepository {
 
         Habit habit = findById(idHabit, idUser);
 
-        builder.append("Id пользователя: ").append(habit.getId()).append("\n");
-        builder.append("Название: ").append(habit.getTitle()).append("\n");
-        builder.append("Описание: ").append(habit.getDescription()).append("\n");
-        builder.append("Статус: ").append(habit.getStatus()).append("\n");
-        builder.append("Частота выполнения: ").append(habit.getRepeat()).append("\n");
+        builder.append("User's id: ").append(habit.getId()).append("\n");
+        builder.append("Title: ").append(habit.getTitle()).append("\n");
+        builder.append("Description: ").append(habit.getDescription()).append("\n");
+        builder.append("Status: ").append(habit.getStatus()).append("\n");
+        builder.append("Repeat: ").append(habit.getRepeat()).append("\n");
 
-        StringBuilder stringBuilder = new StringBuilder("Уведомления : ");
-        if (habit.getPushTime() == null) stringBuilder.append("выкл");
-        else stringBuilder.append("вкл").append(" в ").append(habit.getPushTime());
+        StringBuilder stringBuilder = new StringBuilder("Notification : ");
+        if (habit.getPushTime() == null) stringBuilder.append("off");
+        else stringBuilder.append("on").append(" at ").append(habit.getPushTime());
 
         builder.append(stringBuilder).append("\n");
-        builder.append("Текущая серия выполнений: ").append(habit.getStreak()).append("\n");
-        builder.append("Даты выполнения привычки: ").append(habit.getDoneDates()).append("\n");
+        builder.append("Streak: ").append(habit.getStreak()).append("\n");
+        builder.append("Done dates: ").append(habit.getDoneDates()).append("\n");
 
         return builder.toString();
     }
