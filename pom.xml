@@ -156,6 +156,14 @@
             <systemPath>C:/Users/natel/.m2/repository/org/audit_logging/audit-logging/0.0.1-SNAPSHOT/audit-logging-0.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>org.audit</groupId>
+            <artifactId>audit</artifactId>
+            <scope>system</scope>
+            <version>0.0.1-SNAPSHOT</version>
+            <systemPath>C:/Users/natel/.m2/repository/org/audit/audit/0.0.1-SNAPSHOT/audit-0.0.1-SNAPSHOT.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
     <build>

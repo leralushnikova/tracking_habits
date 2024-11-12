@@ -6,6 +6,8 @@ import com.lushnikova.mapper.UserMapper;
 import com.lushnikova.model.User;
 import com.lushnikova.repository.UserRepository;
 import com.lushnikova.service.UserService;
+import org.audit.annotation.Audit;
+import org.audit.enums.EventType;
 import org.audit_logging.annotations.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Audit(eventType = EventType.CREATE_ACCOUNT)
     @Override
     public Optional<UserResponse> save(UserRequest userRequest){
         try {
@@ -43,51 +46,56 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserResponse> findById(Long id) {
+    public Optional<UserResponse> findById(Long idUser) {
         try {
-            UserResponse userResponse = userMapper.mapToResponse(userRepository.findById(id));
+            UserResponse userResponse = userMapper.mapToResponse(userRepository.findById(idUser));
             return Optional.of(userResponse);
         } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
+    @Audit(eventType = EventType.UPDATE_PROFILE)
     @Override
-    public void updateName(Long id, String name){
+    public void updateName(Long idUser, String name){
         try {
-            userRepository.updateName(id, name);
+            userRepository.updateName(idUser, name);
         } catch (SQLException e) {
             System.err.println("Error with updating name user");
         }
     }
 
+    @Audit(eventType = EventType.UPDATE_PROFILE)
     @Override
-    public void updateEmail(Long id, String email){
+    public void updateEmail(Long idUser, String email){
         try {
-            userRepository.updateEmail(id, email);
+            userRepository.updateEmail(idUser, email);
         } catch (SQLException e) {
             System.err.println("Error with updating email user");
         }
     }
 
+    @Audit(eventType = EventType.UPDATE_PROFILE)
     @Override
-    public void updatePassword(Long id, String password) {
+    public void updatePassword(Long idUser, String password) {
         try {
-            userRepository.updatePassword(id, password);
+            userRepository.updatePassword(idUser, password);
         } catch (SQLException e) {
             System.err.println("Error with updating password user");
         }
     }
 
+    @Audit(eventType = EventType.DELETE_ACCOUNT)
     @Override
-    public void delete(Long id){
+    public void delete(Long idUser){
         try {
-            userRepository.delete(id);
+            userRepository.delete(idUser);
         } catch (SQLException e) {
             System.err.println("Error with deleting user");
         }
     }
 
+    @Audit(eventType = EventType.UPDATE_PROFILE)
     @Override
     public void blockByIdUser(Long idUser, boolean isActive) {
         try {
