@@ -6,15 +6,37 @@
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="003-create_table_users-test" author="lera">
-        <sql>
-            create table demo.users
-            (
-                id        serial primary key,
-                name      varchar(30),
-                email     varchar(30) unique,
-                password  varchar(30),
-                is_active boolean
-            );
-        </sql>
+
+        <createTable  schemaName="demo" tableName="users">
+            <column name="id" type="integer" >
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="name" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="email" type="varchar(30)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="password" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_active" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="role" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addDefaultValue  columnName="id"
+                          defaultValueSequenceNext="users_id_seq"
+                          schemaName="demo"
+                          tableName="users"/>
+
     </changeSet>
 </databaseChangeLog>
